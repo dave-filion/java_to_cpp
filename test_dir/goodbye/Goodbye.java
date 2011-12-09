@@ -1,4 +1,4 @@
-package pack;
+package goodbye;
 
 public class Goodbye {
 

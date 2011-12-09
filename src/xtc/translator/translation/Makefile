@@ -49,7 +49,9 @@ SOURCE = Collector.java \
 	PackageResolver.java \
 	ProtoClass.java \
 	ProtoManager.java \
-	Translator.java
+	Translator.java \
+	CppPrinter.java \
+	PrintHandler.java
 
 JNI_SOURCE =
 

@@ -14,9 +14,7 @@ public class ProtoClass {
 		this.packageName = packageName;
 	}
 	
-	public CompilationUnit makeCompilationUnit() {
-		System.out.println(sourceNode);
-		
+	public CompilationUnit makeCompilationUnit() {		
 		CompilationUnit cu = new CompilationUnit();
 		cu.dispatch(sourceNode);
 		cu.setPackageName(this.getPackageName());

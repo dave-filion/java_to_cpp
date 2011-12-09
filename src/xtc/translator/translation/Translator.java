@@ -1,8 +1,13 @@
 package xtc.translator.translation;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.io.Reader;
+import java.io.Writer;
 
 import java.util.List;
 
@@ -36,10 +41,9 @@ public class Translator {
 	public void run(String[] args) {
 
 		if (args.length == 2) {
-
-			String mainPath = args[0];
-
-			PackageResolver packageResolver = new PackageResolver(args[1]);
+			
+			// arg[0] is mainClassPath, arg[1] is classPath
+			PackageResolver packageResolver = new PackageResolver(args[0], args[1]);
 
 			try {
 				packageResolver.collect();
@@ -49,6 +53,10 @@ public class Translator {
 				Collector collector = new Collector(protoManager.processProtoClasses());
 
 				collector.collect();
+				
+				PrintHandler printHandler = new PrintHandler(collector.classes);
+				
+				printHandler.printAllHeaders();
 
 			} catch (IOException e) {
 				// TODO Auto-generated catch block

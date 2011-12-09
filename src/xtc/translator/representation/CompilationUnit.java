@@ -1,17 +1,21 @@
 package xtc.translator.representation;
 
-import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import xtc.tree.GNode;
 import xtc.tree.Node;
 import xtc.tree.Visitor;
 
-public class CompilationUnit extends Visitor{
+public class CompilationUnit extends BaseVisitor{
 	
 	private String packageName;
 	private ClassVisitor classVisitor;
 	private ArrayList<String> imports;
+	
+	public CompilationUnit(){
+		imports = new ArrayList<String>();
+	}
 	
 	public String getPackageName() {
 		return packageName;
@@ -34,53 +38,32 @@ public class CompilationUnit extends Visitor{
 	 * dispatch it to collect relevant class data.
 	 */
 	public void visitCompilationUnit(GNode n) {
-		// Loop at imports here, and get those classes
-		for (Object o : n) {
-			if (o instanceof Node) {
-				if (((Node) o).getName() == "ImportDeclaration") {
-					dispatch((Node) o);
-				}
-				if (((Node) o).getName() == "PackageDeclaration") {
-					dispatch((Node) o);
-				}
-			}
-		}
+		System.out.println(n);
+		visit(n);
+		
 		ClassVisitor newClass = new ClassVisitor();
 		newClass.dispatch(n);
 		this.classVisitor = newClass;
 	}
 
 	public void visitImportDeclaration(GNode n) {
-		// get QualifiedIdentifier(s)
-		String filename = "";
-		for (int i = 0; i < n.size(); i++)
-			filename += n.getGeneric(1).getString(i) + "/";
-		filename = filename.substring(0, filename.length() - 1);
-		filename += ".java";
-
-		// packDirs will have the paths of the imported packages
-		imports.addAll(getQualifiedIdentifier(n.getGeneric(1)));
-	}
-
-	private ArrayList<String> getQualifiedIdentifier(GNode n) {
-		ArrayList<String> identifierList = new ArrayList<String>();
-		for (int i = 0; i < n.size(); i++) {
-			identifierList.add(n.getString(i));
+		String theImport = "";
+		
+		Node qualifiedIdentifier = n.getNode(1);
+		
+		for (int i = 0; i < qualifiedIdentifier.size(); i++) {
+			theImport += qualifiedIdentifier.getString(i);
+			
+			if (i != qualifiedIdentifier.size() - 1) {
+				theImport += ".";
+			}
 		}
-		return identifierList;
+		
+		if ( "*".equals(n.getString(2)) ) {
+			theImport += ".*";
+		}
+		
+		imports.add(theImport);
 	}
 	
-	/**
-	 * Catch-all visit.
-	 */
-    public void visit(Node n) {
-        for (Object o : n)
-            if (o instanceof Node)
-                dispatch((Node) o);
-    }
-
-
-	public String toString(){
-		return this.getClassVisitor().getIdentifier() + " in package: " + this.getPackageName(); 
-	}
 }

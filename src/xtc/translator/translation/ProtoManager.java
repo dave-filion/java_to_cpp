@@ -18,8 +18,10 @@ public class ProtoManager {
 		
 		for (ProtoClass protoClass : protoClasses) {
 			CompilationUnit compilationUnit = protoClass.makeCompilationUnit();
-			compilationUnit.setPackageName(protoClass.getPackageName());			
+			compilationUnit.setPackageName(protoClass.getPackageName());
+			compilationUnit.getClassVisitor().setPackageName(protoClass.getPackageName());
 			compilationUnits.add(compilationUnit);
+			compilationUnit.getClassVisitor().setImports(compilationUnit.getImports());
 		}
 		
 		return compilationUnits;

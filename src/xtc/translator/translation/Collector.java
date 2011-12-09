@@ -38,8 +38,6 @@ public class Collector extends Visitor {
 	public List<ClassVisitor> classes;
 	public ClassVisitor mainClass;
 	
-	public List<CompilationUnit> compilationUnits;
-
 	/**
 	 * a list of classes that are used this should come from
 	 * visitQualifiedIdentifiers in ImplementationVisitor
@@ -62,17 +60,13 @@ public class Collector extends Visitor {
 		this.packDirs = new ArrayList<File>();
 		this.sortedClasses = new ArrayList<ClassVisitor>();
 		
-		this.compilationUnits = compilationUnits;
 	}
 
 	/**
 	 * Main method to begin collection
 	 * 
 	 */
-	public void collect() throws IOException, ParseException {
-		
-		System.out.println(this.compilationUnits);
-		
+	public void collect() throws IOException, ParseException {				
 		// assign super classes to classVisitors
 		this.assignSuperClass();
 

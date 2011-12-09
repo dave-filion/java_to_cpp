@@ -15,11 +15,15 @@ import xtc.tree.Node;
 
 public class PackageResolver {
 
-	public String classpath;
+	private String mainClass;
+	private ProtoClass mainProtoClass;
+	private String classpath;
 	private ArrayList<ProtoClass> protoClasses;
 	private FilenameFilter javaSrcFilter;
 	
-	public PackageResolver(String classpath){
+	public PackageResolver(String mainClass, String classpath){
+		this.mainClass = mainClass;
+		this.mainProtoClass = null;
 		this.classpath = classpath;
 		this.protoClasses = new ArrayList<ProtoClass>();
 		
@@ -54,9 +58,7 @@ public class PackageResolver {
 		//TODO: might wanna remove the ./ before things if there is one
 		File src = new File(path);
 				
-		for (File file : src.listFiles()) {	
-			System.out.println(file);
-			
+		for (File file : src.listFiles()) {				
 			if (file.isDirectory()) {
 				collect(file.toString());
 			}
@@ -70,8 +72,13 @@ public class PackageResolver {
 			JavaFiveParser parser = new JavaFiveParser(in, javaFile.toString(), (int) javaFile.length());
 			Result result = parser.pCompilationUnit(0);
 			Node node = (Node) parser.value(result);
+
+			ProtoClass protoClass = new ProtoClass(packageName, node);
+			
+			if (path.equals(mainClass)) {
+				this.mainProtoClass = protoClass;
+			}
 						
-			// Make new protoclass and add it to list.
 			protoClasses.add(new ProtoClass(packageName, node));
 		}
 		
@@ -81,4 +88,13 @@ public class PackageResolver {
 		return protoClasses;
 	}
 
+	public ProtoClass getMainProtoClass() {
+		return mainProtoClass;
+	}
+
+	public void setMainProtoClass(ProtoClass mainProtoClass) {
+		this.mainProtoClass = mainProtoClass;
+	}
+
+	
 }
