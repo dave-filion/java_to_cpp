@@ -31,6 +31,7 @@ namespace test_dir{
         bool (*equals)(DeepGoodBye, Object);
         Class (*getClass)(DeepGoodBye);
         String (*toString)(DeepGoodBye);
+
         __DeepGoodBye_VT()
         : __isa(__DeepGoodBye::__class()),
         __delete(&__DeepGoodBye::__delete),

@@ -1,4 +1,4 @@
-package representation;
+package xtc.translator.representation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,11 +34,10 @@ public class Method {
 			this.overloadedIdentifier = identifier;
 		}
 		
-		System.out.println("Overloaded name for " + identifier + " is " + overloadedIdentifier);
 	}
 	
 	public String toString(){
-		return "(" + returnType + ") " + identifier + "( " + argumentTypes + " )";
+		return "(" + returnType + ") " + overloadedIdentifier + "( " + argumentTypes + " )";
 	}
 	
 }

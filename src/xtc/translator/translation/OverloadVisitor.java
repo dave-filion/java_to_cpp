@@ -1,11 +1,11 @@
-package translation;
+package xtc.translator.translation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import representation.Method;
+import xtc.translator.representation.Method;
 
 import xtc.tree.GNode;
 import xtc.tree.Node;
@@ -62,13 +62,16 @@ public class OverloadVisitor extends Visitor {
 			}
 		}
 
-	}
-
+	}	
 	
+	/**
+	 * Catch-all visit.
+	 */
     public void visit(Node n) {
         for (Object o : n)
             if (o instanceof Node)
                 dispatch((Node) o);
     }
+
 
 }

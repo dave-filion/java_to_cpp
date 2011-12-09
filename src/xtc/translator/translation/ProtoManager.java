@@ -22,6 +22,7 @@ public class ProtoManager {
 			compilationUnit.getClassVisitor().setPackageName(protoClass.getPackageName());
 			compilationUnits.add(compilationUnit);
 			compilationUnit.getClassVisitor().setImports(compilationUnit.getImports());
+			compilationUnit.getClassVisitor().setSourceNode(protoClass.getSourceNode());
 		}
 		
 		return compilationUnits;

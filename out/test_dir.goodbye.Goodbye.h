@@ -21,6 +21,7 @@ namespace test_dir{
       __Goodbye();
       static void __delete(__Goodbye*);
       static void sayHi(Goodbye);
+      static void sayBye_String(Goodbye, String);
       static void sayBye(Goodbye);
       static Class __class();
       static ____Goodbye_VT __vtable;
@@ -33,8 +34,11 @@ namespace test_dir{
       Class (*getClass)(Goodbye);
       String (*toString)(Goodbye);
       void (*sayHi)(Goodbye);
-      void (*main)(Goodbye, String);
+      void (*sayHi_String)(Goodbye, String);
+      void (*main_String)(Goodbye, String);
+      void (*sayBye_String)(Goodbye, String);
       void (*sayBye)(Goodbye);
+
       __Goodbye_VT()
       : __isa(__Goodbye::__class()),
       __delete(&__Goodbye::__delete),
@@ -44,9 +48,11 @@ namespace test_dir{
       getClass((Class(*)(Goodbye))&__Object::getClass),
       toString((String(*)(Goodbye))&__Hello::toString),
       sayHi(&__Goodbye::sayHi),
-      main((void(*)(Goodbye,String))&__Hello::main),
+      sayHi_String((void(*)(Goodbye,String))&__Hello::sayHi_String),
+      main_String((void(*)(Goodbye,String))&__Hello::main_String),
 ,
 ,
+      sayBye_String(&__Goodbye::sayBye_String),
       sayBye(&__Goodbye::sayBye)      { }
     }
   }

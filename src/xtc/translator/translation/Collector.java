@@ -5,6 +5,7 @@ import java.lang.Character;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -15,6 +16,7 @@ import java.io.IOException;
 
 import xtc.translator.representation.ClassVisitor;
 import xtc.translator.representation.CompilationUnit;
+import xtc.translator.representation.Method;
 import xtc.translator.representation.MethodVisitor;
 import xtc.translator.representation.SourceObject;
 
@@ -31,7 +33,6 @@ import xtc.tree.Visitor;
  */
 public class Collector extends Visitor {
 
-	// where to look for used things in packages.
 	public ArrayList<File> packDirs;
 	public ArrayList<String> imports;
 	public ArrayList<String> packages;
@@ -67,6 +68,10 @@ public class Collector extends Visitor {
 	 * 
 	 */
 	public void collect() throws IOException, ParseException {
+		
+		// get overloaded methods
+		this.generateMethodOverload();
+		
 		// assign super classes to classVisitors
 		this.assignSuperClass();
 
@@ -78,7 +83,7 @@ public class Collector extends Visitor {
 		//this.sort();
 	}
 
-	public void assignSuperClass() {
+	private void assignSuperClass() {
 		for (ClassVisitor cv : classes) {
 			if (cv.getExtension() == null || cv.getExtension().isEmpty()) {
 				cv.setSuperClass(new SourceObject());
@@ -99,7 +104,7 @@ public class Collector extends Visitor {
 		}
 	}
 
-	public void createImplementationMap() {
+	private void createImplementationMap() {
 		for (ClassVisitor classVisitor : classes) {
 			createImplementationMap(classVisitor, classVisitor);
 			
@@ -182,6 +187,38 @@ public class Collector extends Visitor {
 				visited.put(currentClass.getIdentifier(), sortedClasses.size());
 				sortedClasses.add(currentClass);
 			}
+		}
+	}
+	
+	private void generateMethodOverload() {
+		
+		for (ClassVisitor classVisitor : classes) {
+
+			for (MethodVisitor m : classVisitor.getMethodList()) {
+								
+				Method method = new Method(m.getIdentifier(), m.getReturnType());
+				List<String> paramTypes = new ArrayList<String>();
+				
+				for (Map<String, String> param : m.getParameters()) {
+					paramTypes.add(param.get("type"));
+				}
+				
+				method.argumentTypes = paramTypes;
+				
+				method.generateOverloadedIdentifier();
+				
+				// if method is already there, add it to the list
+				if (classVisitor.getOverloadMap().containsKey(method.identifier)){
+					classVisitor.getOverloadMap().get(method.identifier).add(method);
+				} else {
+					List<Method> methodList = new ArrayList<Method>();
+					methodList.add(method);
+					classVisitor.getOverloadMap().put(method.identifier, methodList);
+				}
+				
+				m.setIdentifier(method.overloadedIdentifier);
+			}
+			
 		}
 	}
 

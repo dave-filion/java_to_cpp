@@ -8,7 +8,11 @@ public class Goodbye extends Hello{
 		System.out.println("Bye!");
 	}
 
-	public void sayBye() {
-		System.out.println("BYE AGAIN");
+	public void sayBye(String name) {
+		System.out.println(name);
+	}
+	
+	public void sayBye(){
+		System.out.println("BYE");
 	}
 }

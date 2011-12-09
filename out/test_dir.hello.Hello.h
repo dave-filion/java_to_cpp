@@ -22,7 +22,8 @@ namespace test_dir{
       __Hello();
       static void __delete(__Hello*);
       static void sayHi(Hello);
-      static void main(Hello, String);
+      static void sayHi_String(Hello, String);
+      static void main_String(Hello, String);
       static String toString(Hello);
       static Class __class();
       static ____Hello_VT __vtable;
@@ -35,7 +36,9 @@ namespace test_dir{
       Class (*getClass)(Hello);
       String (*toString)(Hello);
       void (*sayHi)(Hello);
-      void (*main)(Hello, String);
+      void (*sayHi_String)(Hello, String);
+      void (*main_String)(Hello, String);
+
       __Hello_VT()
       : __isa(__Hello::__class()),
       __delete(&__Hello::__delete),
@@ -45,7 +48,8 @@ namespace test_dir{
       getClass((Class(*)(Hello))&__Object::getClass),
       toString(&__Hello::toString),
       sayHi(&__Hello::sayHi),
-      main(&__Hello::main),
+      sayHi_String(&__Hello::sayHi_String),
+      main_String(&__Hello::main_String),
       { }
     }
   }

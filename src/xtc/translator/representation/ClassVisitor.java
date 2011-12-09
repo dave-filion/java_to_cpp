@@ -17,6 +17,7 @@ import xtc.tree.Visitor;
  */
 public class ClassVisitor extends Visitor implements Cloneable {
 
+	private Node sourceNode;
 	private String identifier;
 	private List<String> extensions;
 	private String extension;
@@ -26,6 +27,8 @@ public class ClassVisitor extends Visitor implements Cloneable {
 	private List<FieldVisitor> fieldList;
 	private List<MethodVisitor> methodList;
 	private Map<String, String> implementationMap;
+	private Map<String, List<Method>> overloadMap;
+	
 	private String packageName;
 	private List<String> imports;
 
@@ -43,6 +46,8 @@ public class ClassVisitor extends Visitor implements Cloneable {
 
 		this.usedClasses = new ArrayList<String>();
 		this.imports = new ArrayList<String>();
+		
+		this.overloadMap = new HashMap<String, List<Method>>();
 	}
 
 	/**
@@ -280,6 +285,22 @@ public class ClassVisitor extends Visitor implements Cloneable {
 		con += ")";
 		
 		return con;
+	}
+
+	public Node getSourceNode() {
+		return sourceNode;
+	}
+
+	public void setSourceNode(Node sourceNode) {
+		this.sourceNode = sourceNode;
+	}
+
+	public Map<String, List<Method>> getOverloadMap() {
+		return overloadMap;
+	}
+
+	public void setOverloadMap(Map<String, List<Method>> overloadMap) {
+		this.overloadMap = overloadMap;
 	}
 
 }
