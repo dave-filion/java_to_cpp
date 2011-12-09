@@ -10,13 +10,6 @@ public class CppPrinter extends Printer{
 	public CppPrinter(Writer out) {
 		super(out);
 	}
-	
-	public void writeHeader(ClassVisitor classVisitor) {
 		
-		pln(classVisitor.toString());
 		
-	}
-	
-	
-
 }

@@ -54,7 +54,7 @@ public class Translator {
 
 				collector.collect();
 				
-				PrintHandler printHandler = new PrintHandler(collector.classes);
+				PrintHandler printHandler = new PrintHandler(collector.classes, args[1]);
 				
 				printHandler.printAllHeaders();
 

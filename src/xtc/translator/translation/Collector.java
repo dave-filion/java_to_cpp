@@ -37,7 +37,7 @@ public class Collector extends Visitor {
 	public ArrayList<String> packages;
 	public List<ClassVisitor> classes;
 	public ClassVisitor mainClass;
-	
+
 	/**
 	 * a list of classes that are used this should come from
 	 * visitQualifiedIdentifiers in ImplementationVisitor
@@ -47,26 +47,26 @@ public class Collector extends Visitor {
 	public ArrayList<ClassVisitor> sortedClasses;
 
 	public Collector(List<CompilationUnit> compilationUnits) {
-		
+
 		this.imports = new ArrayList<String>();
 		this.classes = new ArrayList<ClassVisitor>();
-		
+
 		for (CompilationUnit compilationUnit : compilationUnits) {
 			this.classes.add(compilationUnit.getClassVisitor());
 		}
-		
+
 		this.packages = new ArrayList<String>();
 		this.mainClass = null;
 		this.packDirs = new ArrayList<File>();
 		this.sortedClasses = new ArrayList<ClassVisitor>();
-		
+
 	}
 
 	/**
 	 * Main method to begin collection
 	 * 
 	 */
-	public void collect() throws IOException, ParseException {				
+	public void collect() throws IOException, ParseException {
 		// assign super classes to classVisitors
 		this.assignSuperClass();
 
@@ -75,7 +75,7 @@ public class Collector extends Visitor {
 		this.createImplementationMap();
 
 		// sort the list of classes for printing
-		this.sort();
+		//this.sort();
 	}
 
 	public void assignSuperClass() {
@@ -84,9 +84,6 @@ public class Collector extends Visitor {
 				cv.setSuperClass(new SourceObject());
 			} else {
 				boolean found = false;
-				// This is really inefficient, think of way to do this better
-				// Probably could use a map or something and set the keys to
-				// the classname. Then use a map.get(key) or whatev the idiom is
 				for (ClassVisitor cv2 : classes) {
 					if (cv2.getIdentifier().equals(cv.getExtension())) {
 						cv.setSuperClass(cv2.copy());
@@ -102,10 +99,11 @@ public class Collector extends Visitor {
 		}
 	}
 
-
 	public void createImplementationMap() {
 		for (ClassVisitor classVisitor : classes) {
 			createImplementationMap(classVisitor, classVisitor);
+			
+			System.out.println(classVisitor.getIdentifier() + " : " + classVisitor.getImplementationMap());
 		}
 	}
 
@@ -147,8 +145,6 @@ public class Collector extends Visitor {
 			HashMap<String, Integer> visited = new HashMap<String, Integer>();
 			for (ClassVisitor currentClass : classes) {
 				if (currentClass.getIdentifier() != "Object") {
-					System.out.println("CURRENT CLASS: "
-							+ currentClass.getIdentifier());
 					if (!visited.containsKey(currentClass.getIdentifier())) {
 						sort(currentClass, visited);
 					}

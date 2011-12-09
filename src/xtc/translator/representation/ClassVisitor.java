@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import xtc.translator.translation.CppPrinter;
 import xtc.tree.GNode;
 import xtc.tree.Node;
 import xtc.tree.Visitor;
@@ -128,6 +129,25 @@ public class ClassVisitor extends Visitor implements Cloneable {
 			if (o instanceof Node)
 				dispatch((Node) o);
 	}
+	
+	public void getVTable(CppPrinter cp) {
+		getVTable(cp, this, this);
+	}
+		
+	private void getVTable(CppPrinter cp, ClassVisitor classVisitor, ClassVisitor original) {
+		if (classVisitor == null) {
+			// do nothing
+		} else {
+			getVTable(cp, classVisitor.getSuperClass(), original);
+			
+            for (MethodVisitor m : classVisitor.getMethodList()) {
+            	System.out.println("Class: " + classVisitor.getIdentifier() + " : " + m);
+                if (!m.isOverride() || !m.isStatic())
+                	cp.indent().p(m.getMethodPointer(original)).pln(";");
+            }
+		}
+	}
+
 
 	public ClassVisitor copy() {
 		try {
@@ -207,13 +227,6 @@ public class ClassVisitor extends Visitor implements Cloneable {
 		this.constructorList = constructorList;
 	}
 
-	/*
-	 * public ConstructorVisitor getConstructor() { return constructor; }
-	 * 
-	 * public void setConstructor(ConstructorVisitor constructor) {
-	 * this.constructor = constructor; }
-	 */
-
 	public List<FieldVisitor> getFieldList() {
 		return fieldList;
 	}
@@ -256,6 +269,17 @@ public class ClassVisitor extends Visitor implements Cloneable {
 
 	public void setImports(List<String> imports) {
 		this.imports = imports;
+	}
+	
+	public String getConstructor() {
+		String con = "";
+		
+		con += this.identifier;
+		con += "(";
+		//TODO FIX CONSTRUCTORS
+		con += ")";
+		
+		return con;
 	}
 
 }

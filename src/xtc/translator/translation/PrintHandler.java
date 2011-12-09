@@ -3,15 +3,20 @@ package xtc.translator.translation;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import xtc.translator.representation.ClassVisitor;
+import xtc.translator.representation.MethodVisitor;
 
 public class PrintHandler {
 
 	private List<ClassVisitor> classVisitors;
+	private String classPath;
 	
-	public PrintHandler(List<ClassVisitor> classVisitors) {
+	public PrintHandler(List<ClassVisitor> classVisitors, String classPath) {
 		this.classVisitors = classVisitors;
+		this.classPath = classPath;
 	}
 	
 	public void printAllHeaders() throws IOException {
@@ -22,33 +27,45 @@ public class PrintHandler {
 			CppPrinter cp = new CppPrinter(new FileWriter("out/" + getFullClassName(classVisitor) + ".h"));
 			
 			// Imports
-			System.out.println(classVisitor.getImports());
+			this.printStandardImports(cp);
 			for (String imp : classVisitor.getImports()) {
-				cp.p("#include ").p("\"").p(imp + ".h").pln("\"");
+				if (! imp.endsWith("*"))
+					cp.indent().p("#include ").p("\"").p(classPath + "." + imp + ".h").pln("\"");
 			}
+			cp.pln();
+			
+			cp.pln().pln("using namespace java::lang;");
 			
 			String[] namespaces = splitPackageName(classVisitor.getPackageName());
 						
 			// Open namespaces
 			for (String name : namespaces) {
-				cp.p("namespace ").p(name).pln("{");		
+				cp.indent().p("namespace ").p(name).pln("{");		
+				cp.incr();
+				cp.pln();
 			}
 			
 			// Declare data model.
-			cp.p("struct ").p(prepend(classVisitor.getIdentifier())).pln(";");
+			cp.indent().p("struct ").p(prepend(classVisitor.getIdentifier())).pln(";");
 			
 			// Declare Vtable
-			cp.p("struct ").p(prepend(vtDec(classVisitor.getIdentifier()))).pln(";");
+			cp.indent().p("struct ").p(prepend(vtDec(classVisitor.getIdentifier()))).pln(";");
 			
 			// Typedef definition
-			cp.p("typedef ").p(smartPtrTo(classVisitor.getIdentifier())).p(" ").p(classVisitor.getIdentifier()).pln(";");
+			cp.indent().p("typedef ").p(smartPtrTo(classVisitor.getIdentifier())).p(" ").p(classVisitor.getIdentifier()).pln(";");
 			
-			// MANY MANY THINGS GO HERE
-			//
+			// Print data structure
+			cp.pln();
+			this.printDataStructure(cp, classVisitor);
+			
+			// Print vTable 
+			cp.pln();
+			this.printVTable(cp, classVisitor);
 			
 			// Close namespaces
 			for (String name : namespaces) {
-				cp.indentLess().pln("}");
+				cp.decr();
+				cp.indent().pln("}");
 			}
 			
 			// Flush buffers
@@ -63,13 +80,117 @@ public class PrintHandler {
 			
 			CppPrinter cppPrinter = new CppPrinter(new FileWriter("out/" + getFullClassName(classVisitor) + ".cc"));
 			
-			
-			
 			cppPrinter.flush();
 		}
 		
+		
 	}
 	
+	private void printDataStructure(CppPrinter cp, ClassVisitor classVisitor) {
+		cp.indent().p("struct ").p(prepend(classVisitor.getIdentifier())).pln("{");
+		cp.incr();
+		// vptr
+		cp.indent().p(vtDec(classVisitor.getIdentifier())).p("*").p(" ").p("__vptr").pln(";");
+		
+		// the constructor
+		cp.indent().p(prepend(classVisitor.getConstructor())).pln(";");
+		
+		// the destructor
+		cp.indent().p("static void __delete(").p(prepend(classVisitor.getIdentifier()) + "*").p(")").pln(";");
+		
+		for ( MethodVisitor m : classVisitor.getMethodList() ) {
+			cp.indent().p(m.getSignature(classVisitor)).pln(";");
+		}
+		
+		// __class function
+		cp.indent().p("static Class __class()").pln(";");
+		
+		// the vtable for the object
+		cp.indent().p("static ").p(prepend(vtDec(classVisitor.getIdentifier()))).p(" ").p("__vtable").pln(";");
+		cp.decr();
+		cp.indent().pln("};");
+	}
+	
+	private void printStandardImports(CppPrinter cp) {
+		cp.pln("#include <stdint.h>");
+		cp.pln("#include <string>");
+		cp.pln("#include <iostream>");
+		cp.pln("#include <cstring>");
+		cp.pln("#include \"ptr.h\"");
+		cp.pln("#include \"java_lang.h\"");
+	}
+		
+	private void printVTable(CppPrinter cp, ClassVisitor classVisitor) {
+		cp.indent().p("struct ").p(vtDec(classVisitor.getIdentifier())).pln(" {");
+		cp.incr();
+		cp.pln();
+		
+		// Recurse over all methods (even inherited)
+		printVTable(cp, classVisitor, classVisitor);
+		
+		// Generate constructor
+		cp.pln();
+		cp.indent().pln(vtDec(classVisitor.getIdentifier()) + "()");
+		cp.indent().pln(": __isa(" + prepend(classVisitor.getIdentifier()) + "::__class()),");
+		cp.indent().pln("__delete(&" + prepend(classVisitor.getIdentifier()) + "::__delete),");
+		
+		printVTableConstructor(cp, classVisitor, classVisitor);
+		
+		cp.indent().pln("{ }");
+		
+		
+		cp.decr();
+		cp.indent().pln("}");
+	}
+	
+	private void printVTable(CppPrinter cp, ClassVisitor classVisitor, ClassVisitor original) {
+		if (classVisitor == null) {
+			// do nothing
+		} else {
+			printVTable(cp, classVisitor.getSuperClass(), original);
+            for (MethodVisitor m : classVisitor.getMethodList()) {
+                if (!m.isOverride())
+                	cp.indent().p(m.getMethodPointer(original)).pln(";");
+            }
+		}
+	}
+
+	private static void printVTableConstructor(CppPrinter cp,
+			ClassVisitor cv,
+			ClassVisitor original) {
+
+		if (cv == null) {
+			// do nothing
+		} else {
+			printVTableConstructor(cp, cv.getSuperClass(), original);
+
+			for (int i = 0; i < cv.getMethodList().size(); i++) {
+
+				MethodVisitor m = cv.getMethodList().get(i);
+
+				// comma from previous line
+				cp.pln(",");
+				
+				// exclude main
+				if (!m.isOverride()) {
+					String classPointer = original.getImplementationMap().get(m.getIdentifier());
+
+					if (!classPointer.equals(original.getIdentifier())) {
+						// If class pointer is not class, we must cast it
+						cp.indent().p(cast(m, original, classPointer));
+					} else {
+						// otherwise, reference original classes implementation
+						cp.indent().p(m.getIdentifier()
+								+ openParen()
+								+ reference(prepend(scope(classPointer,
+										m.getIdentifier()))) + closeParen());
+
+					}
+				}
+			}
+		}
+	}
+
 	private String periodToColons(String word) {
 		return word.replace(".", "::");
 	}
@@ -145,8 +266,33 @@ public class PrintHandler {
     }
     
     protected static String smartPtrTo(String object) {
-      return "__rt::Ptr<" + object + ">";
+      return "__rt::Ptr<" + prepend(object) + ">";
     }
 
+	private static String cast(MethodVisitor m, ClassVisitor original,
+			String classPointer) {
+		String out = "";
+		out += m.getIdentifier() + openParen() + openParen()
+				+ m.getReturnType() + "(*)" + openParen()
+				+ original.getIdentifier() + ",";
+		// Include original parameters
+		for (Map<String, String> p : m.getParameters()) {
+			out += p.get("type") + ",";
+		}
+
+		out = removeLastComma(out);
+
+		out += closeParen() + closeParen()
+				+ reference(prepend(scope(classPointer, m.getIdentifier())))
+				+ closeParen();
+
+		return out;
+	}
+	
+    protected static String removeLastComma(String string){
+        // remove last comma
+        return string.substring(0, string.length() - 1);
+
+    }
 
 }
