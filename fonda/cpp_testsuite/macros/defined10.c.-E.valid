@@ -1,0 +1,6 @@
+#if (defined C1)
+#elif !(defined C1)
+#endif
+#if !(defined C1) && (defined CONFIG_VAR) || (defined C1)
+ONE
+#endif

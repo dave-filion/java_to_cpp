@@ -1,0 +1,5 @@
+#!/bin/bash
+
+cloc --force-lang=java,rats $CPPDIR/BuiltinsGenerator.java $CPPDIR/cdiff.java $CPPDIR/cfgGenerator.java $CPPDIR/checkBison.sh $CPPDIR/Constant.rats $CPPDIR/ContextManager.java $CPPDIR/c.y $CPPDIR/Evaluator.java $CPPDIR/ExpressionParser.rats $CPPDIR/extractTable.c $CPPDIR/FileManager.java $CPPDIR/getNodeTypes.sh $CPPDIR/Identifier.rats $CPPDIR/Lexer.l $CPPDIR/MacroTable.java $CPPDIR/Makefile $CPPDIR/NodeTypeGenerator.java $CPPDIR/Parser.java $CPPDIR/Preprocessor.java $CPPDIR/Reserved.rats $CPPDIR/Scope.java $CPPDIR/Spacing.rats $CPPDIR/stats.java $CPPDIR/SuperC.java $CPPDIR/superC.sh $CPPDIR/Symbol.rats $CPPDIR/Syntax.java
+
+cloc $CPPDEV/TypeChef/CParser/src/main/scala/de/fosd/typechef/parser/c/ $CPPDEV/TypeChef/FeatureExprLib/src/main/scala/de/fosd/typechef/featureexpr/ $CPPDEV/TypeChef/LinuxAnalysis/src/main/scala/de/fosd/typechef/linux/ $CPPDEV/TypeChef/ParserFramework/src/main/scala/de/fosd/typechef/parser/ $CPPDEV/TypeChef/PartialPreprocessor/src/main/scala/de/fosd/typechef/lexer/

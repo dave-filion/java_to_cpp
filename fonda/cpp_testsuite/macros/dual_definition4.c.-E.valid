@@ -1,0 +1,10 @@
+#if (defined FUNCTION)
+#endif
+
+#if !(defined FUNCTION)
+F(argument)
+#elif (defined FUNCTION)
+argument+1
+#endif
+
+

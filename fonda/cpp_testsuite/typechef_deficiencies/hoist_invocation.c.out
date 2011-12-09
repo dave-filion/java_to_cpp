@@ -1,0 +1,23 @@
+Processing /home/paul/work/java/fonda/cpp_testsuite/typechef_deficiencies/hoist_invocation.c with TypeChef
+# Flags: 
+Nov 4, 2011 12:03:58 PM de.fosd.typechef.lexer.PreprocessorListener print
+SEVERE: /home/paul/work/java/fonda/cpp_testsuite/typechef_deficiencies/hoist_invocation.c:9:0: error: Alternative non-variadic macros with different arities are not yet supported: (a, b) => a + b vs. (x) => #x; condition: True
+/home/paul/work/java/fonda/cpp_testsuite/typechef_deficiencies/hoist_invocation.c:9:0: error: Alternative non-variadic macros with different arities are not yet supported: (a, b) => a + b vs. (x) => #x; condition: True
+Nov 4, 2011 12:03:58 PM de.fosd.typechef.lexer.Main run
+SEVERE: de.fosd.typechef.lexer.LexerException: Alternative non-variadic macros with different arities are not yet supported: (a, b) => a + b vs. (x) => #x
+de.fosd.typechef.lexer.LexerException: Alternative non-variadic macros with different arities are not yet supported: (a, b) => a + b vs. (x) => #x
+	at de.fosd.typechef.lexer.PreprocessorListener.handleError(PreprocessorListener.java:93)
+	at de.fosd.typechef.lexer.Preprocessor.error(Preprocessor.java:313)
+	at de.fosd.typechef.lexer.Preprocessor.error(Preprocessor.java:329)
+	at de.fosd.typechef.lexer.Preprocessor.macro_expandToken(Preprocessor.java:774)
+	at de.fosd.typechef.lexer.Preprocessor.parse_main(Preprocessor.java:2421)
+	at de.fosd.typechef.lexer.Preprocessor.getNextToken(Preprocessor.java:2671)
+	at de.fosd.typechef.lexer.Main.run(Main.java:246)
+	at de.fosd.typechef.linux.LinuxPreprocessorFrontend$.preprocessFile(LinuxPreprocessorFrontend.scala:78)
+	at de.fosd.typechef.linux.LinuxPreprocessorFrontend$$anonfun$main$1.apply(LinuxPreprocessorFrontend.scala:146)
+	at de.fosd.typechef.linux.LinuxPreprocessorFrontend$$anonfun$main$1.apply(LinuxPreprocessorFrontend.scala:136)
+	at scala.collection.IndexedSeqOptimized$class.foreach(IndexedSeqOptimized.scala:34)
+	at scala.collection.mutable.ArrayOps.foreach(ArrayOps.scala:38)
+	at de.fosd.typechef.linux.LinuxPreprocessorFrontend$.main(LinuxPreprocessorFrontend.scala:136)
+	at de.fosd.typechef.linux.LinuxPreprocessorFrontend.main(LinuxPreprocessorFrontend.scala)
+ -> file /home/paul/work/java/fonda/cpp_testsuite/typechef_deficiencies/hoist_invocation.c

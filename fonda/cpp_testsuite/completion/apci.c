@@ -1,0 +1,4 @@
+#if A
+#else
+#endif
+

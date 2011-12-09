@@ -1,0 +1,93 @@
+#!/usr/bin/perl -w
+
+#The destination for the generated gcc -E commands
+$file = "preprocess_linux_source.sh";
+#$filegcc = "preprocess.gcc";
+#$filepref = "preprocess.prefactory";
+
+# This file is used to record the preprocessed linux source code during
+# a build.  To use it, add the directory of this script to the shell's PATH
+# variable, then run "make C=2" (after configuring the kernel as usual.)
+#
+# This works because setting C=2 causes the kernel to run the "sparse" command
+# on every source file before compiling.  C=2 checks source code even if the
+# object is already built, while C=1 only checks uncompiled source code.
+# Putting this script in the search path before (or in lieu of) the real
+# sparse command allows us to access the names of each source file used in
+# the build and its configuration.  Thus we can accurately preprocess the
+# linux source code.
+
+if (@ARGV == 0) {
+  exit(1);
+}
+
+$cppargs = "";
+$prefargs = "";
+$filename = $ARGV[@ARGV - 1];
+
+while (@ARGV) {
+  $arg = $ARGV[0];
+
+  #$arg =~ s/\(/\\\(/g;
+  #$arg =~ s/\)/\\\)/g;
+
+  if ($arg =~ m/^-/) {
+    #if ($arg =~ m/^-E|^-X|^-D|^-U|^-undef|^-I|^-o|^-Wall|^-Wcomment|^-Wtrigraphs|^-Wtraditional|^-Wimport|^-Wundef|^-Wunused-macros|^-Wendif-labels|^-Werror|^-Wsystem-headers|^-w|^-pedantic|^-pedantic-errors|^-M|^-depedency-file|^-fpch-deps|^-fpch-preprocess|^-x|^-std|^-ansi|^-nostdinc|^-include|^-imacros|^-i|^-f|^-A|^-d|^-P|^-C|^-traditional-cpp|^-trigraphs|^-remap|^--help|^--target-help|^-v|^-H|^-version|^--version/) {
+    if ($arg =~ m/^-nostdinc|^-I|^-isystem|^-iquote|^-D|^-U|^-include/) {
+      if ($arg =~ m/^-I[^ ]|^-D[^ ]|^-U[^ ]/) {
+        $arg = substr($arg, 0, 2) . " " . substr($arg, 2);
+        if ($arg =~ m/^-D.*=/) {
+          #$escaped = $arg;
+          #$escaped =~ s/\(/\\\(/g;
+          #$escaped =~ s/\)/\\\)/g;
+          #$escaped =~ s/\"/\\\"/g;
+          #$arg = $escaped;
+          #$escaped =~ s/\'/\\\'/g;
+          #$arg = "'$escaped'";
+          $a = substr($arg, 0, 3);
+          $tmp = substr($arg, 3);
+          @array = split(/=/, $tmp, 2);
+          $b = $array[0];
+          $c = $array[1];
+          $c =~ s/\"/\\\"/g;
+          $b =~ s/\(/\\\(/g;
+          $b =~ s/\)/\\\)/g;
+          $arg = $a . $b . "=\"" . $c . "\"";
+        }
+      }
+      if ($arg eq "-nostdinc" && $arg =~ m/-nostdinc/) {
+        $arg = ""; #remove duplicate -nostdinc;
+      }
+      $cppargs .= " " . $arg;
+      
+      if ($arg =~ m/^-nostdinc|^-I|^-isystem|^-iquote/) { #prefactory args
+        if ($prefargs !~ m/$arg/) {
+          $prefargs .= " " . $arg;
+        }
+      }
+    }
+  }
+  else {
+    $cppargs .= " " . $arg;
+    $prefargs .= " " . $arg;
+  }
+  
+  shift @ARGV;
+}
+
+if ($filename =~ m/\.c$/) {
+  open FILE, ">>", $file;
+  print FILE "echo Preprocessing $filename\n";
+  print FILE "mkdir -p \$preprocessed/./`dirname $filename`\n";
+  print FILE "echo $cppargs > \$preprocessed/./$filename.cmdline\n";
+  print FILE "gcc -E $cppargs > \$preprocessed/./$filename.E\n";
+  close FILE;
+
+#  open FILE, ">>", $filegcc;
+#  print FILE "$cppargs $filename\n";
+#  close FILE;
+
+#  open FILE, ">>", $filepref;
+#  print FILE "$prefargs $filename\n";
+#  close FILE;
+}

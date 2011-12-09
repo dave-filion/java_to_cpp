@@ -1,0 +1,10 @@
+//partially defined
+#if (defined CONFIG1)
+ZERO
+#endif
+#if !(defined CONFIG1) && (defined MACRO) || (defined CONFIG1)
+ONE
+#endif
+#if !(defined CONFIG1) && (defined MACRO) && UNDEF || (defined CONFIG1) && UNDEF
+TWO
+#endif

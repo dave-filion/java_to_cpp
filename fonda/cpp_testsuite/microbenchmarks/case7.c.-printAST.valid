@@ -1,0 +1,110 @@
+TranslationUnit<1>(
+  StaticChoice<2>(
+    1
+    ExternalDeclarationList<4>(
+      StaticChoice<5>(
+        1
+        ExternalDeclarationList<7>(
+          FunctionDefinition<8>(
+            FunctionDeclarator<9>(
+              BasicTypeSpecifier<10>(
+                BasicTypeName<11>(
+                  "int"
+                )
+              )
+              PostfixIdentifierDeclarator<12>(
+                SimpleDeclarator<13>(
+                  "main"
+                )
+                PostfixingAbstractDeclarator<14>(
+                )
+              )
+            )
+            DeclarationOrStatementList<15>(
+              StaticChoice<16>(
+                1
+                DeclarationOrStatementList<18>(
+                  SelectionStatement<19>(
+                    "if"
+                    StaticChoice<20>(
+                      (defined CONFIG_C3)
+                      EqualityExpression<22>(
+                        PrimaryIdentifier<23>(
+                          "a"
+                        )
+                        "!="
+                        Constant<24>(
+                          "0"
+                        )
+                      )
+                      !(defined CONFIG_C3)
+                      StaticChoice<26>(
+                        !(defined CONFIG_C3) && (defined CONFIG_C1)
+                        EqualityExpression<28>(
+                          PrimaryIdentifier<29>(
+                            "b"
+                          )
+                          "!="
+                          Constant<30>(
+                            "0"
+                          )
+                        )
+                        !(defined CONFIG_C3) && !(defined CONFIG_C1)
+                        EqualityExpression<32>(
+                          #ref<29>
+                          "!="
+                          Constant<33>(
+                            "1"
+                          )
+                        )
+                      )
+                    )
+                    StaticChoice<34>(
+                      (defined CONFIG_C3)
+                      ExpressionStatement<36>(
+                        PostfixExpression<37>(
+                          PrimaryIdentifier<38>(
+                            "a"
+                          )
+                          "++"
+                        )
+                      )
+                      !(defined CONFIG_C3)
+                      ExpressionStatement<40>(
+                        PostfixExpression<41>(
+                          PrimaryIdentifier<42>(
+                            "b"
+                          )
+                          "++"
+                        )
+                      )
+                    )
+                    "else"
+                    ExpressionStatement<43>(
+                      StaticChoice<44>(
+                        (defined CONFIG_C2)
+                        PostfixExpression<46>(
+                          PrimaryIdentifier<47>(
+                            "b"
+                          )
+                          "--"
+                        )
+                        !(defined CONFIG_C2)
+                        PostfixExpression<49>(
+                          PrimaryIdentifier<50>(
+                            "c"
+                          )
+                          "++"
+                        )
+                      )
+                    )
+                  )
+                )
+              )
+            )
+          )
+        )
+      )
+    )
+  )
+)

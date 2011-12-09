@@ -1,0 +1,266 @@
+diff -rupN TypeChef.original//CParser/src/main/scala/de/fosd/typechef/parser/c/ParserMain.scala TypeChef.new//CParser/src/main/scala/de/fosd/typechef/parser/c/ParserMain.scala
+--- TypeChef.original//CParser/src/main/scala/de/fosd/typechef/parser/c/ParserMain.scala	2011-10-22 05:10:42.798906416 -0400
++++ TypeChef.new//CParser/src/main/scala/de/fosd/typechef/parser/c/ParserMain.scala	2011-10-22 05:13:53.498908082 -0400
+@@ -41,7 +41,7 @@ class ParserMain(p: CParser) {
+         parserMain((() => tokenstream), new CTypeContext())
+     }
+ 
+-    def parserMain(lexer: () => TokenReader[TokenWrapper, CTypeContext], initialContext: CTypeContext, printStatistics: Boolean = true): AST = {
++    def parserMain(lexer: () => TokenReader[TokenWrapper, CTypeContext], initialContext: CTypeContext, printStatistics: Boolean = false): AST = {
+         //        val logStats = MyUtil.runnable(() => {
+         //            if (TokenWrapper.profiling) {
+         //                val statistics = new PrintStream(new BufferedOutputStream(new FileOutputStream(filePath + ".stat")))
+diff -rupN TypeChef.original//jcpp.sh TypeChef.new//jcpp.sh
+--- TypeChef.original//jcpp.sh	2011-10-22 05:10:42.838906404 -0400
++++ TypeChef.new//jcpp.sh	2011-10-22 05:11:57.778904302 -0400
+@@ -32,18 +32,9 @@ shift
+ #  PartialPreprocessor/target/scala_2.8.1/classes:PartialPreprocessor/lib/gnu.getopt.jar \
+ #  <(echo -e '#define b ciao\nb')
+ 
+-if [ ! -f "$outPreproc" ]; then
+-  echo "=="
+-  echo "==Preprocess source"
+-  echo "=="
+-  gcc -Wp,-P -U __weak $gccOpts -E "$inp" "$@" > "$outPreproc" || true
+-fi
+-
+ # Beware: the embedded for loop requotes the passed argument. That's dark magic,
+ # don't ever try to touch it. It simplifies your life as a user of this program
+ # though!
+-echo "==Partially preprocessing $inp"
+-echo $partialPreprocFlags
+ 
+ bash -c "time java -ea $javaOpts -cp \
+ $basePath/project/boot/scala-2.9.0/lib/scala-library.jar:\
+@@ -62,7 +53,7 @@ $basePath/CTypeChecker/target/scala_2.9.
+ $basePath/LinuxAnalysis/target/scala_2.9.0/classes:\
+ $basePath/PreprocessorFrontend/target/scala_2.9.0/classes:\
+ $basePath/ParserFramework/lib_managed/scala_2.9.0/compile/kiama_2.9.0-1.1.0.jar\
+-  $mainClass -t -i \
++  $mainClass \
+   $(for arg in $partialPreprocFlags "$@"; do echo -n "\"$arg\" "; done) \
+   '$inp' -o '$outPartialPreproc' 2> '$outErr' |tee '$outDbg'" \
+   2> "$outTime" || true
+diff -rupN TypeChef.original//LinuxAnalysis/src/main/scala/de/fosd/typechef/linux/LinuxPreprocessorFrontend.scala TypeChef.new//LinuxAnalysis/src/main/scala/de/fosd/typechef/linux/LinuxPreprocessorFrontend.scala
+--- TypeChef.original//LinuxAnalysis/src/main/scala/de/fosd/typechef/linux/LinuxPreprocessorFrontend.scala	2011-10-22 05:10:42.818906395 -0400
++++ TypeChef.new//LinuxAnalysis/src/main/scala/de/fosd/typechef/linux/LinuxPreprocessorFrontend.scala	2011-10-22 05:13:24.108901783 -0400
+@@ -23,7 +23,7 @@ object LinuxPreprocessorFrontend {
+     //can be overriden with command line parameters p and t
+     def PARSEAFTERPREPROCESSING = true
+     def TYPECHECKAFTERPARSING = false
+-    def CREATEINTERFACEAFTERPARSING = true
++    def CREATEINTERFACEAFTERPARSING = false
+ 
+     ////////////////////////////////////////
+     // General setup of built-in headers, should become more general and move
+@@ -54,10 +54,10 @@ object LinuxPreprocessorFrontend {
+     def loadSettings(configPath: String) = {
+         settings.load(new FileInputStream(configPath))
+         preIncludeDirs = loadPropList("preIncludes") ++ preIncludeDirs
+-        println("preIncludes: " + preIncludeDirs)
+-        println("systemIncludes: " + systemIncludes)
++        //println("preIncludes: " + preIncludeDirs)
++        //println("systemIncludes: " + systemIncludes)
+         postIncludeDirs = postIncludeDirs ++ loadPropList("postIncludes")
+-        println("postIncludes: " + postIncludeDirs)
++        //println("postIncludes: " + postIncludeDirs)
+     }
+ 
+     def includeFlags =
+@@ -130,7 +130,7 @@ object LinuxPreprocessorFrontend {
+                 loopFlag = false
+             }
+         } while (loopFlag)
+-        println(includeFlags)
++        //println(includeFlags)
+         val remArgs = args.slice(g.getOptind(), args.size)
+ 
+         for (filename <- remArgs) {
+@@ -165,7 +165,7 @@ object LinuxPreprocessorFrontend {
+     def getFeatureModel(cfilename: String): FeatureModel = {
+         val featureModelFile = new File(cfilename + ".fm")
+         val featureExpr = if (featureModelFile.exists) loadFeatureModel(featureModelFile) else FeatureExpr.base
+-        println(cfilename + " FM " + featureExpr)
++        //println(cfilename + " FM " + featureExpr)
+         LinuxFeatureModel.featureModelApprox.and(featureExpr)
+     }
+ 
+diff -rupN TypeChef.original//linuxTestCase.sh TypeChef.new//linuxTestCase.sh
+--- TypeChef.original//linuxTestCase.sh	2011-10-22 05:10:42.848906412 -0400
++++ TypeChef.new//linuxTestCase.sh	2011-10-22 05:11:52.678899615 -0400
+@@ -1,7 +1,7 @@
+ #!/bin/bash
+ #!/bin/bash -vxe
+ 
+-java -jar sbt-launch-0.7.4.jar  compile
++java -jar sbt-launch-0.7.5.jar  compile
+ 
+ . linuxFileList.inc
+ 
+@@ -32,67 +32,67 @@ partialPreprocFlags="-c linux-$system.pr
+ gccOpts="$gccOpts -m32 -nostdinc -isystem $(gcc -print-file-name=include) -include $srcPath/include/generated/autoconf.h"
+ 
+ flags() {
+-  name="$1"
+-  base="$(basename "$1")"
+-  if grep -q "arch/x86/boot" <<< "$name"; then
+-    extraFlag="-D_SETUP"
+-  elif grep -q "arch/x86/kvm" <<< "$name"; then
+-    extraFlag="-I $srcPath/virt/kvm -I $srcPath/arch/x86/kvm -I $srcPath"
+-  elif [ "$name" = "net/mac80211/driver-trace" ]; then
+-    extraFlag="-I $srcPath/net/mac80211"
+-  elif grep -q "fs/gfs2/" <<< "$name"; then
+-    extraFlag="-I $srcPath/fs/gfs2"
+-  elif grep -q "fs/ocfs2/" <<< "$name"; then
+-    extraFlag="-I $srcPath/fs/ocfs2 -DCATCH_BH_JBD_RACES"
+-  elif grep -q "fs/xfs/" <<< "$name"; then
+-    extraFlag="-I $srcPath/fs/xfs -I $srcPath/fs/xfs/linux-2.6"
+-  elif grep -q "fs/ntfs/" <<< "$name"; then
+-    extraFlag="-DNTFS_VERSION=\"\\\"2.1.29\"\\\" --include ntfs.h"
+-  elif grep -q "drivers/gpu/drm/" <<< "$name"; then
+-    extraFlag="-I $srcPath/include/drm"
+-  elif egrep -q "drivers/scsi/pcmcia/|drivers/usb/storage/" <<< "$name"; then
+-    extraFlag="-I $srcPath/drivers/scsi"
+-  elif grep -q "drivers/scsi/cxgb3i/" <<< "$name"; then
+-    extraFlag="-I $srcPath/drivers/net/cxgb3"
+-  elif grep -q "drivers/infiniband/hw/cxgb3/" <<< "$name"; then
+-    extraFlag="-I $srcPath/drivers/net/cxgb3"
+-  elif grep -q "drivers/net/skfp/" <<< "$name"; then
+-    extraFlag="-I $srcPath/drivers/net/skfp -DPCI -DMEM_MAPPED_IO"
+-  elif grep -q "drivers/staging/rt2860/" <<< "$name"; then
+-    extraFlag="-DLINUX -DAGGREGATION_SUPPORT -DPIGGYBACK_SUPPORT -DWMM_SUPPORT -DRTMP_MAC_PCI -DRTMP_PCI_SUPPORT -DRT2860 -DRTMP_RF_RW_SUPPORT -DRTMP_EFUSE_SUPPORT -DRT30xx -DRT3090 -DDBG"
+-  elif grep -q "drivers/staging/rt2870/" <<< "$name"; then
+-    extraFlag="-DLINUX -DAGGREGATION_SUPPORT -DPIGGYBACK_SUPPORT -DWMM_SUPPORT -DRTMP_MAC_USB -DRTMP_USB_SUPPORT -DRT2870 -DRTMP_TIMER_TASK_SUPPORT -DRTMP_RF_RW_SUPPORT -DRTMP_EFUSE_SUPPORT -DRT30xx -DRT3070 -DDBG"
+-  elif grep -q "drivers/staging/rtl8192e/" <<< "$name"; then
+-    extraFlag="-DRTL8192E -DTHOMAS_TURBO -DENABLE_DOT11D"
+-  elif [ "$name" = "drivers/net/wireless/iwlwifi/iwl-devtrace" ]; then
+-    extraFlag="-I $srcPath/drivers/net/wireless/iwlwifi/"
+-  elif grep -q "drivers/scsi/bfa/" <<< "$name"; then
+-    extraFlag=""
+-    for path in drivers/scsi/bfa drivers/scsi/bfa/include drivers/scsi/bfa/include/cna; do
+-      extraFlag="$extraFlag -I $srcPath/$path"
+-    done
+-  elif egrep -q "drivers/media/common/tuners/|drivers/staging/go7007/" <<< "$name"; then
+-    extraFlag=""
+-    for path in drivers/media/dvb/dvb-core drivers/media/dvb/frontends; do
+-      extraFlag="$extraFlag -I $srcPath/$path"
+-    done
+-    if grep -q "drivers/staging/go7007/" <<< "$name"; then
+-      extraFlag="$extraFlag -I $srcPath/drivers/media/dvb/dvb-usb"
++    name="$1"
++    base="$(basename "$1")"
++    if grep -q "arch/x86/boot" <<< "$name"; then
++        extraFlag="-D_SETUP"
++    elif grep -q "arch/x86/kvm" <<< "$name"; then
++        extraFlag="-I $srcPath/virt/kvm -I $srcPath/arch/x86/kvm -I $srcPath"
++    elif [ "$name" = "net/mac80211/driver-trace" ]; then
++        extraFlag="-I $srcPath/net/mac80211"
++    elif grep -q "fs/gfs2/" <<< "$name"; then
++        extraFlag="-I $srcPath/fs/gfs2"
++    elif grep -q "fs/ocfs2/" <<< "$name"; then
++        extraFlag="-I $srcPath/fs/ocfs2 -DCATCH_BH_JBD_RACES"
++    elif grep -q "fs/xfs/" <<< "$name"; then
++        extraFlag="-I $srcPath/fs/xfs -I $srcPath/fs/xfs/linux-2.6"
++    elif grep -q "fs/ntfs/" <<< "$name"; then
++        extraFlag="-DNTFS_VERSION=\"\\\"2.1.29\"\\\" --include ntfs.h"
++    elif grep -q "drivers/gpu/drm/" <<< "$name"; then
++        extraFlag="-I $srcPath/include/drm"
++    elif egrep -q "drivers/scsi/pcmcia/|drivers/usb/storage/" <<< "$name"; then
++        extraFlag="-I $srcPath/drivers/scsi"
++    elif grep -q "drivers/scsi/cxgb3i/" <<< "$name"; then
++        extraFlag="-I $srcPath/drivers/net/cxgb3"
++    elif grep -q "drivers/infiniband/hw/cxgb3/" <<< "$name"; then
++        extraFlag="-I $srcPath/drivers/net/cxgb3"
++    elif grep -q "drivers/net/skfp/" <<< "$name"; then
++        extraFlag="-I $srcPath/drivers/net/skfp -DPCI -DMEM_MAPPED_IO"
++    elif grep -q "drivers/staging/rt2860/" <<< "$name"; then
++        extraFlag="-DLINUX -DAGGREGATION_SUPPORT -DPIGGYBACK_SUPPORT -DWMM_SUPPORT -DRTMP_MAC_PCI -DRTMP_PCI_SUPPORT -DRT2860 -DRTMP_RF_RW_SUPPORT -DRTMP_EFUSE_SUPPORT -DRT30xx -DRT3090 -DDBG"
++    elif grep -q "drivers/staging/rt2870/" <<< "$name"; then
++        extraFlag="-DLINUX -DAGGREGATION_SUPPORT -DPIGGYBACK_SUPPORT -DWMM_SUPPORT -DRTMP_MAC_USB -DRTMP_USB_SUPPORT -DRT2870 -DRTMP_TIMER_TASK_SUPPORT -DRTMP_RF_RW_SUPPORT -DRTMP_EFUSE_SUPPORT -DRT30xx -DRT3070 -DDBG"
++    elif grep -q "drivers/staging/rtl8192e/" <<< "$name"; then
++        extraFlag="-DRTL8192E -DTHOMAS_TURBO -DENABLE_DOT11D"
++    elif [ "$name" = "drivers/net/wireless/iwlwifi/iwl-devtrace" ]; then
++        extraFlag="-I $srcPath/drivers/net/wireless/iwlwifi/"
++    elif grep -q "drivers/scsi/bfa/" <<< "$name"; then
++        extraFlag=""
++        for path in drivers/scsi/bfa drivers/scsi/bfa/include drivers/scsi/bfa/include/cna; do
++            extraFlag="$extraFlag -I $srcPath/$path"
++        done
++    elif egrep -q "drivers/media/common/tuners/|drivers/staging/go7007/" <<< "$name"; then
++        extraFlag=""
++        for path in drivers/media/dvb/dvb-core drivers/media/dvb/frontends; do
++            extraFlag="$extraFlag -I $srcPath/$path"
++        done
++        if grep -q "drivers/staging/go7007/" <<< "$name"; then
++            extraFlag="$extraFlag -I $srcPath/drivers/media/dvb/dvb-usb"
++        fi
++    elif egrep -q "drivers/media/video/gspca/(gl860|m5602|stv06xx)/" <<< "$name"; then
++        extraFlag="-I $srcPath/drivers/media/video/gspca"
++    elif egrep -q "drivers/media/(dvb|video)/|drivers/staging/cx25821/" <<< "$name"; then
++        extraFlag=""
++        for path in drivers/media/dvb/dvb-core drivers/media/dvb/frontends drivers/media/common/tuners \
++            drivers/ieee1394 drivers/media/video/bt8xx drivers/media/video; do
++            extraFlag="$extraFlag -I $srcPath/$path"
++        done
++    else
++        extraFlag=""
+     fi
+-  elif egrep -q "drivers/media/video/gspca/(gl860|m5602|stv06xx)/" <<< "$name"; then
+-    extraFlag="-I $srcPath/drivers/media/video/gspca"
+-  elif egrep -q "drivers/media/(dvb|video)/|drivers/staging/cx25821/" <<< "$name"; then
+-    extraFlag=""
+-    for path in drivers/media/dvb/dvb-core drivers/media/dvb/frontends drivers/media/common/tuners \
+-      drivers/ieee1394 drivers/media/video/bt8xx drivers/media/video; do
+-      extraFlag="$extraFlag -I $srcPath/$path"
+-    done
+-  else
+-    extraFlag=""
+-  fi
+   # XXX: again, I need to specify $PWD, for the same bug as above.
+   # "-I linux-2.6.33.3/include -I linux-2.6.33.3/arch/x86/include"
+-  echo "$extraFlag -I $srcPath/include -I $srcPath/arch/x86/include -D __KERNEL__ -DCONFIG_AS_CFI=1 -DCONFIG_AS_CFI_SIGNAL_FRAME=1 -DKBUILD_BASENAME=\"\\\"$base\\\"\" -DKBUILD_MODNAME=\"\\\"$base\\\"\""
++    echo "$extraFlag -I $srcPath/include -I $srcPath/arch/x86/include -D __KERNEL__ -DCONFIG_AS_CFI=1 -DCONFIG_AS_CFI_SIGNAL_FRAME=1 -DKBUILD_BASENAME=\"\\\"$base\\\"\" -DKBUILD_MODNAME=\"\\\"$base\\\"\""
+ }
+ 
+ export outCSV=linux.csv
+@@ -103,31 +103,18 @@ export outCSV=linux.csv
+ ##################################################################
+ # Actually invoke the preprocessor and analyze result.
+ ##################################################################
++
++date > time.txt
++
+ filesToProcess|while read i; do
+-  extraFlags="$(flags "$i")"
+-  if [ ! -f "$srcPath/$i.i" ]; then
+-    echo "=="
+-    echo "==Preprocess source"
+-    echo "=="
+-    gcc -Wp,-P -U __weak $gccOpts -E $srcPath/$i.c $extraFlags > "$srcPath/$i.i" || true
+-  fi
+-  if [ ! -f $srcPath/$i.pi ]; then
+-    touch $srcPath/$i.pi
+-    . ./jcpp.sh $srcPath/$i.c $extraFlags
+-    . ./postProcess.sh $srcPath/$i.c $extraFlags
+-  else
+-    #echo ./jcpp.sh $srcPath/$i.c $extraFlags
+-    #exit 0
+-    echo "Skipping $srcPath/$i.c"
+-  fi
+-#  for j in $listToParse; do
+-#    if [ "$i" = "$j" ]; then
+-#      ./parseTypecheck.sh $srcPath/$i.pi
+-#      break
+-#    fi
+-#  done
++extraFlags="$(flags "$i")"
++echo "Processing $srcPath/$i.c"
++. ./jcpp.sh $srcPath/$i.c $extraFlags
+ done
+ 
++date >> time.txt
++
++
+ # The original invocation of the compiler:
+ # gcc -Wp,-MD,kernel/.fork.o.d
+ # -nostdinc -isystem /usr/lib/gcc/x86_64-redhat-linux/4.4.4/include

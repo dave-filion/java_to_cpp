@@ -1,0 +1,9 @@
+/* before */ hello /* between */ world! /* after */
+#if A
+#elif !A && B
+#elif !A && !B
+#endif
+#if (defined C)
+#endif
+#if !(defined D)
+#endif

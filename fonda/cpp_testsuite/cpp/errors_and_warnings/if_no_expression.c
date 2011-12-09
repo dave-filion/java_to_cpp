@@ -1,0 +1,6 @@
+#define M
+
+#if M
+EVALUATES TO TRUE
+#endif
+AFTER IF BLOCK

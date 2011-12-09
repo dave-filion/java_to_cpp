@@ -1,0 +1,16 @@
+#if (defined A)
+#elif !(defined A)
+#endif
+#if (defined A)
+#if (defined A)
+int insideAbeforeB;
+#if (defined A)
+int insideB;
+#endif
+#endif
+#endif
+#if !(defined A)
+#if !(defined A)
+int insideB;
+#endif
+#endif

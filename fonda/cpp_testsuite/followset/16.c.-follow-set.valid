@@ -1,0 +1,139 @@
+SYNTAX static ::: 1
+FOLLOW [
+  static ::: 1
+]
+
+SYNTAX int ::: 1
+FOLLOW [
+  int ::: 1
+]
+
+SYNTAX check_part ::: 1
+FOLLOW [
+  check_part ::: 1
+]
+
+SYNTAX [ ::: 1
+FOLLOW [
+  [ ::: 1
+]
+
+SYNTAX ] ::: 1
+FOLLOW [
+  ] ::: 1
+]
+
+SYNTAX = ::: 1
+FOLLOW [
+  = ::: 1
+]
+
+SYNTAX { ::: 1
+FOLLOW [
+  { ::: 1
+]
+
+SYNTAX #if (defined A)
+FOLLOW [
+  2 ::: !(defined A) && !(defined B) && (defined C)
+  2.5 ::: !(defined A) && !(defined B) && !(defined C) && (defined D)
+  3 ::: !(defined A) && !(defined B) && !(defined C) && !(defined D) && (defined E)
+  1 ::: (defined A)
+  NULL ::: !(defined A) && !(defined B) && !(defined C) && !(defined D) && !(defined E)
+  1.5 ::: !(defined A) && (defined B)
+]
+
+SYNTAX 1 ::: (defined A)
+FOLLOW [
+  1 ::: (defined A)
+]
+
+SYNTAX , ::: (defined A)
+FOLLOW [
+  , ::: (defined A)
+]
+
+SYNTAX #elif !(defined A) && (defined B)
+
+SYNTAX 1.5 ::: !(defined A) && (defined B)
+FOLLOW [
+  1.5 ::: !(defined A) && (defined B)
+]
+
+SYNTAX , ::: !(defined A) && (defined B)
+FOLLOW [
+  , ::: !(defined A) && (defined B)
+]
+
+SYNTAX #endif
+
+SYNTAX #if (defined C)
+FOLLOW [
+  2 ::: (defined C)
+  2.5 ::: !(defined C) && (defined D)
+  3 ::: !(defined C) && !(defined D) && (defined E)
+  NULL ::: !(defined C) && !(defined D) && !(defined E)
+]
+
+SYNTAX 2 ::: (defined C)
+FOLLOW [
+  2 ::: (defined C)
+]
+
+SYNTAX , ::: (defined C)
+FOLLOW [
+  , ::: (defined C)
+]
+
+SYNTAX #elif !(defined C) && (defined D)
+
+SYNTAX 2.5 ::: !(defined C) && (defined D)
+FOLLOW [
+  2.5 ::: !(defined C) && (defined D)
+]
+
+SYNTAX , ::: !(defined C) && (defined D)
+FOLLOW [
+  , ::: !(defined C) && (defined D)
+]
+
+SYNTAX #endif
+
+SYNTAX #if (defined E)
+FOLLOW [
+  3 ::: (defined E)
+  NULL ::: !(defined E)
+]
+
+SYNTAX 3 ::: (defined E)
+FOLLOW [
+  3 ::: (defined E)
+]
+
+SYNTAX , ::: (defined E)
+FOLLOW [
+  , ::: (defined E)
+]
+
+SYNTAX #endif
+
+SYNTAX NULL ::: 1
+FOLLOW [
+  NULL ::: 1
+]
+
+SYNTAX } ::: 1
+FOLLOW [
+  } ::: 1
+]
+
+SYNTAX ; ::: 1
+FOLLOW [
+  ; ::: 1
+]
+
+SYNTAX xtc.lang.cpp.Syntax$EOF("EOF") ::: 1
+FOLLOW [
+  xtc.lang.cpp.Syntax$EOF("EOF") ::: 1
+]
+

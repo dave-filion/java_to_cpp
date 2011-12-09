@@ -1,0 +1,9 @@
+cpp/
+regression.sh check-cpp "*.c"
+
+macros/
+regression.sh check "*.c" "-E"
+regression.sh check-cpp "*.c"
+
+fmlr/
+regression.sh check "*.c" "-printAST"

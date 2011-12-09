@@ -1,0 +1,79 @@
+SYNTAX #if (defined A)
+FOLLOW [
+  xtc.lang.cpp.Syntax$EOF("EOF") ::: !(defined A)
+  int ::: (defined A) && (defined B) && (defined C)
+  char ::: (defined A) && (defined B) && !(defined C)
+  double ::: (defined A) && !(defined B)
+]
+
+SYNTAX #if (defined A) && (defined B)
+FOLLOW [
+  int ::: (defined A) && (defined B) && (defined C)
+  char ::: (defined A) && (defined B) && !(defined C)
+  double ::: (defined A) && !(defined B)
+]
+
+SYNTAX #if (defined A) && (defined B) && (defined C)
+FOLLOW [
+  int ::: (defined A) && (defined B) && (defined C)
+  char ::: (defined A) && (defined B) && !(defined C)
+]
+
+SYNTAX int ::: (defined A) && (defined B) && (defined C)
+FOLLOW [
+  int ::: (defined A) && (defined B) && (defined C)
+]
+
+SYNTAX x ::: (defined A) && (defined B) && (defined C)
+FOLLOW [
+  x ::: (defined A) && (defined B) && (defined C)
+]
+
+SYNTAX ; ::: (defined A) && (defined B) && (defined C)
+FOLLOW [
+  ; ::: (defined A) && (defined B) && (defined C)
+]
+
+SYNTAX #elif (defined A) && (defined B) && !(defined C)
+
+SYNTAX char ::: (defined A) && (defined B) && !(defined C)
+FOLLOW [
+  char ::: (defined A) && (defined B) && !(defined C)
+]
+
+SYNTAX y ::: (defined A) && (defined B) && !(defined C)
+FOLLOW [
+  y ::: (defined A) && (defined B) && !(defined C)
+]
+
+SYNTAX ; ::: (defined A) && (defined B) && !(defined C)
+FOLLOW [
+  ; ::: (defined A) && (defined B) && !(defined C)
+]
+
+SYNTAX #endif
+
+SYNTAX #endif
+
+SYNTAX double ::: (defined A)
+FOLLOW [
+  double ::: (defined A)
+]
+
+SYNTAX z ::: (defined A)
+FOLLOW [
+  z ::: (defined A)
+]
+
+SYNTAX ; ::: (defined A)
+FOLLOW [
+  ; ::: (defined A)
+]
+
+SYNTAX #endif
+
+SYNTAX xtc.lang.cpp.Syntax$EOF("EOF") ::: 1
+FOLLOW [
+  xtc.lang.cpp.Syntax$EOF("EOF") ::: 1
+]
+

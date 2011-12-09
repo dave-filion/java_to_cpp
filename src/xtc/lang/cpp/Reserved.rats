@@ -1,0 +1,38 @@
+/*
+ * xtc - The eXTensible Compiler
+ * Copyright (C) 2009-2011 New York University
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * version 2.1 as published by the Free Software Foundation.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+ * USA.
+ */
+
+/**
+ * C preprocessor keywords
+ *
+ * @author Paul Gazzillo
+ * @version $Revision: 1.8 $
+ */
+module xtc.lang.cpp.Reserved;
+
+body {
+  static {
+    add(CPP_KEYWORDS, new String[] {
+      "define", "elif", "else", "endif", "error", "warning", "if", "ifdef",
+      "ifndef", "include", "include_next", "line", "pragma", "undef"
+    });
+
+  }
+}
+
+option setOfString(CPP_KEYWORDS), flag(C99), flag(GCC);

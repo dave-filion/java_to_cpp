@@ -1,0 +1,10 @@
+#if (defined A)
+#elif !(defined A) && (defined B)
+#endif
+#if !(defined A) && !(defined B)
+M
+#elif !(defined A) && (defined B) || (defined A)
+1 + 2
+#endif
+
+

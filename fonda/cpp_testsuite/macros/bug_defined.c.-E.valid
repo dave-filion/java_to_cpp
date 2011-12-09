@@ -1,0 +1,11 @@
+#if (defined C1)
+#elif !(defined C1)
+#endif
+#if (defined C2)
+#elif !(defined C2)
+#endif
+#if !(defined C1) && !(defined C2) && (B + Y) || !(defined C1) && (defined C2) && (B + X) || (defined C1) && !(defined C2) && (A + Y) || (defined C1) && (defined C2) && (A + X)
+IFBRANCH
+#elif !(defined C1) && !(defined C2) && !(B + Y) || !(defined C1) && (defined C2) && !(B + X) || (defined C1) && !(defined C2) && !(A + Y) || (defined C1) && (defined C2) && !(A + X)
+ELSEBRANCH
+#endif

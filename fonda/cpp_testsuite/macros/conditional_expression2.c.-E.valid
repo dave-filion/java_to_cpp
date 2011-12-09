@@ -1,0 +1,14 @@
+#if A
+#elif !A
+#endif
+int x = 
+#if A
+1
+#elif !A
+2
+#endif
+;
+
+#if 1
+hello world;
+#endif

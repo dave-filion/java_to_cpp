@@ -1,0 +1,24 @@
+Processing /home/paul/work/java/fonda/cpp_testsuite/typechef_deficiencies/hoist_include.c with TypeChef
+# Flags: 
+Nov 4, 2011 12:03:57 PM de.fosd.typechef.lexer.PreprocessorListener print
+SEVERE: /home/paul/work/java/fonda/cpp_testsuite/typechef_deficiencies/hoist_include.c:-1:-1: error: Expected string or header, not __IF__; condition: True
+/home/paul/work/java/fonda/cpp_testsuite/typechef_deficiencies/hoist_include.c:-1:-1: error: Expected string or header, not __IF__; condition: True
+Nov 4, 2011 12:03:57 PM de.fosd.typechef.lexer.Main run
+SEVERE: de.fosd.typechef.lexer.LexerException: Expected string or header, not __IF__
+de.fosd.typechef.lexer.LexerException: Expected string or header, not __IF__
+	at de.fosd.typechef.lexer.PreprocessorListener.handleError(PreprocessorListener.java:93)
+	at de.fosd.typechef.lexer.Preprocessor.error(Preprocessor.java:313)
+	at de.fosd.typechef.lexer.Preprocessor.error(Preprocessor.java:329)
+	at de.fosd.typechef.lexer.Preprocessor.parse_include(Preprocessor.java:1636)
+	at de.fosd.typechef.lexer.Preprocessor.parse_main(Preprocessor.java:2479)
+	at de.fosd.typechef.lexer.Preprocessor.getNextToken(Preprocessor.java:2671)
+	at de.fosd.typechef.lexer.Main.run(Main.java:246)
+	at de.fosd.typechef.linux.LinuxPreprocessorFrontend$.preprocessFile(LinuxPreprocessorFrontend.scala:78)
+	at de.fosd.typechef.linux.LinuxPreprocessorFrontend$$anonfun$main$1.apply(LinuxPreprocessorFrontend.scala:146)
+	at de.fosd.typechef.linux.LinuxPreprocessorFrontend$$anonfun$main$1.apply(LinuxPreprocessorFrontend.scala:136)
+	at scala.collection.IndexedSeqOptimized$class.foreach(IndexedSeqOptimized.scala:34)
+	at scala.collection.mutable.ArrayOps.foreach(ArrayOps.scala:38)
+	at de.fosd.typechef.linux.LinuxPreprocessorFrontend$.main(LinuxPreprocessorFrontend.scala:136)
+	at de.fosd.typechef.linux.LinuxPreprocessorFrontend.main(LinuxPreprocessorFrontend.scala)
+ -> constant token stream [[IDENTIFIER]:"__IF__"@True, [(]:"("@True, [P_FEATUREEXPR]:<303>@True, [,]:","@True] in file /home/paul/work/java/fonda/cpp_testsuite/typechef_deficiencies/hoist_include.c
+ -> file /home/paul/work/java/fonda/cpp_testsuite/typechef_deficiencies/hoist_include.c

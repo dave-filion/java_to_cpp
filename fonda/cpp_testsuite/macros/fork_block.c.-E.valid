@@ -1,0 +1,51 @@
+#if (defined BOB)
+#elif !(defined BOB)
+#endif
+#if (defined DOUBLE)
+#endif
+foo = (char *) malloc (
+#if !(defined DOUBLE)
+1024
+#elif (defined DOUBLE)
+2048
+#endif
+);
+
+
+#if (defined BOB)
+(
+#if (defined C1)
+arg1
+#endif
+#if !(defined C1)
+arg2
+#endif
+#if !(defined DOUBLE)
+1024
+#elif (defined DOUBLE)
+2048
+#endif
+)
+#elif !(defined BOB)
+27 * (
+#if (defined C1)
+arg1
+#endif
+#if !(defined C1)
+arg2
+#endif
+#if !(defined DOUBLE)
+1024
+#elif (defined DOUBLE)
+2048
+#endif
+)
+#endif
+#if (defined C1)
+#if (defined C1)
+#elif !(defined C1)
+#elif 0
+#endif
+#endif
+
+

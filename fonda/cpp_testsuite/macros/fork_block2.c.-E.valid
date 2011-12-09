@@ -1,0 +1,49 @@
+#if (defined BOB)
+#elif !(defined BOB)
+#endif
+
+#if (defined BOB)
+(
+#if (defined C1)
+arg1
+#endif
+#if !(defined C1)
+arg2
+#endif
+#if (defined C2)
+C2
+#endif
+#if !(defined C2)
+notc2
+#endif
+)
+#elif !(defined BOB)
+27 * (
+#if (defined C1)
+arg1
+#endif
+#if !(defined C1)
+arg2
+#endif
+#if (defined C2)
+C2
+#endif
+#if !(defined C2)
+notc2
+#endif
+)
+#endif
+#if (defined C1)
+#if (defined C1)
+#elif !(defined C1)
+#elif 0
+#endif
+#endif
+#if (defined C2)
+#if (defined C2)
+#elif !(defined C2)
+#elif 0
+#endif
+#endif
+
+

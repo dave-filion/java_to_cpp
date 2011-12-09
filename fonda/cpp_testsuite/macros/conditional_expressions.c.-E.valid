@@ -1,0 +1,8 @@
+#if (defined C1)
+#elif !(defined C1)
+#endif
+#if !(defined C1) && Q && E || (defined C1) && D && Q
+bob
+#elif !(defined C1) && !Q || !(defined C1) && Q && !E || (defined C1) && !D || (defined C1) && D && !Q
+noxious
+#endif

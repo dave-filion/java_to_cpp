@@ -1,0 +1,40 @@
+/*
+ * xtc - The eXTensible Compiler
+ * Copyright (C) 2009-2011 New York University
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * version 2.1 as published by the Free Software Foundation.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+ * USA.
+ */
+
+/**
+ * C preprocessor identifiers and keywords
+ *
+ * @author Paul Gazzillo
+ * @version $Revision: 1.7 $
+ */
+module xtc.lang.cpp.Identifier(Reserved, Spacing, Symbol);
+
+import Reserved;
+import Spacing;
+import Symbol;
+
+option setOfString(CPP_KEYWORDS);
+
+String Identifier        = WordCharacters !"..." Spacing ;
+String FunctionMacroName = WordCharacters !NonEmptySpacing ;
+String VariadicIdentifier = VariadicArgumentName Spacing ;
+String VariadicArgumentName  = WordCharacters? "..." ;
+String Keyword           = yyValue:Identifier  &{ contains(CPP_KEYWORDS, toText(yyValue)) } ;
+
+transient String WordCharacters = [a-zA-Z_] [a-zA-Z_0-9]* ;

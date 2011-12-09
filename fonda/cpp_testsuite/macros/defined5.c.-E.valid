@@ -1,0 +1,8 @@
+//fully defined
+#if (defined CONFIG1)
+#elif !(defined CONFIG1)
+#endif
+#if 1
+#endif
+#if UNDEF
+#endif

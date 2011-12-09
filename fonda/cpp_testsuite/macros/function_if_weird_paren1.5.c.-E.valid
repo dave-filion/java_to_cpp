@@ -1,0 +1,22 @@
+
+#if (defined A)
+abc + 1 fds
+)
+#elif !(defined A)
+#if !(defined A) && (defined B)
+definfdjsk BBB
+#endif
+#if !(defined A) && !(defined B)
+jfdkks
+#endif
+ + 1
+#endif
+#if (defined A)
+#if (defined A)
+#elif !(defined A) && (defined B)
+#elif 0
+#elif !(defined A) && !(defined B)
+#elif 0
+#endif
+#endif
+

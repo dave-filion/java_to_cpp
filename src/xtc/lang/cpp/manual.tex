@@ -1,0 +1,881 @@
+%-----------------------------------------------------------------------------
+%
+%               Template for sigplanconf LaTeX Class
+%
+% Name:         sigplanconf-template.tex
+%
+% Purpose:      A template for sigplanconf.cls, which is a LaTeX 2e class
+%               file for SIGPLAN conference proceedings.
+%
+% Author:       Paul C. Anagnostopoulos
+%               Windfall Software
+%               978 371-2316
+%               paul@windfall.com
+%
+% Created:      15 February 2005
+%
+%-----------------------------------------------------------------------------
+
+
+\documentclass{report}
+
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage[colorlinks,urlcolor=black,citecolor=black,linkcolor=black]{hyperref}
+\usepackage{graphicx}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\algrenewcommand{\algorithmiccomment}[1]{$\triangleright$ #1}
+\usepackage{verbatim}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{framed}\definecolor{shadecolor}{gray}{.85}
+\usepackage{colortbl}
+\usepackage{rotating}
+%\usepackage[normalem]{ulem}
+\usepackage{listings}
+\lstset{
+  language=C,
+  tabsize=8,
+  numbers=left,
+  captionpos=b,
+  basicstyle=\scriptsize\ttfamily,
+  numberstyle=\tiny\rmfamily,
+  commentstyle=\scriptsize\ttfamily,
+  breaklines=true,
+  numbersep=5pt,
+  columns=fullflexible
+}
+\usepackage{pbox}
+\usepackage{multirow}
+
+\newcommand{\SuperC}{{\textsf{Su\-perC}}}
+\newcommand{\rats}{\textit{Rats!}}
+
+\begin{document}
+
+\title{The \SuperC{} Technical Manual}
+
+\maketitle
+\tableofcontents
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Usage}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Environment}
+
+\SuperC{} shell environment is initialized by the script
+\verb"xtc/lang/cpp/scripts/env.sh" where \verb"xtc/" is the root of the xtc
+suite.  The script sets environment variables required to run
+\SuperC{}, its tests, and its experiments.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Executables}
+
+\begin{description}
+\item[\texttt{java xtc.lang.cpp.SuperC}] - A C lexer, directive parser,
+  preprocessor, and parser.
+
+\item[\texttt{java xtc.lang.cpp.cdiff}] - A C-token diff utility uses
+  SuperC's lexer and directiveParser.
+\end{description}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Regression Testing}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Running the Tests}
+
+All \SuperC{} regression tests can be run from \verb"xtc"'s top-level
+\verb"Makefile".
+
+\begin{description}
+
+\item[\texttt{make check-cpp}] runs all the \SuperC{} regression tests listed
+  below.
+
+\item[\texttt{make check-cpp-preproc}] will run a series of preprocessor
+  regression tests that compare the output of SuperC's preprocessor
+  with the output of the GNU preprocessor.  These regression tests are
+  located in \verb"$JAVA_DEV_ROOT/fonda/cpp_testsuite" in the
+  subdirectories \verb"cpp" for preprocessor tests and \verb"macros" for
+  configuration-preserving preprocessor tests.
+
+\item[\texttt{make check-cpp-followset}] tests the follow-set
+  computation. The SuperC flag \verb"-follow-set" will compute the follow
+  set of every start conditional and ordinary token in the
+  preprocessed input.  The \verb"cpp_testsuite/followset" directory contains
+  a set of tests of the follow-set computation.
+
+\item[\texttt{c\_torture.sh}] - tests the parser on the gcc C torture test
+  suite.  Only checks whether parsing passes or fails, not whether the
+  AST is correct.
+
+\item[\texttt{make check-cpp-parser-combo}] will run a series of parser
+  regression tests that compare all combinations of configuration
+  variables on a small test suite.
+\end{description}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Running \SuperC{} on Linux}
+\label{chapter:linux}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{How Do the Scripts Work?}
+
+SuperC's scripts require several environment variables defined in
+\verb"scripts/env.sh".
+
+The script \verb"getlinuxconfiguration.sh" is used by testers.  It will
+automatically download and compile the x86 kernel using the maximal
+configuration option \verb"allyesconfig".  This is done with the following
+command:
+
+\begin{quote}
+\verb"make allyesconfig ARCH=x86"
+\end{quote}
+
+During compilation, the actual gcc arguments used to compile each
+compilation unit is extracted by exploiting the way \verb"sparse", linux's
+optional static type-checker, is used.  SuperC has its own
+specially-crafted version of \verb"sparse" that intercepts and records the
+gcc compilation flags for each .c file and puts in the path
+environment variable.  \verb"sparse" is turned on with the C make variable:
+
+\begin{quote}
+\verb"make C=2"
+\end{quote}
+
+which always runs \verb"sparse" whether the C file has been compiled or
+not.
+
+This will operate on whatever linux version is set in the environment.
+The environment variable LINUXVER should contain the linux version in
+the form \verb"linux-#.#.###", that is, the name of the linux tarball.
+If you want to change which linux version the test scripts just change
+both LINUXVER that they agree on the same linux version.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Preprocessing the Linux x86 Kernel}
+
+\verb"preprocesslinux.sh" will download and preprocessor the x86 linux
+kernel.  The linux source directory will be placed in the working
+directory, and the preprocessed source will be placed in the same
+working directory as a sibling to the source called
+\verb"$LINUXVER-preprocessed".  For each preprocessed compilation unit,
+there will be two files: \verb"$file.E", the preprocessed compilation
+unit, and \verb"$file.cmdline", which contains the gcc command-line
+arguments that configure the compilation unit.
+
+\verb"get_file_list.sh" will list the names of all of the compilation
+units from the x86 Linux kernel.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Linux Runner Scripts}
+\label{section:runners}
+
+All the linux runner scripts must be run from the linux source
+directory.  This is because one path, \verb"-I include/", is relative to
+this directory.  We keep it relative so that \verb'__FILE__' macros
+will be the same as the gcc-preprocessed linux kernel.
+
+\begin{description}
+
+\item[\texttt{run\_file\_linux.sh file}] will run \SuperC{}
+  with the given flags on a file using the Linux include paths and
+  non-boolean configuration variables.
+
+\item[\texttt{linux\_test.sh}] - will run \SuperC{} on a set of Linux files,
+  defaulting to all of them.
+
+\item[\texttt{linux\_worker.sh}] - runs a \SuperC{} linux worker that gets
+  the filenames to process from a server.  See
+  Section~\ref{section:worker} in this chapter for details.
+
+\item[\texttt{test\_file\_linux.sh}] will test an individual compilation unit
+  against the linux maximal configuration.
+
+\item[\texttt{linux\_torture.sh}] - tests the parser on the preprocessed
+  maximal linux configuration source code.  It will write out the
+  files it fails on to \verb"linux_torture.sh".
+
+\end{description}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Necessary Includes}
+
+Here we describe what paths the preprocessor (either \SuperC{} or gcc)
+needs to process linux source files.  These are already setup when
+using the \SuperC{} helper script \verb'run_file_linux.sh'.  These
+information is current as of \verb"linux-2.6.39".
+
+\begin{description}
+\item[\texttt{-I include/}] - the path to the linux include directory.  Linux
+  make files just use a relative path.  It is important that SuperC
+  also use relative paths so that \verb'__FILE__' macro expansions are
+  accurate.
+
+\item[\texttt{-isystem \$GCCINCLUDEDIR}] - the path to the gcc compiler
+  headers.  GCCINCLUDEDIR is defined in \verb"scripts/env.sh".  It should
+  look something like this,
+  \verb"/usr/lib/gcc/x86_64-linux-gnu/4.4.5/include", depending on the
+  linux installation.
+
+\item[\texttt{-I /.../LINUXVER/arch/x86/include}] - the path to the
+  x86-specific includes.  Again it is important that SuperC also use
+  an absolute path for correct \verb'__FILE__' expansion.  LINUXVER is
+  also specified in \verb"scripts/env.sh".  It is the directory of
+  whereever the linux source is.
+\end{description}
+
+Finally, SuperC needs certain non-boolean configuration to be defined.
+For more information see the section on Linux Non-Boolean
+Configuration Variables.
+
+\begin{description}
+\item[\texttt{-include \$CPPDATA/nonbooleans.h}]
+\end{description}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Distributed Processing}
+\label{section:worker}
+
+A very simple file name server is used to give the names of linux
+compilation units to worker machines to process.  This way, the large
+linux source can be processed separately for time-consuming tasks such
+as data collection.
+
+To start the server, first generate the list of compilation units then
+run the server program.
+
+\begin{quote}
+\begin{verbatim}
+get_file_list.sh
+java xtc.lang.cpp.FilenameService -server port file_list.txt
+\end{verbatim}
+\end{quote}
+
+To retrieve names, run the client.
+
+\begin{quote}
+\begin{verbatim}
+java xtc.lang.cpp.FilenameService -client server_name port
+\end{verbatim}
+\end{quote}
+
+The script \verb"distribute_subparser_cdf.sh" works with the file server already.  Use it like this.
+
+\begin{quote}
+\begin{verbatim}
+# Fire up the filename service.  This is used to
+# distribute work by filename.
+
+java xtc.lang.cpp.FilenameService -server 7000
+  $CPPDATA/linux_file_list.txt &
+
+
+# Kick off SuperC processing on a set of servers.
+
+distribute_linux_test.sh -r -s server_list.txt \
+  -h filename_server -p 7000 -o subparser_dist_run1_ \
+  -S "-parserStatistics"
+\end{verbatim}
+\end{quote}
+
+There is also a version to run the TypeChef Linux test.  The code
+below gathers subparser CDF data for SuperC on the TypeChef test
+suite.
+
+\begin{quote}
+\begin{verbatim}
+# Fire up the filename service.
+
+java xtc.lang.cpp.FilenameService -server 7000 \
+  linux_files_complete.txt &
+
+
+# Kick off TypeChef testsuite processing.
+
+distribute_typechef_test.sh -r SuperC -a "-parserStatistics" \
+  -o typechef_dist_subparser_cdf_run1_ \
+  -h dev.opentheblackbox.net -p 7000 -s server_list.txt
+\end{verbatim}
+\end{quote}
+
+
+The script \verb"linux_worker.sh" also already works with a server to
+process the linux kernel with \SuperC{}.  All it needs are \SuperC{}
+flags, a server name, and a port.  For example, preprocessor
+statistics are collected with the following:
+
+
+\begin{quote}
+\begin{verbatim}
+linux_worker.sh [-S SuperC_args] host port
+\end{verbatim}
+\end{quote}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Linux Non-Boolean Configuration Variables}
+
+Some configuration variables are non-boolean.  SuperC treats
+configuration variables as boolean and the text of non-boolean
+expressions become opaque boolean variables.  However, sometimes the
+actual value of a configuration variable is needed.
+
+\verb'CONFIG_ILLEGAL_POINTER_VALUE' - This is expands to an integer
+constant in the C source.  When it comes to parsing, the C parser will
+expect an integer and an identifier will cause a syntax error.  The
+only way to handle non-booleans completely (without having to change
+the C grammar) is to somehow allow for all possible expansions, which
+seem impractical.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Examples}
+
+\begin{description}
+\item[\texttt{run\_file\_linux.sh -S "-parserStatistics" kernel/sched.c}] -
+  this collects parser statistics for processing a Linux compilation
+  unit.
+\item[\texttt{test\_file\_linux.sh "-S -E" kernel/power/console.c}] - this
+  tests SuperC's preprocessor by comparing the output with the
+  original file after preprocessing both under the maximal linux
+  configuration.
+\item[\texttt{test\_file\_linux.sh "-S -printSource"
+  arch/x86/kernel/acpi/realmode/regs.c}] - this does the same as above
+  except tests SuperC's FMLR parser as well by printing out the AST as
+  C source with preprocessor conditionals.
+\end{description}
+
+
+\subsection*{Distributed SuperC Processing}
+
+The following example shows how to use the filename server and worker
+processes to collect preprocessor statistics (\verb"-E" and
+\verb"-preprocessorStatistics").
+
+\begin{verbatim}
+# Run all of the following from the linux directory
+
+# Start the filename server with the list of Linux files to process.
+nohup java xtc.lang.cpp.FilenameService -server 7779 \
+  $CPPDATA/linux_file_list.txt &
+
+# Each client machine can run a worker process.
+nohup linux_worker.sh -S "-preprocessorStatistics -E" \
+  hostname 7779 &
+\end{verbatim}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Testing Against TypeChef's Linux Version}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Introduction}
+
+TypeChef uses a slightly older version of Linux for testing and also
+defines several configuration variables ahead of time.  For
+comparison, there are modified versions of TypeChef's Linux test
+scripts that run \SuperC{} under the same conditions.
+
+\section{Installation and Preparation}
+
+This information is current as of Oct. 22, 2011.
+
+\begin{verbatim}
+# Get TypeChef.
+git clone git://github.com/ckaestne/TypeChef.git
+cd TypeChef
+
+# Patch TypeChef as described in the next section.
+patch -p1 < $CPPDATA/typechef/TypeChef.patch
+
+# Build TypeChef.
+java -Xmx512M -Xss10m -jar sbt-launch-0.7.5.jar clean update compile
+
+# Get Linux source.
+wget http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.33.3.tar.gz
+tar -zxvf linux-2.6.33.3.tar.gz
+
+# Run TypeChef's preparation script.
+./prepareLinuxTestCase.sh
+
+# Get the RedHat system headers.
+cp -R $CPPDATA/typechef/systems.tar .
+tar -xvf systems.tar 
+
+
+\end{verbatim}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Modifications to TypeChef}
+
+Why was TypeChef modified?
+\begin{itemize}
+\item To run the whole test no matter what.  TypeChef's script does
+  not rerun files.
+\item To avoid running gcc -E or any post processing.
+\item To prevent any printing during the run.
+\item To prevent TypeChef from doing any type checking.
+\item Ultimately, all the above ensure an accurate comparison when
+  comparing the running times of SuperC and TypeChef.
+\end{itemize}
+
+Here is a summary of the modifications:
+
+\begin{description}
+\item[\texttt{linuxTestCase.sh}] - Removed gcc run.  Removed post-processing.
+  Removed check for \verb".pi" file (used to skip already run tests.)
+  Replaced \verb"echo"s with \verb"Processing...".
+\item[\texttt{jcpp.sh}] - Removed gcc run.  Remove \verb"-t" flag to TypeChef
+  which performs type checking.  Remove \verb"-i" flag to TypeChef which
+  does C interface inference.  Removed \verb"echo"s.
+\item[\texttt{LinuxAnalysis/src/main/scala/de/fosd/typechef/linux/LinuxPreprocessorFrontend.scala}]
+  - Commented out printlns.  Set \verb"CREATEINTERFACEAFTERPARSING" to
+  \verb"false".
+\item[\texttt{CParser/src/main/scala/de/fosd/typechef/parser/c/ParserMain.scala}]
+  - Turned \verb"parsingStatistics" to \verb"false".
+\end{description}
+
+These changes can be found in a patch file:
+\verb"$CPPDATA/typechef/TypeChef.patch".  The version of TypeChef is from
+Oct. 22nd, 2011 5:00am EST.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Modifications to SuperC}
+
+\begin{itemize}
+\item It takes \verb"-TypeChef-x CONFIG_" which determines a prefix to
+  indicate which configuration variables are free.  This emulates the
+  behavior of TypeChef's \verb"-x" flag.
+%% \item Take \verb"-TypeChef_openFeatures openFeaturesList.txt".  It
+%%   specifices which configuration variables are free.  (This has not
+%%   been implemented.)
+\end{itemize}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Runners}
+
+\begin{description}
+\item[\texttt{typechef\_run\_file.sh}] runs one file using the TypeChef
+  partial configuration.
+\item[\texttt{typechef\_test.sh}] runs the TypeChef Linux test case.
+\end{description}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Examples}
+
+\begin{description}
+\item[\texttt{typechef\_test.sh -o performance\_TypeChef.txt
+  TypeChef}] runs TypeChef on its own Linux test case, collecting
+  per-file time statistics.
+\item[\texttt{typechef\_test.sh -f \$CPPDATA/sample\_200.txt SuperC}]
+  runs SuperC on a sample of Linux files from the TypeChef test case.
+\end{description}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Statistics, Data Collection, and Analysis}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Introduction}
+
+\SuperC's preprocessor and parser are intrumented to collect various
+data on the source code it processes.  Additionally, there are scripts
+to crunch and summarize these data.  The following data is collected:
+
+\begin{description}
+\item[Static Preprocessor Statistics] - header file usage, macro
+  definitions, conditionals
+\item[Dynamic Preprocessor Statistics] - definitions, invocations,
+  pasting, stringification, hoisting, conditionals, hoisting
+\item[Dynamic Parser Statistics] - statements, declarations, typedef
+  names, typedef ambiguities.
+\item[Subparser State-Space] - distribution of number of subparsers
+  per main parsing loop iteration, distribution of the number of
+  unique state stack heads
+\item[Performance] - how long processing takes.
+\end{description}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Summary Data for the Paper}
+
+For the paper, the following data should be present:
+
+\begin{itemize}
+\item stdio.h's includes, macros, macro definitions, incomplete macros,
+  incomplete ifdefs
+\item Static preprocessor usage as table(s)
+\item Preprocessor and parser usage statistics as a table
+\item Performance numbers on TypeChef x86 linux, total and CDF of
+  per-file times with TypeChef total and CDF of perf-file times.
+\begin{verbatim}
+cd $CPPDEV/TypeChef
+nohup typechef_test.sh -o performance_TypeChef.txt TypeChef
+nohup typechef_test.sh -o performance_SuperC.txt SuperC
+\end{verbatim}
+\item CDF of subparsers over iterations.
+\begin{verbatim}
+cd $CPPDEV/linux-2.6.39
+nohup linux_test.sh -S "-parserStatistics" -o subparser_data.txt
+\end{verbatim}
+\item CDF of subparsers over iterations for each optimization (for a
+  sample of files).
+\begin{verbatim}
+cd $CPPDEV/linux-2.6.39
+
+# Two optimizations, shared and early.
+linux_test.sh -f sample_20.txt
+  -S "-parserStatistics -Oshared -Oearly" \
+  -o $opt_data_shared_early.txt
+
+\end{verbatim}
+\end{itemize}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Output Formats}
+
+\subsection*{\texttt{-preprocessorStatistics}}
+
+Preprocessor statistics are output when the \verb"-preprocessorStatistics"
+flag is turned on.  Below is the format of the data output.
+
+\begin{description}
+\item[\texttt{define name fun|var location ndefs}] - will be output every
+  time a macro definition is encountered.  \verb"ndefs" is the number of
+  macros definitions in the conditional symbol table \emph{after}
+  evaluating the definition.
+\item[\texttt{undef name location ndefs}] - for every \verb"#undef". \verb"ndefs" is the
+  number of definitions \emph{after} evaluating the undef.
+\item[\texttt{object name location depth ndefs nused}] - for every
+  object-like macro invocation.  \verb"depth" is the macro invocation
+  nesting level.  \verb"ndefs" is the number of definitions, but \verb"nused" is
+  the actual number of definitions expanded.  \verb"ndefs" is always
+  greater than or equal to \verb"nused".  \verb"nused" is less when some macro
+  definitions are trimmed.
+\item[\texttt{function nargs name location depth ndefs nused}] - for every
+  function-like macro invocation.  \verb"nargs" is the number of arguments
+  passed to this function-like macro invocation.  \verb"depth", \verb"ndefs",
+  and \verb"nused" are the same as for object-like macros.
+\item[\texttt{hoist\_function name location depth nhoisted}] - every function-like
+  macro is hoisted before invoking, even if their is only one
+  resulting function.  \verb"nhoisted" shows how many function-like macro
+  invocations resulted from hoisting.
+\item[\texttt{paste token|conditional token|conditional location nhoisted}] -
+  a token-pasting.  Each argument's type, token or conditional, is
+  indicated.  \verb"nhoisted" is the number of token-paste operations
+  resulting from the hoisting.
+\item[\texttt{stringify token|conditional location nhoisted}] - a
+  token-pasting.  The argument's type, token or conditional, is
+  indicated.  \verb"nhoisted" is the number of stringification operations
+  resulting from the hoisting.
+\item[\texttt{include name location guarded|unguarded system|user normal|next
+  single|computed depth}] - a header include.  Indicates given header
+  name, location of the directive, whether it was guarded, whether it
+  was a system (\verb"<...>") or user header (\verb'\verb"..."'), whether it was
+  a gcc-specific \verb"#include_next" directive, whether it was from a
+  computed header or not, and how many headers deep we are after
+  entering this header.
+\item[\texttt{computed location normal|next depth nhoisted}] - a computed
+  include, indicating how many headers deep after performing the
+  include, and the number of hoisted include directives.  Not all
+  hoisted headers must be valid, so \verb"end_computed" will summarize how
+  many actual headers were included.
+\item[\texttt{end\_computed location nvalid}] - after a computed include has
+  finished, this reports how many valid headers were hoisted.
+\item[\texttt{conditional if|ifdef|ifndef|elif|else location
+  boolean|nonboolean depth nhoisted}] - a start or next conditional
+  directive. \verb"nonboolean" is emitted when the expression contains at
+  least one non-boolean subexpression \verb"nhoisted" is the number of
+  expressions resulting from multiply-defined macros in its
+  expression.
+\item[\texttt{endif location breadth}] - an endif, its location, and that
+  number of branches in the conditional it is ending.
+\item[\texttt{line|error\_directive|warning|pragma location}] - a line, error, warning,
+  or pragma directive and its location.
+\end{description}
+
+In all cases, \verb"location" has the following format:
+
+\begin{quote}
+\verb"file:line:col[:macro]"
+\end{quote}
+
+where \verb"macro" is present only when the preprocessor usage occurs
+inside of a macro expansion, e.g. nested macro expansion.
+
+
+\subsection*{\texttt{-languageStatistics}}
+
+Language statistics are output when the \verb"-languageStatistics" flag is
+turned on.  Below is the format of the data output.
+
+\begin{description}
+\item[\texttt{c\_construct name location}] - emitted every time a statement
+  or declaration is reduced.
+\item[\texttt{typedef name location}] - emitted every time there a typedef
+  name is bound.
+\item[\texttt{typedef\_ambiguity name location}] - emitted every time a
+  subparser encounters a name that is both a typedef name and a
+  variable name in the same parsing context.
+\end{description}
+
+
+\subsection*{\texttt{-parserStatistics}}
+
+Parser statistics are output when the \verb"-parserStatistics" flag is
+turned on.  Below is the format of the data output.
+
+\begin{description}
+\item[\texttt{iterations n}] - the number of iterations of the main parsing
+  loop.
+\item[\texttt{subparsers size iterations}] - this shows how many \verb"iterations"
+  of the FMLR parsing loop had \verb"size" subparsers.
+\item[\texttt{max\_subparsers size}] - this shows the maximum number of
+  subparsers.
+\item[\texttt{killswitch\_subparsers size}] - when -killswitch is used and
+  the naive parser reaches the limit, this reports how many subparsers
+  there were before killing the parser.
+\item[\texttt{follow n}] - the number of times \verb"follow()" was called.
+\item[\texttt{ast\_nodes}] - the number of AST nodes in the resulting tree.
+  This counts shared DAG-nodes multiple times, reflecting the number
+  of nodes an AST walk will touch.
+\item[\texttt{dag\_nodes}] - the number of DAG nodes from the parser.  This
+  represents the actual spaced used by the parser output in terms of
+  nodes in memory.
+\item[\texttt{empty\_conditionals total with\_empty}]
+\item[\texttt{lazy\_forks total with\_lazy}]
+\end{description}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Computing Summary Data}
+
+\begin{description}
+\item[\texttt{performance\_cdf.sh}] - compute the cumulative percentiles of
+  per-file running times from \verb"linux_test.sh" and \verb"typechef_test.sh"
+  output.
+\item[\texttt{performance\_sum.sh}] - computes the total time by adding up
+  the individual file times.
+\item[\texttt{subparser\_cdf.sh}] - compute cumulative percentiles of
+  subparser sizes at each parser loop iteration from -parserStatistics
+  outputs.
+\item[\texttt{subparser\_max.sh}] - compute the per-file subparser maximum
+  from the -parserStatistics output.
+\item[\texttt{preprocessor\_static\_usage.sh}] - when run in a Linux source
+  directory computes several static preprocessor statistics including
+  number of directives, lines of code, number .c and .h files, percent
+  of directives and lines by .c and .h file.
+\item[\texttt{top\_includes.sh}] - finds the most commonly-used headers by
+  ordering headers by how many \verb"#include" directives they can be found
+  in.
+\item[\texttt{dynamic\_analysis.sh}] - summarizes preprocessor and language
+  statistics.
+\end{description}
+
+
+
+\subsection*{Output Format for \texttt{dynamic\_analysis.sh}}
+
+\begin{description}
+\item[\texttt{summary\_definitions total total\_in\_conditionals objects functions}]
+\item[\texttt{summary\_redefinitions total}]
+\item[\texttt{summary\_invocations total total\_trimmed objects functions}] - trimmed is the
+  number of invocations that have at least one definition trimmed.
+\item[\texttt{summary\_nested\_invocations total}] - number of invocations in
+  another macro's invocation.
+\item[\texttt{summary\_paste total nhoisted ncond}] - \verb"nhoisted" is the
+  number of pastes that needed to be hoisted.  \verb"ncond" is the number
+  of token-paste that have at least one argument that is a
+  conditional.
+\item[\texttt{summary\_stringify total nhoisted ncond}] - \verb"nhoisted" and
+  \verb"ncond" as with \verb"summary_paste".
+\item[\texttt{summary\_include total computed hoisted valid}] - \verb"computed"
+  is the number of include directives with a macro instead of a
+  filename.  \verb"hoisted" is the number of computed includes that had a
+  multiply-defined macros.  \verb"valid" is the number of includes with a
+  multiply-defined macro that expanded to more than one valid header.
+\item[\texttt{summary\_reinclude total}] - total number of times a header was
+  reincluded.
+\item[\texttt{summary\_conditionals total nonboolean depth hoisted}] -
+  \verb"nonboolean" is the number of conditionals whose expression contains
+  at least one non-boolean subexpression. \verb"maxdepth" is the maximum
+  nesting depth of conditionals.  \verb"hoisted" is the number of \verb"#if"
+  directives with an expression that needed to be hoisted.
+\item[\texttt{summary\_c\_statement\_and\_declarations total}]
+\item[\texttt{summary\_typedefs count}]
+\item[\texttt{summary\_typedef\_ambiguities count}]
+\end{description}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Examples}
+
+Parsing statistics on the Linux kernel can be done with the runner
+scripts described in Section~\ref{section:runners}.
+
+\begin{verbatim}
+linux_test.sh -o out.txt -S "-parserStatistics"
+\end{verbatim}
+
+Then the subparser CDF numbers can be computed as shown below.
+
+\begin{verbatim}
+subparser_cdf.sh out.txt
+\end{verbatim}
+
+CDF numbers for per-file times can be computed as shown below.
+
+\begin{verbatim}
+performance_cdf.sh out.txt
+\end{verbatim}
+
+Computing per-file preprocessor and language statistics.
+
+\begin{verbatim}
+# After running SuperC with -statistics on all files, the following
+# computes the summary data for each file.
+
+for i in `find data_dir -name "*.data"`;
+do
+    dynamic_analysis.sh $i;
+done > dynamic_analysis.txt
+\end{verbatim}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Language-Independence}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Introduction}
+
+The preprocessor and the parser are language-independent.  To use them
+for a specific language, they need the following:
+
+\begin{itemize}
+\item A token specification, e.g. \verb"c.l" for \SuperC{}.  This
+  specifies the token name and regular expression for each token.  It
+  also provides information to the preprocessor, specifically, which
+  tokens are the comma, parentheses, hash mark, double hash mark, and
+  ellipsis, and also which tokens can be used as macro names.  The
+  header file \verb"token.h" provides preprocessor macros that make
+  specifying tokens easy.
+\item A token creator, e.g. \verb"CTokenCreator.java" for \SuperC{}.
+  This provides methods to create new string, integer, and identifier
+  tokens, and also to paste two tokens.  These methods are
+  language-dependent, but are needed for the operation of the
+  preprocessor.  The file \verb"TokenCreator.java" defines the
+  interface.
+\item A grammar specification, e.g. \verb"c.y" for \SuperC{}.  This is
+  a Bison grammar file annotated with AST-building instructions.
+\item An optional parsing context and semantic action implementation,
+  e.g. \verb"CActions.java" for \SuperC{}, of the \verb"Actions.java"
+  interface.  This implements the parsing context methods needed by
+  the Fork-Merge LR parsing engine.  It also implements any semantic
+  actions specified with annotations in the grammar file.  The utility
+  \verb"ActionsGenerator.java" generates an abstract subclass of
+  \verb"Actions.java" that includes the semantic actions defined in
+  the grammar file.
+\end{itemize}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Miscellaneous}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Line Directives}
+
+Debugging the preprocessor on the massive compilation units from the
+linux source is a massive headache.  To ease this, SuperC's
+preprocessor \verb"SuperC -E" emits line directives like \verb"gcc -E" does.
+This way, when SuperC's preprocessed output differs from the
+preprocessed original, one can (more) easily find the source of the
+difference.
+
+When are line markers emitted?
+
+\begin{itemize}
+\item At the beginning and end of every header.
+\item Before and after any macro expansion in the original file
+  including nested macro expansions.
+\end{itemize}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Preprocessor Operation}
+
+Each processing function returns a token, processToken,
+evaluateDirective, etc, which is returned by Preprocessor.scan().
+Anytime there are multiple tokens returned, e.g. a macro expansion, a
+token buffer is pushed onto the stack.  The preprocessor reads from
+any pending token buffers before reading the next token from the
+actual input.  This is how the gcc preprocessor operates also.
+
+
+\end{document}

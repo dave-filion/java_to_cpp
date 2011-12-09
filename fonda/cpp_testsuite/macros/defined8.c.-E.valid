@@ -1,0 +1,8 @@
+//partially defined configuration variable
+
+#if (defined CONFIG_CONFIG)
+#endif
+#if !(defined CONFIG_CONFIG) && (defined M_CONFIG) || (defined CONFIG_CONFIG)
+#endif
+#if !(defined CONFIG_CONFIG) && !(defined M_CONFIG) && (defined A) || !(defined CONFIG_CONFIG) && (defined M_CONFIG) || (defined CONFIG_CONFIG)
+#endif

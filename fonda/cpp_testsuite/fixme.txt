@@ -1,0 +1,59 @@
+Bugs
+-------------
+
+cpp/
+
+function_parenthesis.c - The problem is that the include is processed
+after the buffer that contains the ")".
+
+stringifications_strings.c - Lexer error.
+
+macros/
+
+exercise_context.c - Issue with function-like macro broken by
+conditional.
+
+function_if_weird_paren5.c, function_object3.c - Something is wrong
+with the hoisted function-like macro expansion.  It yields an
+infeasible branch "#elif 0".
+
+pragma_once.c - #pragma once is not implemented.
+
+token_pasting_conditional.c - The argument to the function that does
+the token-pasting is a conditional.  The preprocessor should first
+hoist this, and then invoke the function once for each branch.  Since
+the argument to the function is used in a token-pasting, it should not
+be expanded, but it is!
+
+Strange Behavior
+----------------
+
+macros/
+
+exercise_bdds.c - After (3) combine multiple streams, there are
+extraneous conditionals at the end of the expansion.
+
+exercise_expression_bdds.c - Preserve whitespace after directives.
+Need to emit it separately from directive, which will require
+reworking directive parsing and preprocessor.
+
+fork_block2.c - Extraneous blocks at end of function-like macro
+expansion.  Probably has to do with function-like macro hoisting.
+
+
+Fine Details
+------------
+
+function_parenthesis.c - Need to test that #define in a zero-argument
+function-like macro is being evaluated properly.  Furthermore, need to
+test that defines and undefs in all arguments are being evaluated
+properl, since they are only evalauted if expandArg is called.  It is
+not called for stringified or token-pasted arguments.
+
+
+Missing Headers
+---------------
+
+include_computed_system.c
+include_next.c
+include_system.c

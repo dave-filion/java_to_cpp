@@ -1,0 +1,10 @@
+//run with -U A
+#if (defined A)
+#elif !(defined A)
+#endif
+#if (defined A)
+never
+#elif !(defined A)
+always
+#endif
+

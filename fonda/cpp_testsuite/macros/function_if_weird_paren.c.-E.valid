@@ -1,0 +1,14 @@
+
+#if (defined A)
+abc + 1 fds
+)
+#elif !(defined A)
+jfdkks + 1
+#endif
+#if (defined A)
+#if (defined A)
+#elif !(defined A)
+#elif 0
+#endif
+#endif
+

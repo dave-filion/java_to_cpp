@@ -1,0 +1,13 @@
+#if (defined FUNCTION)
+#elif !(defined FUNCTION) && (defined OBJECT)
+#endif
+
+#if !(defined FUNCTION) && !(defined OBJECT)
+F(argument)
+#elif (defined FUNCTION)
+(argument) * func_def
+#elif !(defined FUNCTION) && (defined OBJECT)
+object_def(argument)
+#endif
+
+

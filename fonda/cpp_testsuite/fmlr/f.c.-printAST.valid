@@ -1,0 +1,34 @@
+TranslationUnit<1>(
+  StaticChoice<2>(
+    1
+    ExternalDeclarationList<4>(
+      StaticChoice<5>(
+        1
+        ExternalDeclarationList<7>(
+          Declaration<8>(
+            StaticChoice<9>(
+              (defined A)
+              DeclaringList<11>(
+                BasicTypeSpecifier<12>(
+                  BasicTypeName<13>(
+                    "int"
+                  )
+                )
+                SimpleDeclarator<14>(
+                  "x"
+                )
+              )
+              !(defined A)
+              DeclaringList<16>(
+                #ref<12>
+                SimpleDeclarator<17>(
+                  "y"
+                )
+              )
+            )
+          )
+        )
+      )
+    )
+  )
+)

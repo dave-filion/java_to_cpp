@@ -1,0 +1,6 @@
+//partially defined
+
+#if (defined A)
+#endif
+#if !(defined A) && (defined CONFIG) || (defined A)
+#endif

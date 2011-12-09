@@ -1,0 +1,10 @@
+int beforeA;
+#if 1
+int insideAbeforeB;
+#if 1
+int insideB;
+#endif
+#endif
+int afterAbeforeBfirst;
+int afterBfirst;
+int afterBsecond;

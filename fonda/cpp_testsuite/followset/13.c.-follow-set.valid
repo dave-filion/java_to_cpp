@@ -1,0 +1,115 @@
+SYNTAX static ::: 1
+FOLLOW [
+  static ::: 1
+]
+
+SYNTAX int ::: 1
+FOLLOW [
+  int ::: 1
+]
+
+SYNTAX check_part ::: 1
+FOLLOW [
+  check_part ::: 1
+]
+
+SYNTAX [ ::: 1
+FOLLOW [
+  [ ::: 1
+]
+
+SYNTAX ] ::: 1
+FOLLOW [
+  ] ::: 1
+]
+
+SYNTAX = ::: 1
+FOLLOW [
+  = ::: 1
+]
+
+SYNTAX { ::: 1
+FOLLOW [
+  { ::: 1
+]
+
+SYNTAX #if (defined A)
+FOLLOW [
+  1 ::: (defined A)
+  2 ::: !(defined A)
+]
+
+SYNTAX 1 ::: (defined A)
+FOLLOW [
+  1 ::: (defined A)
+]
+
+SYNTAX , ::: (defined A)
+FOLLOW [
+  , ::: (defined A)
+]
+
+SYNTAX #elif !(defined A)
+
+SYNTAX 2 ::: !(defined A)
+FOLLOW [
+  2 ::: !(defined A)
+]
+
+SYNTAX , ::: !(defined A)
+FOLLOW [
+  , ::: !(defined A)
+]
+
+SYNTAX #endif
+
+SYNTAX #if (defined B)
+FOLLOW [
+  3 ::: (defined B)
+  4 ::: !(defined B)
+]
+
+SYNTAX 3 ::: (defined B)
+FOLLOW [
+  3 ::: (defined B)
+]
+
+SYNTAX , ::: (defined B)
+FOLLOW [
+  , ::: (defined B)
+]
+
+SYNTAX #elif !(defined B)
+
+SYNTAX 4 ::: !(defined B)
+FOLLOW [
+  4 ::: !(defined B)
+]
+
+SYNTAX , ::: !(defined B)
+FOLLOW [
+  , ::: !(defined B)
+]
+
+SYNTAX #endif
+
+SYNTAX NULL ::: 1
+FOLLOW [
+  NULL ::: 1
+]
+
+SYNTAX } ::: 1
+FOLLOW [
+  } ::: 1
+]
+
+SYNTAX ; ::: 1
+FOLLOW [
+  ; ::: 1
+]
+
+SYNTAX xtc.lang.cpp.Syntax$EOF("EOF") ::: 1
+FOLLOW [
+  xtc.lang.cpp.Syntax$EOF("EOF") ::: 1
+]
+

@@ -1,0 +1,9 @@
+load_lib cpp-run.exp
+dg-init
+#
+# run test for every file .c in this directory
+#
+#dg-runtest [lsort [glob -nocomplain $srcdir/$subdir/*.c]] 
+#dg-runtest [lsort [glob -nocomplain $srcdir/$subdir/errors_and_warnings/invalid_directive.c]] 
+#dg-runtest [lsort [glob -nocomplain $srcdir/$subdir/pending/include_guard.c]] 
+dg-finish

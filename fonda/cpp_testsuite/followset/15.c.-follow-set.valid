@@ -1,0 +1,119 @@
+SYNTAX static ::: 1
+FOLLOW [
+  static ::: 1
+]
+
+SYNTAX int ::: 1
+FOLLOW [
+  int ::: 1
+]
+
+SYNTAX check_part ::: 1
+FOLLOW [
+  check_part ::: 1
+]
+
+SYNTAX [ ::: 1
+FOLLOW [
+  [ ::: 1
+]
+
+SYNTAX ] ::: 1
+FOLLOW [
+  ] ::: 1
+]
+
+SYNTAX = ::: 1
+FOLLOW [
+  = ::: 1
+]
+
+SYNTAX { ::: 1
+FOLLOW [
+  { ::: 1
+]
+
+SYNTAX #if (defined A)
+FOLLOW [
+  3 ::: !(defined A) && !(defined B) && (defined C)
+  4 ::: !(defined A) && !(defined B) && !(defined C) && (defined D)
+  NULL ::: !(defined A) && !(defined B) && !(defined C) && !(defined D)
+  1 ::: (defined A)
+  2 ::: !(defined A) && (defined B)
+]
+
+SYNTAX 1 ::: (defined A)
+FOLLOW [
+  1 ::: (defined A)
+]
+
+SYNTAX , ::: (defined A)
+FOLLOW [
+  , ::: (defined A)
+]
+
+SYNTAX #elif !(defined A) && (defined B)
+
+SYNTAX 2 ::: !(defined A) && (defined B)
+FOLLOW [
+  2 ::: !(defined A) && (defined B)
+]
+
+SYNTAX , ::: !(defined A) && (defined B)
+FOLLOW [
+  , ::: !(defined A) && (defined B)
+]
+
+SYNTAX #endif
+
+SYNTAX #if (defined C)
+FOLLOW [
+  3 ::: (defined C)
+  4 ::: !(defined C) && (defined D)
+  NULL ::: !(defined C) && !(defined D)
+]
+
+SYNTAX 3 ::: (defined C)
+FOLLOW [
+  3 ::: (defined C)
+]
+
+SYNTAX , ::: (defined C)
+FOLLOW [
+  , ::: (defined C)
+]
+
+SYNTAX #elif !(defined C) && (defined D)
+
+SYNTAX 4 ::: !(defined C) && (defined D)
+FOLLOW [
+  4 ::: !(defined C) && (defined D)
+]
+
+SYNTAX , ::: !(defined C) && (defined D)
+FOLLOW [
+  , ::: !(defined C) && (defined D)
+]
+
+SYNTAX #endif
+
+SYNTAX NULL ::: 1
+FOLLOW [
+  NULL ::: 1
+]
+
+SYNTAX } ::: 1
+FOLLOW [
+  } ::: 1
+]
+
+SYNTAX ; ::: 1
+FOLLOW [
+  ; ::: 1
+]
+
+SYNTAX xtc.lang.cpp.Syntax$EOF("EOF") ::: 1
+FOLLOW [
+  xtc.lang.cpp.Syntax$EOF("EOF") ::: 1
+]
+

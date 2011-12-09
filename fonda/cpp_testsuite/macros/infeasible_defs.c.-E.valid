@@ -1,0 +1,22 @@
+#if (defined A)
+#endif
+#if (defined A)
+1
+#endif
+#if !(defined A)
+BOB
+#elif (defined A)
+1
+#endif
+
+
+#if (defined B)
+#endif
+#if !(defined A) && !(defined B)
+BOB
+#elif (defined A) && !(defined B)
+1
+#elif (defined B)
+BOB
+#endif
+

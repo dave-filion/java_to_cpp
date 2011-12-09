@@ -1,0 +1,20 @@
+SYNTAX int ::: 1
+FOLLOW [
+  int ::: 1
+]
+
+SYNTAX x ::: 1
+FOLLOW [
+  x ::: 1
+]
+
+SYNTAX ; ::: 1
+FOLLOW [
+  ; ::: 1
+]
+
+SYNTAX xtc.lang.cpp.Syntax$EOF("EOF") ::: 1
+FOLLOW [
+  xtc.lang.cpp.Syntax$EOF("EOF") ::: 1
+]
+

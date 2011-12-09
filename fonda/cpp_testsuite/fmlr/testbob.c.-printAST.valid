@@ -1,0 +1,71 @@
+TranslationUnit<1>(
+  StaticChoice<2>(
+    1
+    ExternalDeclarationList<4>(
+      StaticChoice<5>(
+        1
+        ExternalDeclarationList<7>(
+          Declaration<8>(
+            StaticChoice<9>(
+              (defined A) && (defined B)
+              DeclaringList<11>(
+                BasicDeclarationSpecifier<12>(
+                  DeclarationQualifierList<13>(
+                    StorageClass<14>(
+                      "typedef"
+                    )
+                  )
+                  BasicTypeName<15>(
+                    "int"
+                  )
+                )
+                SimpleDeclarator<16>(
+                  "x"
+                )
+              )
+              !(defined A) && (defined B)
+              DeclaringList<18>(
+                BasicTypeSpecifier<19>(
+                  BasicTypeName<20>(
+                    "int"
+                  )
+                )
+                SimpleDeclarator<21>(
+                  "x"
+                )
+              )
+              (defined A) && !(defined B)
+              DeclaringList<23>(
+                #ref<12>
+                SimpleDeclarator<24>(
+                  "y"
+                )
+                InitializerOpt<25>(
+                  Initializer<26>(
+                    Constant<27>(
+                      "1"
+                    )
+                  )
+                )
+              )
+              !(defined A) && !(defined B)
+              DeclaringList<29>(
+                #ref<19>
+                SimpleDeclarator<30>(
+                  "y"
+                )
+                InitializerOpt<31>(
+                  Initializer<32>(
+                    Constant<33>(
+                      "1"
+                    )
+                  )
+                )
+              )
+            )
+          )
+        )
+      )
+    )
+  )
+)

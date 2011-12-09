@@ -1,0 +1,3 @@
+(invoke1
+(invoke2) * 2) * 2
+
