@@ -40,7 +40,7 @@ namespace test_dir{
         equals((bool(*)(DeepGoodBye,Object))&__Object::equals),
         getClass((Class(*)(DeepGoodBye))&__Object::getClass),
         toString((String(*)(DeepGoodBye))&__Object::toString)        { }
-      }
+      };
     }
   }
 }

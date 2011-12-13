@@ -51,7 +51,8 @@ SOURCE = Collector.java \
 	ProtoManager.java \
 	Translator.java \
 	CppPrinter.java \
-	PrintHandler.java
+	PrintHandler.java \
+	OverloadVisitor.java
 
 JNI_SOURCE =
 

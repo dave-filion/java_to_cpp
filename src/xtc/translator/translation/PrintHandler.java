@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import xtc.translator.representation.ClassVisitor;
+import xtc.translator.representation.CppPrintable;
 import xtc.translator.representation.MethodVisitor;
 
 public class PrintHandler {
@@ -78,9 +79,20 @@ public class PrintHandler {
 		
 		for (ClassVisitor classVisitor : classVisitors) {
 			
-			CppPrinter cppPrinter = new CppPrinter(new FileWriter("out/" + getFullClassName(classVisitor) + ".cc"));
+			CppPrinter cp = new CppPrinter(new FileWriter("out/" + getFullClassName(classVisitor) + ".cc"));
 			
-			cppPrinter.flush();
+			for (MethodVisitor m : classVisitor.getMethodList()) {
+				cp.pln(m.getIdentifier());
+				
+				for (CppPrintable p : m.getImplementationVisitor().getCppPrintList()) {
+					p.printCpp(cp);
+				}
+				
+				Runtime.getRuntime().exec("echo \"HELLO\"");
+				
+			}
+			
+			cp.flush();
 		}
 		
 		
@@ -140,7 +152,7 @@ public class PrintHandler {
 		
 		
 		cp.decr();
-		cp.indent().pln("}");
+		cp.indent().pln("};");
 	}
 	
 	private void printVTable(CppPrinter cp, ClassVisitor classVisitor, ClassVisitor original) {

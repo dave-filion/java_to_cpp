@@ -51,7 +51,12 @@ SOURCE = ClassVisitor.java \
 	FieldVisitor.java \
 	ImplementationVisitor.java \
 	MethodVisitor.java \
-	SourceObject.java
+	SourceObject.java \
+	Method.java \
+	CppPrintable.java \
+	IPiece.java \
+	CallExpressionPiece.java 
+	
 
 JNI_SOURCE =
 

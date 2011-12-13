@@ -51,6 +51,6 @@ namespace test_dir{
       sayHi_String(&__Hello::sayHi_String),
       main_String(&__Hello::main_String),
       { }
-    }
+    };
   }
 }

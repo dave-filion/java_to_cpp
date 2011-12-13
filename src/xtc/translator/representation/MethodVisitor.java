@@ -18,6 +18,7 @@ public class MethodVisitor extends Visitor implements Cloneable{
     private boolean isOverride;
     private String implementation;
     private boolean isStatic;
+    private ImplementationVisitor implementationVisitor;
 	  
     private ArrayList<String> usedClasses;
 	
@@ -68,7 +69,7 @@ public class MethodVisitor extends Visitor implements Cloneable{
 					iv.dispatch((Node) o);
 					this.setImplementation(iv.getImplementation());
 					this.usedClasses.addAll(iv.getUsedClasses());
-					System.out.println("VARIABLES: " + iv.getVarTypeDict());
+					this.implementationVisitor = iv;
 				}
 
 				// If modifiers... collect modifiers...
@@ -284,5 +285,21 @@ public class MethodVisitor extends Visitor implements Cloneable{
     public List<String> getUsedClasses() {
       return this.usedClasses;
     }
+
+	public ImplementationVisitor getImplementationVisitor() {
+		return implementationVisitor;
+	}
+
+	public void setImplementationVisitor(ImplementationVisitor implementationVisitor) {
+		this.implementationVisitor = implementationVisitor;
+	}
+
+	public void setStatic(boolean isStatic) {
+		this.isStatic = isStatic;
+	}
+
+	public void setUsedClasses(ArrayList<String> usedClasses) {
+		this.usedClasses = usedClasses;
+	}
 
 }
