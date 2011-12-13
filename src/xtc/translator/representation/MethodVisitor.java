@@ -189,6 +189,20 @@ public class MethodVisitor extends Visitor implements Cloneable{
 
 		return out;
 	}
+	
+	public String parametersToString(){
+		
+		String out = "";
+		
+		for (Map p : this.parameters) {
+			out += ",";
+			out += p.get("type");
+			out += " ";
+			out += p.get("name");
+		}
+		
+		return out;
+	}
 
 	public String getConstructorPtr() {
 		return "CONSTR PTR";

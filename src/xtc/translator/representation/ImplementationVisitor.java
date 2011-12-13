@@ -58,12 +58,9 @@ public class ImplementationVisitor extends Visitor {
 	}
 
 	public void visitBlock(GNode n) {
-		addLn("{");
-		indent++;
+		cppPrintList.add(new BlockPiece("{"));
 		visit(n);
-		indent--;
-		add(getIndent());
-		addLn("}");
+		cppPrintList.add(new BlockPiece("}"));
 	}
 
 	public void visitNewClassExpression(GNode n) {
@@ -452,11 +449,7 @@ public class ImplementationVisitor extends Visitor {
 	}
 
 	public void visitStringLiteral(GNode n) {
-		for (Object o : n) {
-			if (o instanceof String) {
-				add((String) o);
-			}
-		}
+		add("__rt::literal(" + n.getString(0) + ")");
 	}
 
 	public void visitBooleanLiteral(GNode n) {

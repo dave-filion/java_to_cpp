@@ -31,7 +31,7 @@ public class PrintHandler {
 			this.printStandardImports(cp);
 			for (String imp : classVisitor.getImports()) {
 				if (! imp.endsWith("*"))
-					cp.indent().p("#include ").p("\"").p(classPath + "." + imp + ".h").pln("\"");
+					cp.p("#include ").p("\"").p(classPath + "." + imp + ".h").pln("\"");
 			}
 			cp.pln();
 			
@@ -41,19 +41,19 @@ public class PrintHandler {
 						
 			// Open namespaces
 			for (String name : namespaces) {
-				cp.indent().p("namespace ").p(name).pln("{");		
+				cp.p("namespace ").p(name).pln("{");		
 				cp.incr();
 				cp.pln();
 			}
 			
 			// Declare data model.
-			cp.indent().p("struct ").p(prepend(classVisitor.getIdentifier())).pln(";");
+			cp.p("struct ").p(prepend(classVisitor.getIdentifier())).pln(";");
 			
 			// Declare Vtable
-			cp.indent().p("struct ").p(prepend(vtDec(classVisitor.getIdentifier()))).pln(";");
+			cp.p("struct ").p(prepend(vtDec(classVisitor.getIdentifier()))).pln(";");
 			
 			// Typedef definition
-			cp.indent().p("typedef ").p(smartPtrTo(classVisitor.getIdentifier())).p(" ").p(classVisitor.getIdentifier()).pln(";");
+			cp.p("typedef ").p(smartPtrTo(classVisitor.getIdentifier())).p(" ").p(classVisitor.getIdentifier()).pln(";");
 			
 			// Print data structure
 			cp.pln();
@@ -66,7 +66,7 @@ public class PrintHandler {
 			// Close namespaces
 			for (String name : namespaces) {
 				cp.decr();
-				cp.indent().pln("}");
+				cp.pln("}");
 			}
 			
 			// Flush buffers
@@ -81,17 +81,55 @@ public class PrintHandler {
 			
 			CppPrinter cp = new CppPrinter(new FileWriter("out/" + getFullClassName(classVisitor) + ".cc"));
 			
+			// Print standard imports
+			printStandardImports(cp);
+			// Include header
+			cp.pln("#include \"" + getFullClassName(classVisitor) + ".h\"");
+			
+			String[] namespaces = splitPackageName(classVisitor.getPackageName());
+			// Open namespaces
+			for (String name : namespaces) {
+				cp.p("namespace ").p(name).pln("{");		
+				cp.incr();
+				cp.pln();
+			}
+
+			// Print constructor
+			// TODO: print constructor
+			
+			// Print destructor
+			cp.p("void ").p(prepend(classVisitor.getIdentifier())).p("::").p("__delete");
+			cp.p("(").p(prepend(classVisitor.getIdentifier())).p("*").p(" __this)").pln("{");
+			cp.pln("delete __this;");
+			cp.pln("}");
+			cp.pln();
+			
+			// Print all methods
 			for (MethodVisitor m : classVisitor.getMethodList()) {
-				cp.pln(m.getIdentifier());
+				// Print method signature
+				// print return type
+				cp.p(m.getReturnType()).p(" ");
+				
+				// print de-scoped method identifier
+				cp.p(prepend(classVisitor.getIdentifier())).p("::").p(m.getIdentifier());
+				
+				// print parameters with implicit this
+				cp.p(" (").p(classVisitor.getIdentifier() + " __this").p(m.parametersToString()).p(")").pln();
 				
 				for (CppPrintable p : m.getImplementationVisitor().getCppPrintList()) {
 					p.printCpp(cp);
 				}
 				
-				Runtime.getRuntime().exec("echo \"HELLO\"");
-				
+				cp.pln();
 			}
 			
+			// Close namespaces
+			for (String name : namespaces) {
+				cp.decr();
+				cp.pln("}");
+			}
+
+						
 			cp.flush();
 		}
 		
@@ -99,28 +137,28 @@ public class PrintHandler {
 	}
 	
 	private void printDataStructure(CppPrinter cp, ClassVisitor classVisitor) {
-		cp.indent().p("struct ").p(prepend(classVisitor.getIdentifier())).pln("{");
+		cp.p("struct ").p(prepend(classVisitor.getIdentifier())).pln("{");
 		cp.incr();
 		// vptr
-		cp.indent().p(vtDec(classVisitor.getIdentifier())).p("*").p(" ").p("__vptr").pln(";");
+		cp.p(vtDec(classVisitor.getIdentifier())).p("*").p(" ").p("__vptr").pln(";");
 		
 		// the constructor
-		cp.indent().p(prepend(classVisitor.getConstructor())).pln(";");
+		cp.p(prepend(classVisitor.getConstructor())).pln(";");
 		
 		// the destructor
-		cp.indent().p("static void __delete(").p(prepend(classVisitor.getIdentifier()) + "*").p(")").pln(";");
+		cp.p("static void __delete(").p(prepend(classVisitor.getIdentifier()) + "*").p(")").pln(";");
 		
 		for ( MethodVisitor m : classVisitor.getMethodList() ) {
-			cp.indent().p(m.getSignature(classVisitor)).pln(";");
+			cp.p(m.getSignature(classVisitor)).pln(";");
 		}
 		
 		// __class function
-		cp.indent().p("static Class __class()").pln(";");
+		cp.p("static Class __class()").pln(";");
 		
 		// the vtable for the object
-		cp.indent().p("static ").p(prepend(vtDec(classVisitor.getIdentifier()))).p(" ").p("__vtable").pln(";");
+		cp.p("static ").p(prepend(vtDec(classVisitor.getIdentifier()))).p(" ").p("__vtable").pln(";");
 		cp.decr();
-		cp.indent().pln("};");
+		cp.pln("};");
 	}
 	
 	private void printStandardImports(CppPrinter cp) {
@@ -133,7 +171,7 @@ public class PrintHandler {
 	}
 		
 	private void printVTable(CppPrinter cp, ClassVisitor classVisitor) {
-		cp.indent().p("struct ").p(vtDec(classVisitor.getIdentifier())).pln(" {");
+		cp.p("struct ").p(vtDec(classVisitor.getIdentifier())).pln(" {");
 		cp.incr();
 		cp.pln();
 		
@@ -142,17 +180,17 @@ public class PrintHandler {
 		
 		// Generate constructor
 		cp.pln();
-		cp.indent().pln(vtDec(classVisitor.getIdentifier()) + "()");
-		cp.indent().pln(": __isa(" + prepend(classVisitor.getIdentifier()) + "::__class()),");
-		cp.indent().pln("__delete(&" + prepend(classVisitor.getIdentifier()) + "::__delete),");
+		cp.pln(vtDec(classVisitor.getIdentifier()) + "()");
+		cp.pln(": __isa(" + prepend(classVisitor.getIdentifier()) + "::__class()),");
+		cp.pln("__delete(&" + prepend(classVisitor.getIdentifier()) + "::__delete),");
 		
 		printVTableConstructor(cp, classVisitor, classVisitor);
 		
-		cp.indent().pln("{ }");
+		cp.pln("{ }");
 		
 		
 		cp.decr();
-		cp.indent().pln("};");
+		cp.pln("};");
 	}
 	
 	private void printVTable(CppPrinter cp, ClassVisitor classVisitor, ClassVisitor original) {
@@ -162,7 +200,7 @@ public class PrintHandler {
 			printVTable(cp, classVisitor.getSuperClass(), original);
             for (MethodVisitor m : classVisitor.getMethodList()) {
                 if (!m.isOverride())
-                	cp.indent().p(m.getMethodPointer(original)).pln(";");
+                	cp.p(m.getMethodPointer(original)).pln(";");
             }
 		}
 	}
@@ -189,10 +227,10 @@ public class PrintHandler {
 
 					if (!classPointer.equals(original.getIdentifier())) {
 						// If class pointer is not class, we must cast it
-						cp.indent().p(cast(m, original, classPointer));
+						cp.p(cast(m, original, classPointer));
 					} else {
 						// otherwise, reference original classes implementation
-						cp.indent().p(m.getIdentifier()
+						cp.p(m.getIdentifier()
 								+ openParen()
 								+ reference(prepend(scope(classPointer,
 										m.getIdentifier()))) + closeParen());

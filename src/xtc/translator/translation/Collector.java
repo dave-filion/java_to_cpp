@@ -14,6 +14,7 @@ import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 
+import xtc.translator.representation.CallExpressionPiece;
 import xtc.translator.representation.ClassVisitor;
 import xtc.translator.representation.CompilationUnit;
 import xtc.translator.representation.Method;
@@ -81,6 +82,9 @@ public class Collector extends Visitor {
 
 		// sort the list of classes for printing
 		//this.sort();
+		
+		// Process method calls for proper overloading
+		this.processCallExpression();
 	}
 
 	private void assignSuperClass() {
@@ -203,7 +207,7 @@ public class Collector extends Visitor {
 					paramTypes.add(param.get("type"));
 				}
 				
-				method.argumentTypes = paramTypes;
+				method.arguments.setArguments(paramTypes);
 				
 				method.generateOverloadedIdentifier();
 				
@@ -222,6 +226,19 @@ public class Collector extends Visitor {
 		}
 	}
 
+	private void processCallExpression() {
+		
+		for (ClassVisitor classVisitor : classes) {
+			
+			for (MethodVisitor m : classVisitor.getMethodList()) {
+				
+				for (CallExpressionPiece c : m.getImplementationVisitor().getCallExpressions()) {
+					c.processNode();
+				}	
+			}	
+		}
+	}
+	
 	public ArrayList<ClassVisitor> getSortedClasses() {
 		sort();
 		return sortedClasses;

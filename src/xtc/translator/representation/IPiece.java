@@ -20,7 +20,7 @@ public class IPiece implements CppPrintable{
 	
 	@Override
 	public void printCpp(CppPrinter cp) {
-		cp.indent().p(representation);
+		cp.p(representation);
 	}
 	
 	
