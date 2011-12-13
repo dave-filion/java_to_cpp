@@ -7,7 +7,7 @@ import xtc.tree.GNode;
 public class ConstructorVisitor extends MethodVisitor {
 
 	public ConstructorVisitor() {
-		super();
+		super(null);
 	}
 	
 	public String getSignature(){

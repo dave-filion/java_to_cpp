@@ -26,6 +26,7 @@ static void sayBye(Goodbye);
 static void forTest(Goodbye);
 static void whileTest(Goodbye);
 static String returnString(Goodbye);
+static String returnString_int(Goodbye, int);
 static void chainTest(Goodbye);
 static Class __class();
 static ____Goodbye_VT __vtable;
@@ -45,6 +46,7 @@ void (*sayBye)(Goodbye);
 void (*forTest)(Goodbye);
 void (*whileTest)(Goodbye);
 String (*returnString)(Goodbye);
+String (*returnString_int)(Goodbye, int);
 void (*chainTest)(Goodbye);
 
 __Goodbye_VT()
@@ -65,6 +67,7 @@ sayBye(&__Goodbye::sayBye),
 forTest(&__Goodbye::forTest),
 whileTest(&__Goodbye::whileTest),
 returnString(&__Goodbye::returnString),
+returnString_int(&__Goodbye::returnString_int),
 chainTest(&__Goodbye::chainTest){ }
 };
 }

@@ -4,11 +4,16 @@ import hello.Hello;
 
 public class Goodbye extends Hello{
 
+	public int global;
+	
 	public void sayHi() {
 		System.out.println("Bye!");
 	}
 
 	public void sayBye(String name) {
+		int dave = 5;
+		String bob = "hey there";
+		
 		System.out.println(name);
 	}
 	
@@ -34,7 +39,11 @@ public class Goodbye extends Hello{
 		return "Hi";
 	}
 	
+	public String returnString(int something) {
+		return "Hi 2";
+	}
+	
 	public void chainTest(){
-		returnString().startsWith("H");
+		returnString(4).startsWith("H");
 	}
 }

@@ -11,6 +11,7 @@ import java.util.*;
  */
 public class MethodVisitor extends Visitor implements Cloneable{
 
+	private Node baseNode;
     private String identifier;
     private List<Map<String, String>> parameters;
     private List<String> modifiers;
@@ -19,17 +20,20 @@ public class MethodVisitor extends Visitor implements Cloneable{
     private String implementation;
     private boolean isStatic;
     private ImplementationVisitor implementationVisitor;
+    private Map<String, String> variableMap;
 	  
     private ArrayList<String> usedClasses;
 	
-    public MethodVisitor() {
+    public MethodVisitor(Node baseNode) {
 		super();
 
+		this.baseNode = baseNode;
 		modifiers = new ArrayList<String>();
 		parameters = new ArrayList<Map<String, String>>();
 		this.isOverride = false;	
 		this.usedClasses = new ArrayList<String>();	
         this.isStatic = false;
+        this.variableMap = null;
 	}
 	
 	public MethodVisitor(String identifier, String returnType) {
@@ -70,6 +74,7 @@ public class MethodVisitor extends Visitor implements Cloneable{
 					this.setImplementation(iv.getImplementation());
 					this.usedClasses.addAll(iv.getUsedClasses());
 					this.implementationVisitor = iv;
+					System.out.println(iv.getVarTypeDict());
 				}
 
 				// If modifiers... collect modifiers...
@@ -316,4 +321,21 @@ public class MethodVisitor extends Visitor implements Cloneable{
 		this.usedClasses = usedClasses;
 	}
 
+	public Node getBaseNode() {
+		return baseNode;
+	}
+
+	public void setBaseNode(Node baseNode) {
+		this.baseNode = baseNode;
+	}
+
+	public Map<String, String> getVariableMap() {
+		return variableMap;
+	}
+
+	public void setVariableMap(Map<String, String> variableMap) {
+		this.variableMap = variableMap;
+	}
+
+	
 }

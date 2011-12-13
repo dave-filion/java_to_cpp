@@ -329,43 +329,6 @@ public class ImplementationVisitor extends Visitor {
 		}
 	}
 
-	// helper method for method chaining
-	private String callExpressionHelper(GNode n) {
-		String name = "";
-		// find the primary identifier
-		if (GNode.test(n.get(0))) {
-			if (n.getGeneric(0).hasName("PrimaryIdentifier")) {
-				// add object name to the start
-				name = n.getGeneric(0).getString(0);
-				add(name);
-			} else if (n.getGeneric(0).hasName("CallExpression")) {
-				name = callExpressionHelper(n.getGeneric(0));
-			}
-			// don't think this will ever get called
-			else if (n.getGeneric(0).hasName("ThisExpression")) {
-				name = "__this";
-				add(name);
-			}
-		}
-
-		// then act as a visitCallExpression
-		String methodName = n.getString(2);
-		add("->__vptr->");
-		add(methodName);
-		add("(");
-		// implicit this
-		add(name);
-		add(",");
-		// dispatch over arguments
-		for (Object o : n.getNode(3)) {
-			dispatch((Node) o);
-			add(",");
-		}
-		removeLastComma();
-		add(")");
-		return name;
-	}
-
 	public void visitCallExpression(GNode n) {
 
 		CallExpressionPiece cep = new CallExpressionPiece(n);

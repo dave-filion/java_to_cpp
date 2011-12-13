@@ -5,10 +5,10 @@ import java.util.List;
 
 public class Method {
 
-	public String identifier;
-	public String overloadedIdentifier;
-	public String returnType;
-	public Arguments arguments; //have to be in order
+	private String identifier;
+	private String overloadedIdentifier;
+	private String returnType;
+	private Arguments arguments; //have to be in order
 	
 	public Method(String identifier, String returnType) {
 		this.identifier = identifier;
@@ -38,6 +38,38 @@ public class Method {
 	
 	public String toString(){
 		return "(" + returnType + ") " + overloadedIdentifier + "( " + arguments + " )";
+	}
+
+	public String getIdentifier() {
+		return identifier;
+	}
+
+	public void setIdentifier(String identifier) {
+		this.identifier = identifier;
+	}
+
+	public String getOverloadedIdentifier() {
+		return overloadedIdentifier;
+	}
+
+	public void setOverloadedIdentifier(String overloadedIdentifier) {
+		this.overloadedIdentifier = overloadedIdentifier;
+	}
+
+	public String getReturnType() {
+		return returnType;
+	}
+
+	public void setReturnType(String returnType) {
+		this.returnType = returnType;
+	}
+
+	public Arguments getArguments() {
+		return arguments;
+	}
+
+	public void setArguments(Arguments arguments) {
+		this.arguments = arguments;
 	}
 	
 }

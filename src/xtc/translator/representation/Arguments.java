@@ -24,9 +24,32 @@ public class Arguments implements Comparable {
 	}
 
 	@Override
-	public int compareTo(Object arg0) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int compareTo(Object other) {
+		
+		if (other == null) {
+			return -1;
+		} else {
+			
+			List<String> otherArgs = ((Arguments)other).getArguments();
+			
+			// If the sizes are different, they are not the same
+			if (otherArgs.size() != arguments.size()) {
+				return -1;
+			}
+			
+			for (int i = 0; i < this.arguments.size(); i++) {
+				
+				String o = otherArgs.get(i);
+				if (! o.equals(arguments.get(i))) {
+					return -1;
+				}
+				
+			}
+			
+			return 0;
+		}
+		
+		
 	}
 
 	@Override

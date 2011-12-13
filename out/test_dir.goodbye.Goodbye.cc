@@ -15,17 +15,19 @@ delete __this;
 
 void __Goodbye::sayHi (Goodbye __this)
 {
-println;
+System.out;
 }
 
 void __Goodbye::sayBye_String (Goodbye __this,String name)
 {
-println;
+int dave = 5;
+String bob = __rt::literal("hey there");
+System.out;
 }
 
 void __Goodbye::sayBye (Goodbye __this)
 {
-println;
+System.out;
 }
 
 void __Goodbye::forTest (Goodbye __this)
@@ -49,9 +51,14 @@ String __Goodbye::returnString (Goodbye __this)
 return __rt::literal("Hi");
 }
 
+String __Goodbye::returnString_int (Goodbye __this,int something)
+{
+return __rt::literal("Hi 2");
+}
+
 void __Goodbye::chainTest (Goodbye __this)
 {
-startsWith;
+returnString_int;
 }
 
 }

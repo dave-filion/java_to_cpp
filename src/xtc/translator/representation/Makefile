@@ -55,7 +55,11 @@ SOURCE = ClassVisitor.java \
 	Method.java \
 	CppPrintable.java \
 	IPiece.java \
-	CallExpressionPiece.java 
+	CallExpressionPiece.java \
+	Arguments.java \
+	BlockPiece.java \
+	ArgumentVisitor.java \
+	VariableVisitor.java
 	
 
 JNI_SOURCE =

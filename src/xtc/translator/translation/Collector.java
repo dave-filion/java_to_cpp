@@ -17,9 +17,11 @@ import java.io.IOException;
 import xtc.translator.representation.CallExpressionPiece;
 import xtc.translator.representation.ClassVisitor;
 import xtc.translator.representation.CompilationUnit;
+import xtc.translator.representation.FieldVisitor;
 import xtc.translator.representation.Method;
 import xtc.translator.representation.MethodVisitor;
 import xtc.translator.representation.SourceObject;
+import xtc.translator.representation.VariableVisitor;
 
 import xtc.lang.JavaFiveParser;
 import xtc.parser.ParseException;
@@ -82,6 +84,9 @@ public class Collector extends Visitor {
 
 		// sort the list of classes for printing
 		//this.sort();
+		
+		// Create variable map for each method
+		this.createVariableMaps();
 		
 		// Process method calls for proper overloading
 		this.processCallExpression();
@@ -207,22 +212,44 @@ public class Collector extends Visitor {
 					paramTypes.add(param.get("type"));
 				}
 				
-				method.arguments.setArguments(paramTypes);
+				method.getArguments().setArguments(paramTypes);
 				
 				method.generateOverloadedIdentifier();
 				
 				// if method is already there, add it to the list
-				if (classVisitor.getOverloadMap().containsKey(method.identifier)){
-					classVisitor.getOverloadMap().get(method.identifier).add(method);
+				if (classVisitor.getOverloadMap().containsKey(method.getIdentifier())){
+					classVisitor.getOverloadMap().get(method.getIdentifier()).add(method);
 				} else {
 					List<Method> methodList = new ArrayList<Method>();
 					methodList.add(method);
-					classVisitor.getOverloadMap().put(method.identifier, methodList);
+					classVisitor.getOverloadMap().put(method.getIdentifier(), methodList);
 				}
 				
-				m.setIdentifier(method.overloadedIdentifier);
+				m.setIdentifier(method.getOverloadedIdentifier());
 			}
 			
+		}
+	}
+	
+	private void createVariableMaps() {
+		
+		for (ClassVisitor classVisitor : classes) {
+			
+			for (MethodVisitor m : classVisitor.getMethodList()) {
+				
+				VariableVisitor vv = new VariableVisitor();
+				
+				// Put field variables into it
+				for (FieldVisitor fv : classVisitor.getFieldList()) {
+					vv.getVariableMap().put(fv.variableName, fv.variableType);
+				}
+				
+				// get the rest of the variables in method scope
+				vv.dispatch(m.getBaseNode());
+				
+				// set methods variable map
+				m.setVariableMap(vv.getVariableMap());
+			}			
 		}
 	}
 
@@ -233,6 +260,8 @@ public class Collector extends Visitor {
 			for (MethodVisitor m : classVisitor.getMethodList()) {
 				
 				for (CallExpressionPiece c : m.getImplementationVisitor().getCallExpressions()) {
+					c.setMethodMap(classVisitor.getOverloadMap());
+					c.setVariableMap(m.getVariableMap());
 					c.processNode();
 				}	
 			}	

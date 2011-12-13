@@ -119,7 +119,7 @@ public class ClassVisitor extends Visitor implements Cloneable {
 	 * 
 	 */
 	public void visitMethodDeclaration(GNode n) {
-		MethodVisitor methodVisitor = new MethodVisitor();
+		MethodVisitor methodVisitor = new MethodVisitor(n);
 		methodVisitor.dispatch(n);
 
 		this.methodList.add(methodVisitor);
