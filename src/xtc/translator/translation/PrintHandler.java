@@ -133,6 +133,29 @@ public class PrintHandler {
 			cp.flush();
 		}
 		
+	}
+	
+	public void printMainFile(String mainClass) throws IOException {
+		
+		CppPrinter cp = new CppPrinter(new FileWriter("out/main.cc"));
+		ClassVisitor main = null;
+		
+		//TODO: this is inefficient, but i don't know how else to do it.
+		for (ClassVisitor cv : classVisitors) {
+			if ((cv.getIdentifier() + ".java").equals(mainClass)) {
+				main = cv;
+			}
+		}
+		
+		// Print standard imports
+		printStandardImports(cp);
+
+		//TODO: Include all headers
+		
+		cp.p(main.getIdentifier()).p(".main(__rt::null())").pln();
+		
+		
+		cp.flush();
 		
 	}
 	

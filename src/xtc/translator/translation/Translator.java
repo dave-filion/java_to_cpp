@@ -59,6 +59,8 @@ public class Translator {
 				printHandler.printAllHeaders();
 				
 				printHandler.printAllImplementations();
+				
+				printHandler.printMainFile(args[0]);
 
 			} catch (IOException e) {
 				// TODO Auto-generated catch block

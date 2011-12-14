@@ -14,6 +14,7 @@ import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 
+import xtc.translator.representation.Argument;
 import xtc.translator.representation.CallExpressionPiece;
 import xtc.translator.representation.ClassVisitor;
 import xtc.translator.representation.CompilationUnit;
@@ -206,14 +207,18 @@ public class Collector extends Visitor {
 			for (MethodVisitor m : classVisitor.getMethodList()) {
 								
 				Method method = new Method(m.getIdentifier(), m.getReturnType());
-				List<String> paramTypes = new ArrayList<String>();
+				
+				// set if method is static
+				method.isStatic = m.isStatic();
+				
+				List<Argument> paramTypes = new ArrayList<Argument>();
 				
 				for (Map<String, String> param : m.getParameters()) {
-					paramTypes.add(param.get("type"));
+					paramTypes.add(new Argument(param.get("type"), null));
 				}
 				
 				method.getArguments().setArguments(paramTypes);
-				
+								
 				method.generateOverloadedIdentifier();
 				
 				// if method is already there, add it to the list

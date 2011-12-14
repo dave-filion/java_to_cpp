@@ -28,6 +28,7 @@ static void whileTest(Goodbye);
 static String returnString(Goodbye);
 static String returnString_int(Goodbye, int);
 static void chainTest(Goodbye);
+static void main_String(Goodbye, String);
 static Class __class();
 static ____Goodbye_VT __vtable;
 };
@@ -59,7 +60,7 @@ getClass((Class(*)(Goodbye))&__Object::getClass),
 toString((String(*)(Goodbye))&__Hello::toString),
 sayHi(&__Goodbye::sayHi),
 sayHi_String((void(*)(Goodbye,String))&__Hello::sayHi_String),
-main_String((void(*)(Goodbye,String))&__Hello::main_String),
+main_String(&__Goodbye::main_String),
 ,
 ,
 sayBye_String(&__Goodbye::sayBye_String),
@@ -68,7 +69,8 @@ forTest(&__Goodbye::forTest),
 whileTest(&__Goodbye::whileTest),
 returnString(&__Goodbye::returnString),
 returnString_int(&__Goodbye::returnString_int),
-chainTest(&__Goodbye::chainTest){ }
+chainTest(&__Goodbye::chainTest),
+{ }
 };
 }
 }

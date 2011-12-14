@@ -15,17 +15,17 @@ delete __this;
 
 void __Hello::sayHi (Hello __this)
 {
-System.out;
+System.out.println(__rt::literal("Hi"));
 }
 
 void __Hello::sayHi_String (Hello __this,String name)
 {
-System.out;
+System.out.println(__rt::literal("HIII"));
 }
 
 void __Hello::main_String (Hello __this,String args)
 {
-System.out;
+System.out.println(__rt::literal("Hello world"));
 }
 
 String __Hello::toString (Hello __this)

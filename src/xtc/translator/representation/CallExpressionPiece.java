@@ -7,6 +7,7 @@ import xtc.translator.translation.CppPrinter;
 import xtc.tree.GNode;
 import xtc.tree.Node;
 import xtc.tree.Visitor;
+import xtc.type.C;
 
 public class CallExpressionPiece extends Visitor implements CppPrintable{
 
@@ -29,41 +30,81 @@ public class CallExpressionPiece extends Visitor implements CppPrintable{
 	public void visitCallExpression(GNode n) {		
 		visit(n);
 
+		System.out.println("Call expression " + n);
+		
+		// get caller
+		Node caller = n.getNode(0);
+		if (caller.getName().equals("PrimaryIdentifier")) {
+			representation += caller.getString(0);
+		}
+		
 		// get arguments here
 		Node arguments = n.getNode(3);
 		ArgumentVisitor argumentVisitor = new ArgumentVisitor(variableMap);
 		argumentVisitor.dispatch(arguments);
 				
 		// check methodMap
-		String name = n.getString(2);
-		
-		System.out.println("Args for " + name + argumentVisitor.getArguments());
-		
-		List<Method> methodList = methodMap.get(name);
-		
-		//TODO need to special-case for print and println
-		
-		if (methodList == null) {
-			//TODO: throw exception
-			System.out.println("COULDNT FIND METHOD " + name);
+		String name = n.getString(2);		
+
+		// Special case for print and println
+		if (name.equals("println") || name.equals("print")) {
+			
+			representation += ".";
+			representation += name;
+			//TODO: make this more robust
+			representation += "(" + argumentVisitor.getArguments().getArguments().get(0).value + ")";
+			
 		} else {
-			for (Method method : methodList) {
-				
-				// check for method with matching arguments
-				if (method.getArguments()
-						.compareTo(argumentVisitor.getArguments()) == 0) {
-					System.out.println("Found matching method " + method);
-					
-					representation += method.getOverloadedIdentifier();
+
+			// get method list for name
+			List<Method> methodList = methodMap.get(name);
+
+			if (methodList == null) {
+				// TODO: throw exception
+				System.out.println("COULDNT FIND METHOD " + name);
+			} else {
+				for (Method method : methodList) {
+
+					// check for method with matching arguments
+					if (method.getArguments().compareTo(
+							argumentVisitor.getArguments()) == 0) {
+
+						// TODO: need to check method type to see whether to go
+						// thru v pointer or statically
+						if (method.isStatic) {
+							representation += "."
+									+ method.getOverloadedIdentifier();
+						} else {
+							representation += "->__vptr ->"
+									+ method.getOverloadedIdentifier();
+						}
+					}
 				}
-				
 			}
-		}		
+
+			// Print arguments
+			representation += "(";
+			representation += "__this";
+
+			// TODO: fix this horrible get.get thing
+			for (Argument arg : argumentVisitor.getArguments().getArguments()) {
+				representation += ",";
+				representation += arg.value;
+			}
+
+			representation += ")";
+		}
 	}
 	
-	public void visitSelectionExpression(GNode n) {
-		visit(n);
-		
+	public void visitThisExpression(GNode n) {
+		representation += "__this";
+	}
+	
+	public void visitPrimaryIdentifier(GNode n) {
+		//representation += n.getString(0);
+	}
+	
+	public void visitSelectionExpression(GNode n) {		
 		String primaryId = n.getNode(0).getString(0);
 		String selection = n.getString(1);
 		

@@ -44,6 +44,11 @@ public class Goodbye extends Hello{
 	}
 	
 	public void chainTest(){
-		returnString(4).startsWith("H");
+		this.returnString(4).startsWith("H");
+	}
+	
+	public static void main(String[] args) {
+		Goodbye b = new Goodbye();
+		b.chainTest();
 	}
 }

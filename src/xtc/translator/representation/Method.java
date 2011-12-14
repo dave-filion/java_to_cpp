@@ -9,6 +9,7 @@ public class Method {
 	private String overloadedIdentifier;
 	private String returnType;
 	private Arguments arguments; //have to be in order
+	public boolean isStatic;
 	
 	public Method(String identifier, String returnType) {
 		this.identifier = identifier;
@@ -25,8 +26,8 @@ public class Method {
 			
 			this.overloadedIdentifier = identifier;
 			
-			for (String type : arguments.getArguments()) {
-				this.overloadedIdentifier += "_" + type;
+			for (Argument arg : arguments.getArguments()) {
+				this.overloadedIdentifier += "_" + arg.type;
 			}
 			
 		} else {

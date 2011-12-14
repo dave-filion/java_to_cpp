@@ -5,24 +5,24 @@ import java.util.List;
 
 public class Arguments implements Comparable {
 
-	private List<String> arguments;
+	private List<Argument> arguments;
 	
 	public Arguments() {
-		this.arguments = new ArrayList<String>();
+		this.arguments = new ArrayList<Argument>();
 	}
 	
-	public void addArgument(String type){
-		this.arguments.add(type);
+	public void addArgument(String type, String value){
+		this.arguments.add(new Argument(type, value));
 	}
 	
-	public List<String> getArguments() {
+	public List<Argument> getArguments() {
 		return arguments;
 	}
 
-	public void setArguments(List<String> arguments) {
+	public void setArguments(List<Argument> arguments) {
 		this.arguments = arguments;
 	}
-
+	
 	@Override
 	public int compareTo(Object other) {
 		
@@ -30,7 +30,7 @@ public class Arguments implements Comparable {
 			return -1;
 		} else {
 			
-			List<String> otherArgs = ((Arguments)other).getArguments();
+			List<Argument> otherArgs = ((Arguments)other).getArguments();
 			
 			// If the sizes are different, they are not the same
 			if (otherArgs.size() != arguments.size()) {
@@ -39,8 +39,8 @@ public class Arguments implements Comparable {
 			
 			for (int i = 0; i < this.arguments.size(); i++) {
 				
-				String o = otherArgs.get(i);
-				if (! o.equals(arguments.get(i))) {
+				String o = otherArgs.get(i).type;
+				if (! o.equals(arguments.get(i).type)) {
 					return -1;
 				}
 				

@@ -22,16 +22,17 @@ public class ArgumentVisitor extends Visitor {
 	}
 	
 	public void visitStringLiteral(GNode n) {
-		arguments.addArgument("String");
+		arguments.addArgument("String", 
+				"__rt::literal(" + n.getString(0) + ")");
 	}
 	
 	public void visitPrimaryIdentifier(GNode n) {		
 		String type = variableMap.get(n.getString(0));
-		arguments.addArgument(type);
+		arguments.addArgument(type, n.getString(0));
 	}
 	
 	public void visitIntegerLiteral(GNode n) {
-		arguments.addArgument("int");
+		arguments.addArgument("int", n.getString(0));
 	}
 	
 	public Arguments getArguments() {
