@@ -19,6 +19,7 @@ __Hello_VT* __vptr;
 __Hello();
 static void __delete(__Hello*);
 static void hello(Hello);
+static void hello_String(Hello, String);
 static void main();
 static Class __class();
 static __Hello_VT __vtable;
@@ -33,6 +34,7 @@ bool (*equals)(Hello, Object);
 Class (*getClass)(Hello);
 String (*toString)(Hello);
 void (*hello)(Hello);
+void (*hello_String)(Hello, String);
 
 __Hello_VT()
 : __isa(__Hello::__class()),
@@ -41,6 +43,7 @@ hashCode((int32_t(*)(Hello))&__Object::hashCode),
 equals((bool(*)(Hello,Object))&__Object::equals),
 getClass((Class(*)(Hello))&__Object::getClass),
 toString((String(*)(Hello))&__Object::toString),
-hello(&__Hello::hello){ }
+hello(&__Hello::hello),
+hello_String(&__Hello::hello_String){ }
 };
 }

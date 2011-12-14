@@ -145,6 +145,7 @@ public class PrintHandler {
 			//print superclass
 			cp.p("), ").p(prepend(classVisitor.getSuperClass().getIdentifier()));
 			cp.p("::__class());").pln();
+			cp.p("return k;").pln();
 			cp.p("}").pln();
 			
 			// Invoke vtable constructor
