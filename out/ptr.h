@@ -37,8 +37,6 @@ namespace __rt {
     size_t* counter;
     
   public:
-    typedef T value_t;
-
     inline Ptr(T* addr = 0) : addr(addr), counter(new size_t(1)) {
       TRACE(addr);
     }

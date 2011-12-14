@@ -179,17 +179,21 @@ public class MethodVisitor extends Visitor implements Cloneable{
 
 	public String getSignature(ClassVisitor implicitThis) {
 		String out = "";
-        //out += this.modifiers.get(0) + " static " + this.returnType + " " + this.identifier + "(";
 		out += "static " + this.returnType + " " + this.identifier + "(";
+		
+		if (this.identifier.equals("main")) {
+			// do nothing
+		} else {
 
-		out += implicitThis.getIdentifier();
+			out += implicitThis.getIdentifier();
 
-		// Print parameter types
-		for (Map<String, String> p : this.parameters) {
-			out += ", ";
-			out += p.get("type");
+			// Print parameter types
+			for (Map<String, String> p : this.parameters) {
+				out += ", ";
+				out += p.get("type");
+			}
+
 		}
-
 		out += ")";
 
 		return out;

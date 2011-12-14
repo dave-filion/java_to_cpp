@@ -28,7 +28,6 @@ public class CallExpressionPiece extends Visitor implements CppPrintable{
 	}
 	
 	public void visitCallExpression(GNode n) {		
-		System.out.println("Call expression " + n);
 		
 		// get caller
 		Node caller = n.getNode(0);
@@ -85,7 +84,12 @@ public class CallExpressionPiece extends Visitor implements CppPrintable{
 
 			// Print arguments
 			representation += "(";
-			representation += "__this";
+			
+			if (caller.getName().equals("PrimaryIdentifier")) {
+				representation += caller.getString(0);
+			} else {
+				representation += "__this";
+			}
 
 			// TODO: fix this horrible get.get thing
 			for (Argument arg : argumentVisitor.getArguments().getArguments()) {

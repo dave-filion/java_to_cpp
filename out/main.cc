@@ -6,5 +6,5 @@
 #include "java_lang.h"
 #include "easy_test.Hello.h"
 int main(){
-easy_test::Hello.main(__rt::null());
+easy_test::__Hello::main();
 }

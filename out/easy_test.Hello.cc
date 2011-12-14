@@ -15,13 +15,12 @@ delete __this;
 
 void __Hello::hello (Hello __this)
 {
-System::out.println(__rt::literal("Hello world!"));
 }
 
-void __Hello::main_String (Hello __this,String args)
+void __Hello::main()
 {
 Hello h = new __Hello(  );
-h->__vptr ->hello(__this);
+h->__vptr ->hello(h);
 }
 
 Class __Hello::__class() {

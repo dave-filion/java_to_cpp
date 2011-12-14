@@ -118,10 +118,17 @@ public class PrintHandler {
 				
 				// print de-scoped method identifier
 				cp.p(prepend(classVisitor.getIdentifier())).p("::").p(m.getIdentifier());
-				
-				// print parameters with implicit this
-				cp.p(" (").p(classVisitor.getIdentifier() + " __this").p(m.parametersToString()).p(")").pln();
-				
+
+				if (m.getIdentifier().equals("main")) {
+					// Special case main to have no arguments
+					cp.p("()").pln();
+
+				} else {
+					// print parameters with implicit this
+					cp.p(" (").p(classVisitor.getIdentifier() + " __this")
+							.p(m.parametersToString()).p(")").pln();
+				}
+
 				for (CppPrintable p : m.getImplementationVisitor().getCppPrintList()) {
 					p.printCpp(cp);
 				}
@@ -184,7 +191,7 @@ public class PrintHandler {
 			cp.p(namespace).p("::");
 		}
 		//TODO: this needs to change as well
-		cp.p(main.getIdentifier()).p(".main(__rt::null())").p(";").pln();
+		cp.p(prepend(main.getIdentifier())).p("::main()").p(";").pln();
 		
 		cp.p("}").pln();
 		
@@ -263,7 +270,7 @@ public class PrintHandler {
 		} else {
 			printVTable(cp, classVisitor.getSuperClass(), original);
             for (MethodVisitor m : classVisitor.getMethodList()) {
-                if (!m.isOverride())
+                if (!m.isOverride() && !m.isStatic())
                 	cp.p(m.getMethodPointer(original)).pln(";");
             }
 		}
@@ -283,7 +290,7 @@ public class PrintHandler {
 				MethodVisitor m = cv.getMethodList().get(i);
 				
 				// exclude main
-				if (!m.isOverride()) {
+				if (!m.isOverride() && !m.isStatic()) {
 					// comma from previous line
 					cp.pln(",");
 

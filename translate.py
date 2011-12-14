@@ -20,3 +20,4 @@ else:
                         print "Compile Failed"
                 else:
                         print "Sucess!"
+			os.system("./a.out")

@@ -230,7 +230,8 @@ public class Collector extends Visitor {
 					classVisitor.getOverloadMap().put(method.getIdentifier(), methodList);
 				}
 				
-				m.setIdentifier(method.getOverloadedIdentifier());
+				if (! m.getIdentifier().equals("main"))
+					m.setIdentifier(method.getOverloadedIdentifier());
 			}
 			
 		}
