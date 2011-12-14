@@ -27,13 +27,15 @@ public class PrintHandler {
 			// Make new printer printing to outfile
 			CppPrinter cp = new CppPrinter(new FileWriter("out/" + getFullClassName(classVisitor) + ".h"));
 			
+			//Pragma once
+			cp.pln("#pragma once");
+			
 			// Imports
 			this.printStandardImports(cp);
 			for (String imp : classVisitor.getImports()) {
 				if (! imp.endsWith("*"))
 					cp.p("#include ").p("\"").p(classPath + "." + imp + ".h").pln("\"");
 			}
-			cp.pln("#include \"System.h\"");
 			cp.pln();
 			
 			cp.pln().pln("using namespace java::lang;");
@@ -84,6 +86,7 @@ public class PrintHandler {
 			
 			// Print standard imports
 			printStandardImports(cp);
+			cp.pln("#include \"System.h\"");
 			// Include header
 			cp.pln("#include \"" + getFullClassName(classVisitor) + ".h\"");
 			

@@ -4,6 +4,10 @@
 #include <cstring>
 #include "ptr.h"
 #include "java_lang.h"
+#include "easy_test.Hello.h"
+
 int main(){
-test_dir::hello::Hello.main(__rt::null());
+eash_test::Hello hello = new __Hello();
+
+hello -> main(__rt::null());
 }

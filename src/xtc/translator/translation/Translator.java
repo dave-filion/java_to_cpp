@@ -11,6 +11,8 @@ import java.io.Writer;
 
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
+
 import xtc.translator.*;
 import xtc.translator.representation.CompilationUnit;
 
@@ -65,11 +67,10 @@ public class Translator {
 				
 				printHandler.printMainFile(mainClassPath);
 				
-				//TODO: run g++ 
-				//TODO: execute program
+				for (File file : new File("dependencies").listFiles()) {
+					FileUtils.copyFileToDirectory(file, new File("out"));
+				}
 				
-				Runtime.getRuntime().exec("g++");
-
 			} catch (IOException e) {
 				e.printStackTrace();
 			} catch (ParseException e) {

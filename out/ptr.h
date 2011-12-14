@@ -32,35 +32,13 @@
 namespace __rt {
 
   template<typename T>
-  struct ObjectPolicy {
-    static void destroy(T* addr) {
-      delete addr;
-    }
-  };
-
-  template<typename T>
-  struct ArrayPolicy {
-    static void destroy(T* addr) {
-      delete[] addr;
-    }
-  };
-
-  template<typename T>
-  struct JavaPolicy {
-    static void destroy(T* addr) {
-      if (0 != addr) addr->__vptr->__delete(addr);
-    }
-  };
-
-  template<typename T, template <typename> class Policy = ObjectPolicy>
   class Ptr {
     T* addr;
     size_t* counter;
     
   public:
     typedef T value_t;
-    typedef Policy<T> policy_t;
-    
+
     inline Ptr(T* addr = 0) : addr(addr), counter(new size_t(1)) {
       TRACE(addr);
     }
@@ -73,7 +51,7 @@ namespace __rt {
     inline ~Ptr() {
       TRACE(addr);
       if (0 == --(*counter)) {
-        policy_t::destroy(addr);
+        if (0 != addr) addr->__vptr->__delete(addr);
         delete counter;
       }
     }
@@ -82,7 +60,7 @@ namespace __rt {
       TRACE(addr);
       if (addr != right.addr) {
         if (0 == --(*counter)) {
-          policy_t::destroy(addr);
+          if (0 != addr) addr->__vptr->__delete(addr);
           delete counter;
         }
         addr = right.addr;
@@ -96,23 +74,23 @@ namespace __rt {
     inline T* operator->() const { TRACE(addr); return addr;  }
     inline T* raw()        const { TRACE(addr); return addr;  }
 
-    template<typename U, template <typename> class P>
+    template<typename U>
     friend class Ptr;
 
-    template<typename U, template <typename> class P>
-    inline explicit Ptr(const Ptr<U,P>& other)
+    template<typename U>
+    inline Ptr(const Ptr<U>& other)
     : addr((T*)other.addr), counter(other.counter) {
       TRACE(addr);
       ++(*counter);
     }
 
-    template<typename U, template <typename> class P>
-    inline bool operator==(const Ptr<U,P>& other) const {
+    template<typename U>
+    inline bool operator==(const Ptr<U>& other) const {
       return addr == (T*)other.addr;
     }
     
-    template<typename U, template <typename> class P>
-    inline bool operator!=(const Ptr<U,P>& other) const {
+    template<typename U>
+    inline bool operator!=(const Ptr<U>& other) const {
       return addr != (T*)other.addr;
     }
 
