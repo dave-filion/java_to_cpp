@@ -28,8 +28,6 @@ public class CallExpressionPiece extends Visitor implements CppPrintable{
 	}
 	
 	public void visitCallExpression(GNode n) {		
-		visit(n);
-
 		System.out.println("Call expression " + n);
 		
 		// get caller
@@ -38,9 +36,12 @@ public class CallExpressionPiece extends Visitor implements CppPrintable{
 			representation += caller.getString(0);
 		}
 		
+		// recurse into caller for chained methods
+		dispatch(caller);
+		
 		// get arguments here
 		Node arguments = n.getNode(3);
-		ArgumentVisitor argumentVisitor = new ArgumentVisitor(variableMap);
+		ArgumentVisitor argumentVisitor = new ArgumentVisitor(variableMap, methodMap);
 		argumentVisitor.dispatch(arguments);
 				
 		// check methodMap
@@ -99,11 +100,7 @@ public class CallExpressionPiece extends Visitor implements CppPrintable{
 	public void visitThisExpression(GNode n) {
 		representation += "__this";
 	}
-	
-	public void visitPrimaryIdentifier(GNode n) {
-		//representation += n.getString(0);
-	}
-	
+		
 	public void visitSelectionExpression(GNode n) {		
 		String primaryId = n.getNode(0).getString(0);
 		String selection = n.getString(1);

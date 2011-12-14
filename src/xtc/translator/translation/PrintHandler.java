@@ -152,8 +152,17 @@ public class PrintHandler {
 
 		//TODO: Include all headers
 		
-		cp.p(main.getIdentifier()).p(".main(__rt::null())").pln();
+		cp.p("int main(){").pln();
 		
+		//Declare new object
+		String[] namespaces = splitPackageName(main.getPackageName());
+		for (String namespace : namespaces ) {
+			cp.p(namespace).p("::");
+		}
+		
+		cp.p(main.getIdentifier()).p(".main(__rt::null())").p(";").pln();
+		
+		cp.p("}").pln();
 		
 		cp.flush();
 		

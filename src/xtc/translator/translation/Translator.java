@@ -43,7 +43,10 @@ public class Translator {
 		if (args.length == 2) {
 			
 			// arg[0] is mainClassPath, arg[1] is classPath
-			PackageResolver packageResolver = new PackageResolver(args[0], args[1]);
+			String mainClassPath = args[0];
+			String classPath = args[1];
+			
+			PackageResolver packageResolver = new PackageResolver(mainClassPath, classPath);
 
 			try {
 				packageResolver.collect();
@@ -54,22 +57,24 @@ public class Translator {
 
 				collector.collect();
 				
-				PrintHandler printHandler = new PrintHandler(collector.classes, args[1]);
+				PrintHandler printHandler = new PrintHandler(collector.classes, classPath);
 				
 				printHandler.printAllHeaders();
 				
 				printHandler.printAllImplementations();
 				
-				printHandler.printMainFile(args[0]);
+				printHandler.printMainFile(mainClassPath);
+				
+				//TODO: run g++ 
+				//TODO: execute program
+				
+				Runtime.getRuntime().exec("g++");
 
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
 		} else {
 			System.out.println(ARG_ERROR);
 		}

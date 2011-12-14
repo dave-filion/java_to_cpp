@@ -18,7 +18,7 @@ String __Goodbye::returnString (Goodbye __this)
 return __rt::literal("Hi");
 }
 
-int __Goodbye::returnInt_String (Goodbye __this,String word)
+int __Goodbye::returnInt (Goodbye __this)
 {
 return 42;
 }
@@ -31,7 +31,7 @@ return __rt::literal("Hi 2");
 void __Goodbye::chainTest (Goodbye __this)
 {
 __this->__vptr ->returnString_int(__this,4);
-String something = __this->__vptr ->returnString_int(__this,null__this->__vptr ->returnInt_String(__this,new __String()));
+String something = __this->__vptr ->returnString_int(__this,null__this->__vptr ->returnInt(__this));
 }
 
 void __Goodbye::main_String (Goodbye __this,String args)

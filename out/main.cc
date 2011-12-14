@@ -4,4 +4,6 @@
 #include <cstring>
 #include "ptr.h"
 #include "java_lang.h"
-Hello.main(__rt::null())
+int main(){
+test_dir::hello::Hello.main(__rt::null());
+}
