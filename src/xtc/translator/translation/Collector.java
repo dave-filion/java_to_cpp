@@ -20,6 +20,7 @@ import xtc.translator.representation.ClassVisitor;
 import xtc.translator.representation.CompilationUnit;
 import xtc.translator.representation.FieldVisitor;
 import xtc.translator.representation.Method;
+import xtc.translator.representation.MethodMaps;
 import xtc.translator.representation.MethodVisitor;
 import xtc.translator.representation.SourceObject;
 import xtc.translator.representation.VariableVisitor;
@@ -232,6 +233,7 @@ public class Collector extends Visitor {
 					m.setIdentifier(method.getOverloadedIdentifier());
 			}
 			
+			MethodMaps.addMethodMapForClass(classVisitor.getIdentifier(), classVisitor.getOverloadMap());
 		}
 	}
 	

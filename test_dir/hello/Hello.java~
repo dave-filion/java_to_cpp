@@ -16,7 +16,6 @@ public void sayHi(String name) {
 public static void main(String[] args) {
 	System.out.println("Hello world");
 	Goodbye g = new Goodbye();
-	g.chainTest();
 }
 
 public String toString(){

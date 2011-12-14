@@ -60,7 +60,8 @@ SOURCE = ClassVisitor.java \
 	BlockPiece.java \
 	ArgumentVisitor.java \
 	VariableVisitor.java \
-	Argument.java
+	Argument.java \
+	MethodMaps.java
 	
 
 JNI_SOURCE =

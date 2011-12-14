@@ -55,9 +55,22 @@ public class CallExpressionPiece extends Visitor implements CppPrintable{
 			representation += "(" + argumentVisitor.getArguments().getArguments().get(0).value + ")";
 			
 		} else {
+			
+			List<Method> methodList;
+			
+			// if caller is self, use current method map
+			// otherwise, need to get methodmap for caller
+			if (caller.getName().equals("PrimaryIdentifier")) {
+				String className = variableMap.get(caller.getString(0));
+				System.out.println("Getting method map for " + className);
+				Map<String, List<Method>> mm = MethodMaps.getMethodMapForClass(className);
+				System.out.println(mm);
+				methodList = mm.get(name);
+			} else {
 
-			// get method list for name
-			List<Method> methodList = methodMap.get(name);
+				// get method list for name
+				methodList = methodMap.get(name);
+			}
 
 			if (methodList == null) {
 				// TODO: throw exception

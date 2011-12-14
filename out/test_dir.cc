@@ -36,6 +36,8 @@ System::out.println(__rt::literal("HIII"));
 void __Hello::main()
 {
 System::out.println(__rt::literal("Hello world"));
+Goodbye g = new __Goodbye(  );
+g->__vptr ->chainTest(g);
 }
 
 String __Hello::toString (Hello __this)
@@ -97,6 +99,7 @@ void __Goodbye::chainTest (Goodbye __this)
 {
 __this->__vptr ->returnString_int(__this,4);
 String something = __this->__vptr ->returnString_int(__this,__this->__vptr ->returnInt_String(__this,__rt::literal("Hi There")));
+System::out.println(something);
 }
 
 void __Goodbye::main()
