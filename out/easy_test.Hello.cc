@@ -15,7 +15,7 @@ delete __this;
 
 void __Hello::hello (Hello __this)
 {
-System.out.println(__rt::literal("Hello world!"));
+System::out.println(__rt::literal("Hello world!"));
 }
 
 void __Hello::main_String (Hello __this,String args)

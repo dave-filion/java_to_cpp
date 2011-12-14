@@ -105,7 +105,7 @@ public class CallExpressionPiece extends Visitor implements CppPrintable{
 		String primaryId = n.getNode(0).getString(0);
 		String selection = n.getString(1);
 		
-		representation += primaryId + "." + selection;
+		representation += primaryId + "::" + selection;
 	}
 	
 	public void visit(Node n) {

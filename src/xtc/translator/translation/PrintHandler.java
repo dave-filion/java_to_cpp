@@ -173,6 +173,7 @@ public class PrintHandler {
 		printStandardImports(cp);
 
 		//TODO: Include all headers
+		cp.p("#include \"").p(getFullClassName(main) + ".h").p("\"").pln();
 		
 		cp.p("int main(){").pln();
 		
@@ -182,7 +183,7 @@ public class PrintHandler {
 		for (String namespace : namespaces ) {
 			cp.p(namespace).p("::");
 		}
-		
+		//TODO: this needs to change as well
 		cp.p(main.getIdentifier()).p(".main(__rt::null())").p(";").pln();
 		
 		cp.p("}").pln();
