@@ -74,7 +74,6 @@ public class MethodVisitor extends Visitor implements Cloneable{
 					this.setImplementation(iv.getImplementation());
 					this.usedClasses.addAll(iv.getUsedClasses());
 					this.implementationVisitor = iv;
-					System.out.println(iv.getVarTypeDict());
 				}
 
 				// If modifiers... collect modifiers...

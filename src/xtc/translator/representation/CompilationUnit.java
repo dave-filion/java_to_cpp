@@ -38,7 +38,6 @@ public class CompilationUnit extends BaseVisitor{
 	 * dispatch it to collect relevant class data.
 	 */
 	public void visitCompilationUnit(GNode n) {
-		System.out.println(n);
 		visit(n);
 		
 		ClassVisitor newClass = new ClassVisitor();

@@ -147,7 +147,6 @@ public class ClassVisitor extends Visitor implements Cloneable {
 			getVTable(cp, classVisitor.getSuperClass(), original);
 			
             for (MethodVisitor m : classVisitor.getMethodList()) {
-            	System.out.println("Class: " + classVisitor.getIdentifier() + " : " + m);
                 if (!m.isOverride() || !m.isStatic())
                 	cp.indent().p(m.getMethodPointer(original)).pln(";");
             }

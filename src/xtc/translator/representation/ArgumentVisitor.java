@@ -21,7 +21,6 @@ public class ArgumentVisitor extends Visitor {
 	}
 
 	public void visitArguments(GNode n) {
-		System.out.println("Arguments look like this: " + n);
 		visit(n);
 	}
 
@@ -40,8 +39,6 @@ public class ArgumentVisitor extends Visitor {
 	}
 
 	public void visitCallExpression(GNode n) {
-		System.out.println("Call expression " + n);
-
 		Argument arg = new Argument();
 		
 		// get caller
@@ -111,7 +108,6 @@ public class ArgumentVisitor extends Visitor {
 	}
 
 	public void visitNewClassExpression(GNode n) {
-		System.out.println("New Class Expression " + n);
 		String type = n.getNode(2).getString(0);
 
 		ArgumentVisitor av = new ArgumentVisitor(variableMap, methodMap);
