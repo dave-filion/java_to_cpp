@@ -33,6 +33,7 @@ public class PrintHandler {
 				if (! imp.endsWith("*"))
 					cp.p("#include ").p("\"").p(classPath + "." + imp + ".h").pln("\"");
 			}
+			cp.pln("#include \"System.h\"");
 			cp.pln();
 			
 			cp.pln().pln("using namespace java::lang;");
@@ -50,7 +51,7 @@ public class PrintHandler {
 			cp.p("struct ").p(prepend(classVisitor.getIdentifier())).pln(";");
 			
 			// Declare Vtable
-			cp.p("struct ").p(prepend(vtDec(classVisitor.getIdentifier()))).pln(";");
+			cp.p("struct ").p(vtDec(classVisitor.getIdentifier())).pln(";");
 			
 			// Typedef definition
 			cp.p("typedef ").p(smartPtrTo(classVisitor.getIdentifier())).p(" ").p(classVisitor.getIdentifier()).pln(";");
@@ -95,7 +96,9 @@ public class PrintHandler {
 			}
 
 			// Print constructor
-			// TODO: print constructor
+			// TODO: FIX CONSTRUCOR PRINTING
+			cp.p(prepend(classVisitor.getIdentifier())).p("::").p(prepend(classVisitor.getIdentifier()));
+			cp.p("() : __vptr(&__vtable) { }").pln();
 			
 			// Print destructor
 			cp.p("void ").p(prepend(classVisitor.getIdentifier())).p("::").p("__delete");
@@ -122,6 +125,22 @@ public class PrintHandler {
 				
 				cp.pln();
 			}
+			
+			// Print internal class accessor
+			cp.p("Class ").p(prepend(classVisitor.getIdentifier()));
+			cp.p("::__class() {").pln();
+			cp.p("static Class k = new __Class(__rt::literal(");
+			//TODO: print full name here
+			cp.p("\"" + classVisitor.getIdentifier() + "\"");
+			//print superclass
+			cp.p("), ").p(prepend(classVisitor.getSuperClass().getIdentifier()));
+			cp.p("::__class());").pln();
+			cp.p("}").pln();
+			
+			// Invoke vtable constructor
+			cp.p(vtDec(classVisitor.getIdentifier()));
+			cp.p(" ").p(prepend(classVisitor.getIdentifier()));
+			cp.p("::__vtable;").pln();
 			
 			// Close namespaces
 			for (String name : namespaces) {
@@ -155,6 +174,7 @@ public class PrintHandler {
 		cp.p("int main(){").pln();
 		
 		//Declare new object
+		//TODO: need to instantiate single object
 		String[] namespaces = splitPackageName(main.getPackageName());
 		for (String namespace : namespaces ) {
 			cp.p(namespace).p("::");
@@ -188,7 +208,7 @@ public class PrintHandler {
 		cp.p("static Class __class()").pln(";");
 		
 		// the vtable for the object
-		cp.p("static ").p(prepend(vtDec(classVisitor.getIdentifier()))).p(" ").p("__vtable").pln(";");
+		cp.p("static ").p(vtDec(classVisitor.getIdentifier())).p(" ").p("__vtable").pln(";");
 		cp.decr();
 		cp.pln("};");
 	}
@@ -207,6 +227,14 @@ public class PrintHandler {
 		cp.incr();
 		cp.pln();
 		
+		// Print isa method
+		cp.p("Class __isa;").pln();
+		
+		// Print delete method
+		cp.p("void ").p("(*__delete)(").p(prepend(classVisitor.getIdentifier()));
+		cp.p("*);").pln();
+		
+		
 		// Recurse over all methods (even inherited)
 		printVTable(cp, classVisitor, classVisitor);
 		
@@ -214,7 +242,7 @@ public class PrintHandler {
 		cp.pln();
 		cp.pln(vtDec(classVisitor.getIdentifier()) + "()");
 		cp.pln(": __isa(" + prepend(classVisitor.getIdentifier()) + "::__class()),");
-		cp.pln("__delete(&" + prepend(classVisitor.getIdentifier()) + "::__delete),");
+		cp.p("__delete(&" + prepend(classVisitor.getIdentifier()) + "::__delete)");
 		
 		printVTableConstructor(cp, classVisitor, classVisitor);
 		
@@ -249,12 +277,12 @@ public class PrintHandler {
 			for (int i = 0; i < cv.getMethodList().size(); i++) {
 
 				MethodVisitor m = cv.getMethodList().get(i);
-
-				// comma from previous line
-				cp.pln(",");
 				
 				// exclude main
 				if (!m.isOverride()) {
+					// comma from previous line
+					cp.pln(",");
+
 					String classPointer = original.getImplementationMap().get(m.getIdentifier());
 
 					if (!classPointer.equals(original.getIdentifier())) {
