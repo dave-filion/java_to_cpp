@@ -10,6 +10,11 @@ public class Argument {
 		this.value = value;
 	}
 	
+	public Argument(){
+		this.type = "";
+		this.value = "";
+	}
+	
 	public String toString(){
 		return "Argument : " + type + " : " + value;
 	}

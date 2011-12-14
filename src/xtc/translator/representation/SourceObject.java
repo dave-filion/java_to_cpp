@@ -25,4 +25,14 @@ public class SourceObject extends ClassVisitor{
 				
 		this.setSuperClass(null);
 	}
+	
+	public String getFullIdentifier(){
+		return "java::lang::__Object";
+	}
+
+	public String getFullIdentifierPointer(){
+		return "java::lang::Object";
+	}
+
+	
 }

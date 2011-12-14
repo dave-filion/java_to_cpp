@@ -19,6 +19,7 @@ public class ClassVisitor extends Visitor implements Cloneable {
 
 	private Node sourceNode;
 	private String identifier;
+	private String fullIdentifier;
 	private List<String> extensions;
 	private String extension;
 	private ClassVisitor superClass;
@@ -286,6 +287,22 @@ public class ClassVisitor extends Visitor implements Cloneable {
 		
 		return con;
 	}
+	
+	public String makeFullIdentifier() {
+		return packageName + "." + identifier;
+	}
+	
+	public String getFullIdentifier() {
+		String full = packageName + "." + "__" + identifier;
+		full = full.replace(".", "::");
+		return full;
+	}
+	
+	public String getFullIdentifierPointer() {
+		String full = packageName + "." + identifier;
+		full = full.replace(".", "::");
+		return full;		
+	}
 
 	public Node getSourceNode() {
 		return sourceNode;
@@ -302,5 +319,11 @@ public class ClassVisitor extends Visitor implements Cloneable {
 	public void setOverloadMap(Map<String, List<Method>> overloadMap) {
 		this.overloadMap = overloadMap;
 	}
+
+	public void setFullIdentifier(String fullIdentifier) {
+		this.fullIdentifier = fullIdentifier;
+	}
+	
+	
 
 }

@@ -18,7 +18,7 @@ public class Goodbye extends Hello{
 	
 	public void chainTest(){
 		this.returnString(4);
-		String something = this.returnString(this.returnInt(new String()));
+		String something = this.returnString(returnInt("Hi There"));
 	}
 	
 	public static void main(String[] args) {

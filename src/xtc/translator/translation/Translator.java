@@ -60,7 +60,7 @@ public class Translator {
 				collector.collect();
 				
 				PrintHandler printHandler = new PrintHandler(collector.classes, classPath);
-				
+								
 				printHandler.printAllHeaders();
 				
 				printHandler.printAllImplementations();
@@ -81,7 +81,8 @@ public class Translator {
 		}
 
 	}
-
+	
+	
 	/**
 	 * Run the translator with the specified command line arguments and stuff.
 	 * 

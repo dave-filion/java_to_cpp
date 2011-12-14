@@ -2,4 +2,4 @@
 
 cd ~/xtc
 
-python translate.py Hello.java easy_test
+python translate.py Hello.java test_dir

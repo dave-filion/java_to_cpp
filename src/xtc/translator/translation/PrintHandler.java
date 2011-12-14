@@ -19,29 +19,25 @@ public class PrintHandler {
 		this.classVisitors = classVisitors;
 		this.classPath = classPath;
 	}
-	
+		
 	public void printAllHeaders() throws IOException {
 		
+		// Make new printer printing to outfile
+		CppPrinter cp = new CppPrinter(new FileWriter("out/" + classPath + ".h"));
+
+		//Pragma once
+		cp.pln("#pragma once");
+
+		// Imports
+		this.printStandardImports(cp);
+
+		cp.pln().pln("using namespace java::lang;");
+		
+		// Forward declarations
 		for (ClassVisitor classVisitor : classVisitors) {
-			
-			// Make new printer printing to outfile
-			CppPrinter cp = new CppPrinter(new FileWriter("out/" + getFullClassName(classVisitor) + ".h"));
-			
-			//Pragma once
-			cp.pln("#pragma once");
-			
-			// Imports
-			this.printStandardImports(cp);
-			for (String imp : classVisitor.getImports()) {
-				if (! imp.endsWith("*"))
-					cp.p("#include ").p("\"").p(classPath + "." + imp + ".h").pln("\"");
-			}
-			cp.pln();
-			
-			cp.pln().pln("using namespace java::lang;");
-			
-			String[] namespaces = splitPackageName(classVisitor.getPackageName());
 						
+			//TODO : put namespace stuff in method
+			String[] namespaces = splitPackageName(classVisitor.getPackageName());
 			// Open namespaces
 			for (String name : namespaces) {
 				cp.p("namespace ").p(name).pln("{");		
@@ -57,7 +53,25 @@ public class PrintHandler {
 			
 			// Typedef definition
 			cp.p("typedef ").p(smartPtrTo(classVisitor.getIdentifier())).p(" ").p(classVisitor.getIdentifier()).pln(";");
+
+			// Close namespaces
+			for (String name : namespaces) {
+				cp.decr();
+				cp.pln("}");
+			}
+		}
+		
+		for (ClassVisitor classVisitor : classVisitors) {
 			
+			
+			String[] namespaces = splitPackageName(classVisitor.getPackageName());					
+			// Open namespaces
+			for (String name : namespaces) {
+				cp.p("namespace ").p(name).pln("{");		
+				cp.incr();
+				cp.pln();
+			}
+						
 			// Print data structure
 			cp.pln();
 			this.printDataStructure(cp, classVisitor);
@@ -80,16 +94,23 @@ public class PrintHandler {
 	
 	public void printAllImplementations() throws IOException {
 		
+		CppPrinter cp = new CppPrinter(new FileWriter("out/" + classPath + ".cc"));
+
+		// Print standard imports
+		printStandardImports(cp);
+		cp.pln("#include \"System.h\"");
+		// Include header
+		cp.pln("#include \"" + classPath + ".h\"").pln();
+		
+		// Print using declarations
 		for (ClassVisitor classVisitor : classVisitors) {
-			
-			CppPrinter cp = new CppPrinter(new FileWriter("out/" + getFullClassName(classVisitor) + ".cc"));
-			
-			// Print standard imports
-			printStandardImports(cp);
-			cp.pln("#include \"System.h\"");
-			// Include header
-			cp.pln("#include \"" + getFullClassName(classVisitor) + ".h\"");
-			
+			cp.p("using ").p(classVisitor.getFullIdentifier()).pln(";");
+			cp.p("using ").p(classVisitor.getFullIdentifierPointer()).pln(";");
+		}
+		cp.pln();
+		
+		for (ClassVisitor classVisitor : classVisitors) {
+						
 			String[] namespaces = splitPackageName(classVisitor.getPackageName());
 			// Open namespaces
 			for (String name : namespaces) {
@@ -181,7 +202,7 @@ public class PrintHandler {
 		printStandardImports(cp);
 
 		//TODO: Include all headers
-		cp.p("#include \"").p(getFullClassName(main) + ".h").p("\"").pln();
+		cp.p("#include \"").p(classPath + ".h").p("\"").pln();
 		
 		cp.p("int main(){").pln();
 		
@@ -304,8 +325,8 @@ public class PrintHandler {
 						// otherwise, reference original classes implementation
 						cp.p(m.getIdentifier()
 								+ openParen()
-								+ reference(prepend(scope(classPointer,
-										m.getIdentifier()))) + closeParen());
+								+ reference(scope(classPointer,
+										m.getIdentifier())) + closeParen());
 
 					}
 				}
@@ -319,6 +340,10 @@ public class PrintHandler {
 	
 	private String getFullClassName(ClassVisitor classVisitor) {
 		return classVisitor.getPackageName() + "." + classVisitor.getIdentifier();
+	}
+	
+	private String getFullImportName(ClassVisitor classVisitor, String importName) {
+		return classVisitor.getPackageName() + "::" + importName;
 	}
 	
 	private String[] splitPackageName(String packageName) {
@@ -405,7 +430,7 @@ public class PrintHandler {
 		out = removeLastComma(out);
 
 		out += closeParen() + closeParen()
-				+ reference(prepend(scope(classPointer, m.getIdentifier())))
+				+ reference(scope(classPointer, m.getIdentifier()))
 				+ closeParen();
 
 		return out;

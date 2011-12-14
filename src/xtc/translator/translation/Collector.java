@@ -72,7 +72,7 @@ public class Collector extends Visitor {
 	 * 
 	 */
 	public void collect() throws IOException, ParseException {
-		
+				
 		// get overloaded methods
 		this.generateMethodOverload();
 		
@@ -92,7 +92,7 @@ public class Collector extends Visitor {
 		// Process method calls for proper overloading
 		this.processCallExpression();
 	}
-
+	
 	private void assignSuperClass() {
 		for (ClassVisitor cv : classes) {
 			if (cv.getExtension() == null || cv.getExtension().isEmpty()) {
@@ -116,9 +116,7 @@ public class Collector extends Visitor {
 
 	private void createImplementationMap() {
 		for (ClassVisitor classVisitor : classes) {
-			createImplementationMap(classVisitor, classVisitor);
-			
-			System.out.println(classVisitor.getIdentifier() + " : " + classVisitor.getImplementationMap());
+			createImplementationMap(classVisitor, classVisitor);			
 		}
 	}
 
@@ -146,7 +144,7 @@ public class Collector extends Visitor {
 					m.setOverride(true);
 				}
 				original.getImplementationMap().put(m.getIdentifier(),
-						currentClass.getIdentifier());
+						currentClass.getFullIdentifier());
 			}
 		}
 	}

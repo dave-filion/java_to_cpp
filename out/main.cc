@@ -4,7 +4,7 @@
 #include <cstring>
 #include "ptr.h"
 #include "java_lang.h"
-#include "easy_test.Hello.h"
+#include "test_dir.h"
 int main(){
-easy_test::__Hello::main();
+test_dir::hello::__Hello::main();
 }
