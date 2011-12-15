@@ -73,7 +73,10 @@ public class Collector extends Visitor {
 	 * 
 	 */
 	public void collect() throws IOException, ParseException {
-				
+	   
+	   // TODO: NEED TO ORDER CLASSES BASED ON DEPENDENCIES
+	   // IT SUCKS BUT IS NECESSARY BECAUSE G++ BLOWS
+	   
 		// get overloaded methods
 		this.generateMethodOverload();
 		

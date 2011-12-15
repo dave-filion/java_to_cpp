@@ -7,6 +7,7 @@
 #include "java_lang.h"
 
 using namespace java::lang;
+
 namespace test_dir{
 
 namespace hello{
@@ -16,6 +17,8 @@ struct __Hello_VT;
 typedef __rt::Ptr<__Hello> Hello;
 }
 }
+
+
 namespace test_dir{
 
 namespace goodbye{
@@ -35,46 +38,6 @@ namespace goodbye{
 struct __Goodbye;
 struct __Goodbye_VT;
 typedef __rt::Ptr<__Goodbye> Goodbye;
-}
-}
-namespace test_dir{
-
-namespace hello{
-
-
-struct __Hello{
-__Hello_VT* __vptr;
-__Hello();
-static void __delete(__Hello*);
-static void sayHi(Hello);
-static void sayHi_String(Hello, String);
-static void main();
-static String toString(Hello);
-static Class __class();
-static __Hello_VT __vtable;
-};
-
-struct __Hello_VT {
-
-Class __isa;
-void (*__delete)(__Hello*);
-int32_t (*hashCode)(Hello);
-bool (*equals)(Hello, Object);
-Class (*getClass)(Hello);
-String (*toString)(Hello);
-void (*sayHi)(Hello);
-void (*sayHi_String)(Hello, String);
-
-__Hello_VT()
-: __isa(__Hello::__class()),
-__delete(&__Hello::__delete),
-hashCode((int32_t(*)(Hello))&java::lang::__Object::hashCode),
-equals((bool(*)(Hello,Object))&java::lang::__Object::equals),
-getClass((Class(*)(Hello))&java::lang::__Object::getClass),
-toString((String(*)(Hello))&test_dir::hello::__Hello::toString),
-sayHi((void(*)(Hello))&test_dir::hello::__Hello::sayHi),
-sayHi_String((void(*)(Hello,String))&test_dir::hello::__Hello::sayHi_String){ }
-};
 }
 }
 namespace test_dir{
@@ -134,12 +97,9 @@ struct __Goodbye_VT {
 
 Class __isa;
 void (*__delete)(__Goodbye*);
-int32_t (*hashCode)(Goodbye);
-bool (*equals)(Goodbye, Object);
-Class (*getClass)(Goodbye);
-String (*toString)(Goodbye);
 void (*sayHi)(Goodbye);
 void (*sayHi_String)(Goodbye, String);
+String (*toString)(Goodbye);
 String (*returnString)(Goodbye);
 int (*returnInt_String)(Goodbye, String);
 String (*returnString_int)(Goodbye, int);
@@ -148,16 +108,53 @@ void (*chainTest)(Goodbye);
 __Goodbye_VT()
 : __isa(__Goodbye::__class()),
 __delete(&__Goodbye::__delete),
-hashCode((int32_t(*)(Goodbye))&java::lang::__Object::hashCode),
-equals((bool(*)(Goodbye,Object))&java::lang::__Object::equals),
-getClass((Class(*)(Goodbye))&java::lang::__Object::getClass),
-toString((String(*)(Goodbye))&test_dir::hello::__Hello::toString),
 sayHi((void(*)(Goodbye))&test_dir::hello::__Hello::sayHi),
 sayHi_String((void(*)(Goodbye,String))&test_dir::hello::__Hello::sayHi_String),
+toString((String(*)(Goodbye))&test_dir::hello::__Hello::toString),
 returnString((String(*)(Goodbye))&test_dir::goodbye::__Goodbye::returnString),
 returnInt_String((int(*)(Goodbye,String))&test_dir::goodbye::__Goodbye::returnInt_String),
 returnString_int((String(*)(Goodbye,int))&test_dir::goodbye::__Goodbye::returnString_int),
 chainTest((void(*)(Goodbye))&test_dir::goodbye::__Goodbye::chainTest){ }
+};
+}
+}
+namespace test_dir{
+
+namespace hello{
+
+
+struct __Hello{
+__Hello_VT* __vptr;
+__Hello();
+static void __delete(__Hello*);
+static void sayHi(Hello);
+static void sayHi_String(Hello, String);
+static void main();
+static String toString(Hello);
+static Class __class();
+static __Hello_VT __vtable;
+};
+
+struct __Hello_VT {
+
+Class __isa;
+void (*__delete)(__Hello*);
+int32_t (*hashCode)(Hello);
+bool (*equals)(Hello, Object);
+Class (*getClass)(Hello);
+String (*toString)(Hello);
+void (*sayHi)(Hello);
+void (*sayHi_String)(Hello, String);
+
+__Hello_VT()
+: __isa(__Hello::__class()),
+__delete(&__Hello::__delete),
+hashCode((int32_t(*)(Hello))&java::lang::__Object::hashCode),
+equals((bool(*)(Hello,Object))&java::lang::__Object::equals),
+getClass((Class(*)(Hello))&java::lang::__Object::getClass),
+toString((String(*)(Hello))&test_dir::hello::__Hello::toString),
+sayHi((void(*)(Hello))&test_dir::hello::__Hello::sayHi),
+sayHi_String((void(*)(Hello,String))&test_dir::hello::__Hello::sayHi_String){ }
 };
 }
 }

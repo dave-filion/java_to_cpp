@@ -7,51 +7,13 @@
 #include "System.h"
 #include "test_dir.h"
 
-using test_dir::hello::__Hello;
-using test_dir::hello::Hello;
 using test_dir::goodbye::deepGoodbye::__DeepGoodBye;
 using test_dir::goodbye::deepGoodbye::DeepGoodBye;
 using test_dir::goodbye::__Goodbye;
 using test_dir::goodbye::Goodbye;
+using test_dir::hello::__Hello;
+using test_dir::hello::Hello;
 
-namespace test_dir{
-
-namespace hello{
-
-__Hello::__Hello() : __vptr(&__vtable) { }
-void __Hello::__delete(__Hello* __this){
-delete __this;
-}
-
-void __Hello::sayHi (Hello __this)
-{
-System::out.println(__rt::literal("Hi"));
-}
-
-void __Hello::sayHi_String (Hello __this,String name)
-{
-System::out.println(__rt::literal("HIII"));
-}
-
-void __Hello::main()
-{
-System::out.println(__rt::literal("Hello world"));
-Goodbye g = new __Goodbye(  );
-g->__vptr ->chainTest(g);
-}
-
-String __Hello::toString (Hello __this)
-{
-return __rt::literal("HELLO");
-}
-
-Class __Hello::__class() {
-static Class k = new __Class(__rt::literal("Hello"), __Object::__class());
-return k;
-}
-__Hello_VT __Hello::__vtable;
-}
-}
 namespace test_dir{
 
 namespace goodbye{
@@ -113,5 +75,43 @@ static Class k = new __Class(__rt::literal("Goodbye"), __Hello::__class());
 return k;
 }
 __Goodbye_VT __Goodbye::__vtable;
+}
+}
+namespace test_dir{
+
+namespace hello{
+
+__Hello::__Hello() : __vptr(&__vtable) { }
+void __Hello::__delete(__Hello* __this){
+delete __this;
+}
+
+void __Hello::sayHi (Hello __this)
+{
+System::out.println(__rt::literal("Hi"));
+}
+
+void __Hello::sayHi_String (Hello __this,String name)
+{
+System::out.println(__rt::literal("HIII"));
+}
+
+void __Hello::main()
+{
+System::out.println(__rt::literal("Hello world"));
+Goodbye g = new __Goodbye(  );
+g->__vptr ->chainTest(g);
+}
+
+String __Hello::toString (Hello __this)
+{
+return __rt::literal("HELLO");
+}
+
+Class __Hello::__class() {
+static Class k = new __Class(__rt::literal("Hello"), __Object::__class());
+return k;
+}
+__Hello_VT __Hello::__vtable;
 }
 }
