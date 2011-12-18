@@ -19,6 +19,7 @@ import xtc.translator.representation.CallExpressionPiece;
 import xtc.translator.representation.ClassVisitor;
 import xtc.translator.representation.CompilationUnit;
 import xtc.translator.representation.FieldVisitor;
+import xtc.translator.representation.ImplementationVisitor;
 import xtc.translator.representation.Method;
 import xtc.translator.representation.MethodMaps;
 import xtc.translator.representation.MethodVisitor;
@@ -58,7 +59,8 @@ public class Collector extends Visitor {
 		this.classes = new ArrayList<ClassVisitor>();
 
 		for (CompilationUnit compilationUnit : compilationUnits) {
-			this.classes.add(compilationUnit.getClassVisitor());
+			for (ClassVisitor classVisitor : compilationUnit.getClassVisitors())
+				this.classes.add(classVisitor);
 		}
 
 		this.packages = new ArrayList<String>();
@@ -72,55 +74,55 @@ public class Collector extends Visitor {
 	 * Main method to begin collection
 	 * 
 	 */
-	public void collect() throws IOException, ParseException {
-	   
-	   // TODO: NEED TO ORDER CLASSES BASED ON DEPENDENCIES
-	   // IT SUCKS BUT IS NECESSARY BECAUSE G++ BLOWS
-	   
-		// get overloaded methods
-		this.generateMethodOverload();
-		
+	public void collect() throws IOException, ParseException {		
 		// assign super classes to classVisitors
 		this.assignSuperClass();
+		
+		// get overloaded methods
+		this.generateMethodOverload();
+		System.out.println("Method Map is " + MethodMaps.methodMaps);
 
 		// Use assigned super classes to create implementation
 		// map of all methods in class hierarchy (vtable precursor)
 		this.createImplementationMap();
 
 		// sort the list of classes for printing
-		//this.sort();
-		
+		// this.sort();
+
 		// Create variable map for each method
 		this.createVariableMaps();
-		
+
 		// Process method calls for proper overloading
 		this.processCallExpression();
 	}
-	
+
 	private void assignSuperClass() {
 		for (ClassVisitor cv : classes) {
-			if (cv.getExtension() == null || cv.getExtension().isEmpty()) {
-				cv.setSuperClass(new SourceObject());
+			assignSuperClass(cv);
+		}
+	}
+	
+	private void assignSuperClass(ClassVisitor current) {
+		
+		if (current == null) {
+			return;
+		} else {		
+			if (current.getExtension().equals("Object")) {
+				current.setSuperClass(new SourceObject());
 			} else {
-				boolean found = false;
-				for (ClassVisitor cv2 : classes) {
-					if (cv2.getIdentifier().equals(cv.getExtension())) {
-						cv.setSuperClass(cv2.copy());
-						found = true;
-						break;
+				for (ClassVisitor cv : classes) {
+					if (current.getExtension().equals(cv.getIdentifier())) {
+						current.setSuperClass(cv.copy());
 					}
 				}
-
-				if (found == false) {
-					cv.setSuperClass(new SourceObject());
-				}
 			}
-		}
+			assignSuperClass(current.getSuperClass());
+		}		
 	}
 
 	private void createImplementationMap() {
 		for (ClassVisitor classVisitor : classes) {
-			createImplementationMap(classVisitor, classVisitor);			
+			createImplementationMap(classVisitor, classVisitor);
 		}
 	}
 
@@ -201,82 +203,145 @@ public class Collector extends Visitor {
 			}
 		}
 	}
-	
+
 	private void generateMethodOverload() {
-		
+
+		for (ClassVisitor classVisitor : classes) {
+			
+			ClassVisitor currentClass = classVisitor;
+						
+			while (currentClass != null) {
+				for (MethodVisitor m : currentClass.getMethodList()) {
+					Method method = new Method(m.getIdentifier(),
+							m.getReturnType());
+
+					// set if method is static
+					method.isStatic = m.isStatic();
+
+					List<Argument> paramTypes = new ArrayList<Argument>();
+
+					for (Map<String, String> param : m.getParameters()) {
+						paramTypes.add(new Argument(param.get("type"), null));
+					}
+
+					method.getArguments().setArguments(paramTypes);
+
+					method.generateOverloadedIdentifier();
+
+					// if method is already there, add it to the list
+					if (classVisitor.getOverloadMap().containsKey(method.getIdentifier())) {
+						// Check to see if method is already there
+						boolean add = true;
+						
+						for (Method checkMethod : classVisitor.getOverloadMap().get(method.getIdentifier())) {
+							// If specific method is already there, then a subclass must implement it,
+							// so don't add it to the list.
+							if (checkMethod.getOverloadedIdentifier().equals(method.getOverloadedIdentifier())) {
+								add = false;
+							} 
+						}						
+						
+						if (add){
+							classVisitor.getOverloadMap().get(method.getIdentifier()).add(method);						
+						}
+						
+					} else {
+						List<Method> methodList = new ArrayList<Method>();
+						System.out.println("Adding list for method: " + method.getIdentifier());
+						methodList.add(method);
+						classVisitor.getOverloadMap().put(method.getIdentifier(), methodList);
+					}
+
+					if (!m.getIdentifier().equals("main"))
+						m.setIdentifier(method.getOverloadedIdentifier());
+				}
+				currentClass = currentClass.getSuperClass();
+			}
+
+			MethodMaps.addMethodMapForClass(classVisitor.getIdentifier(),
+					classVisitor.getOverloadMap());
+
+		}
+
+		// do source object
+		SourceObject source = new SourceObject();
+
+		for (MethodVisitor m : source.getMethodList()) {
+			Method method = new Method(m.getIdentifier(), m.getReturnType());
+
+			// set if method is static
+			method.isStatic = m.isStatic();
+
+			List<Argument> paramTypes = new ArrayList<Argument>();
+
+			for (Map<String, String> param : m.getParameters()) {
+				paramTypes.add(new Argument(param.get("type"), null));
+			}
+
+			method.getArguments().setArguments(paramTypes);
+
+			method.generateOverloadedIdentifier();
+
+			// if method is already there, add it to the list
+			if (source.getOverloadMap().containsKey(method.getIdentifier())) {
+				source.getOverloadMap().get(method.getIdentifier()).add(method);
+			} else {
+				List<Method> methodList = new ArrayList<Method>();
+				methodList.add(method);
+				source.getOverloadMap().put(method.getIdentifier(), methodList);
+			}
+
+			if (!m.getIdentifier().equals("main"))
+				m.setIdentifier(method.getOverloadedIdentifier());
+		}
+
+		MethodMaps.addMethodMapForClass(source.getIdentifier(),
+				source.getOverloadMap());
+
+	}
+
+	private void createVariableMaps() {
+
 		for (ClassVisitor classVisitor : classes) {
 
 			for (MethodVisitor m : classVisitor.getMethodList()) {
-								
-				Method method = new Method(m.getIdentifier(), m.getReturnType());
-				
-				// set if method is static
-				method.isStatic = m.isStatic();
-				
-				List<Argument> paramTypes = new ArrayList<Argument>();
-				
-				for (Map<String, String> param : m.getParameters()) {
-					paramTypes.add(new Argument(param.get("type"), null));
-				}
-				
-				method.getArguments().setArguments(paramTypes);
-								
-				method.generateOverloadedIdentifier();
-				
-				// if method is already there, add it to the list
-				if (classVisitor.getOverloadMap().containsKey(method.getIdentifier())){
-					classVisitor.getOverloadMap().get(method.getIdentifier()).add(method);
-				} else {
-					List<Method> methodList = new ArrayList<Method>();
-					methodList.add(method);
-					classVisitor.getOverloadMap().put(method.getIdentifier(), methodList);
-				}
-				
-				if (! m.getIdentifier().equals("main"))
-					m.setIdentifier(method.getOverloadedIdentifier());
-			}
-			
-			MethodMaps.addMethodMapForClass(classVisitor.getIdentifier(), classVisitor.getOverloadMap());
-		}
-	}
-	
-	private void createVariableMaps() {
-		
-		for (ClassVisitor classVisitor : classes) {
-			
-			for (MethodVisitor m : classVisitor.getMethodList()) {
-				
+
 				VariableVisitor vv = new VariableVisitor();
-				
+
 				// Put field variables into it
 				for (FieldVisitor fv : classVisitor.getFieldList()) {
 					vv.getVariableMap().put(fv.variableName, fv.variableType);
 				}
-				
+
 				// get the rest of the variables in method scope
 				vv.dispatch(m.getBaseNode());
-				
+
 				// set methods variable map
 				m.setVariableMap(vv.getVariableMap());
-			}			
+			}
 		}
 	}
 
 	private void processCallExpression() {
-		
+
 		for (ClassVisitor classVisitor : classes) {
-			
+
 			for (MethodVisitor m : classVisitor.getMethodList()) {
+				ImplementationVisitor i = m.getImplementationVisitor();
 				
-				for (CallExpressionPiece c : m.getImplementationVisitor().getCallExpressions()) {
-					c.setMethodMap(classVisitor.getOverloadMap());
-					c.setVariableMap(m.getVariableMap());
-					c.processNode();
-				}	
-			}	
+				if (i == null) {
+					System.out.println("No implementationVisitor for " + m.getIdentifier());
+				} else {
+					for (CallExpressionPiece c : m.getImplementationVisitor().getCallExpressions()) {
+						c.setMethodMap(classVisitor.getOverloadMap());
+						c.setVariableMap(m.getVariableMap());
+						c.processNode();
+					}
+				}
+			}
 		}
 	}
-	
+
 	public ArrayList<ClassVisitor> getSortedClasses() {
 		sort();
 		return sortedClasses;

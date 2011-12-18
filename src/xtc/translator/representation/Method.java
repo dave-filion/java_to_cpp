@@ -3,7 +3,7 @@ package xtc.translator.representation;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Method {
+public class Method implements Comparable{
 
 	private String identifier;
 	private String overloadedIdentifier;
@@ -38,7 +38,7 @@ public class Method {
 	}
 	
 	public String toString(){
-		return "(" + returnType + ") " + overloadedIdentifier + "( " + arguments + " )";
+		return overloadedIdentifier;
 	}
 
 	public String getIdentifier() {
@@ -71,6 +71,17 @@ public class Method {
 
 	public void setArguments(Arguments arguments) {
 		this.arguments = arguments;
+	}
+
+	@Override
+	public int compareTo(Object arg0) {
+		System.out.println("Comaparing " + this.getOverloadedIdentifier() + " and " + ((Method)arg0).getOverloadedIdentifier());
+		
+		if (((Method)arg0).overloadedIdentifier.equals(this.overloadedIdentifier)) {
+			return 0;
+		} else {
+			return -1;
+		}
 	}
 	
 }

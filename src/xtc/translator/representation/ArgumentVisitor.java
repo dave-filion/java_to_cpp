@@ -31,6 +31,7 @@ public class ArgumentVisitor extends Visitor {
 
 	public void visitPrimaryIdentifier(GNode n) {
 		String type = variableMap.get(n.getString(0));
+		System.out.println("Type of " + n.getString(0) + " is " + type);
 		arguments.addArgument(type, n.getString(0));
 	}
 

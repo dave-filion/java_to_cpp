@@ -4,7 +4,7 @@
 #include <cstring>
 #include "ptr.h"
 #include "java_lang.h"
-#include "test_dir.h"
+#include "grimm.h"
 int main(){
-test_dir::hello::__Hello::main();
+grimm::__Test::main();
 }

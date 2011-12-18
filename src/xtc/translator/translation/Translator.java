@@ -14,6 +14,7 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 
 import xtc.translator.*;
+import xtc.translator.representation.ClassVisitor;
 import xtc.translator.representation.CompilationUnit;
 
 import xtc.parser.ParseException;
@@ -56,6 +57,10 @@ public class Translator {
 				ProtoManager protoManager = new ProtoManager(packageResolver.getProtoClasses());
 								
 				Collector collector = new Collector(protoManager.processProtoClasses());
+				
+				for (ClassVisitor c : collector.classes) {
+					System.out.println(c.getOverloadMap());
+				}
 
 				collector.collect();
 				

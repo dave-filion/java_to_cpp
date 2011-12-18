@@ -3,6 +3,7 @@ package xtc.translator.translation;
 import java.util.ArrayList;
 import java.util.List;
 
+import xtc.translator.representation.ClassVisitor;
 import xtc.translator.representation.CompilationUnit;
 
 public class ProtoManager {
@@ -19,10 +20,16 @@ public class ProtoManager {
 		for (ProtoClass protoClass : protoClasses) {
 			CompilationUnit compilationUnit = protoClass.makeCompilationUnit();
 			compilationUnit.setPackageName(protoClass.getPackageName());
-			compilationUnit.getClassVisitor().setPackageName(protoClass.getPackageName());
 			compilationUnits.add(compilationUnit);
-			compilationUnit.getClassVisitor().setImports(compilationUnit.getImports());
-			compilationUnit.getClassVisitor().setSourceNode(protoClass.getSourceNode());
+			
+			for (ClassVisitor classVisitor : compilationUnit.getClassVisitors()) {
+				classVisitor.setPackageName(protoClass.getPackageName());
+				classVisitor.setImports(compilationUnit.getImports());
+				//TODO: make this sourceNode the actual class begin
+				classVisitor.setSourceNode(protoClass.getSourceNode());
+				
+			}
+			
 		}
 		
 		return compilationUnits;

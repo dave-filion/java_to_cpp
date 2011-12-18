@@ -10,19 +10,20 @@ import xtc.tree.Visitor;
 public class CompilationUnit extends BaseVisitor{
 	
 	private String packageName;
-	private ClassVisitor classVisitor;
+	private ArrayList<ClassVisitor> classVisitors;
 	private ArrayList<String> imports;
 	
 	public CompilationUnit(){
 		imports = new ArrayList<String>();
+		classVisitors = new ArrayList<ClassVisitor>();
 	}
 	
 	public String getPackageName() {
 		return packageName;
 	}
 
-	public ClassVisitor getClassVisitor() {
-		return classVisitor;
+	public ArrayList<ClassVisitor> getClassVisitors() {
+		return classVisitors;
 	}
 
 	public ArrayList<String> getImports() {
@@ -42,7 +43,7 @@ public class CompilationUnit extends BaseVisitor{
 		
 		ClassVisitor newClass = new ClassVisitor();
 		newClass.dispatch(n);
-		this.classVisitor = newClass;
+		classVisitors.add(newClass);
 	}
 
 	public void visitImportDeclaration(GNode n) {

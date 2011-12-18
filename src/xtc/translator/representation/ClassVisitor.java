@@ -34,6 +34,7 @@ public class ClassVisitor extends Visitor implements Cloneable {
 	private List<String> imports;
 
 	private ArrayList<String> usedClasses;
+	
 
 	public ClassVisitor() {
 		this.extension = "";
@@ -48,7 +49,7 @@ public class ClassVisitor extends Visitor implements Cloneable {
 		this.usedClasses = new ArrayList<String>();
 		this.imports = new ArrayList<String>();
 		
-		this.overloadMap = new HashMap<String, List<Method>>();
+		this.overloadMap = new HashMap<String, List<Method>>();		
 	}
 
 	/**
@@ -57,6 +58,7 @@ public class ClassVisitor extends Visitor implements Cloneable {
 	 * @param n
 	 */
 	public void visitClassDeclaration(GNode n) {
+		System.out.println("Class Dec -> " + n);
 		for (Object o : n) {
 
 			// record the class name if o is a string
@@ -101,10 +103,9 @@ public class ClassVisitor extends Visitor implements Cloneable {
 
 	// parse through the constructor
 	public void visitConstructorDeclaration(GNode n) {
-		ConstructorVisitor constructorVisitor = new ConstructorVisitor();
+		ConstructorVisitor constructorVisitor = new ConstructorVisitor(n);
 		constructorVisitor.dispatch(n);
 		this.constructorList.add(constructorVisitor);
-		// this.constructor = constructorVisitor;
 	}
 
 	public void visitFieldDeclaration(GNode n) {
@@ -181,7 +182,7 @@ public class ClassVisitor extends Visitor implements Cloneable {
 		return "ClassVisitor [identifier=" + identifier + ", superClass="
 				+ superClass + ", fieldList=" + fieldList
 				+ ", implementationMap=" + implementationMap + ", packageName="
-				+ packageName + "]";
+				+ packageName + "extends: " + this.extension + "]";
 	}
 
 	public String getIdentifier() {
