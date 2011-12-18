@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 
 import xtc.translator.representation.ClassVisitor;
 import xtc.translator.representation.CppPrintable;
+import xtc.translator.representation.FieldVisitor;
 import xtc.translator.representation.MethodVisitor;
 
 public class PrintHandler {
@@ -124,6 +125,13 @@ public class PrintHandler {
 			cp.p(prepend(classVisitor.getIdentifier())).p("::").p(prepend(classVisitor.getIdentifier()));
 			cp.p("() : __vptr(&__vtable) { }").pln();
 			
+			// the fields
+			for ( FieldVisitor f : classVisitor.getFieldList()) {
+				if (f.isStatic)
+					cp.p(f.forImplementation()).pln();
+			}
+
+			
 			// Print destructor
 			cp.p("void ").p(prepend(classVisitor.getIdentifier())).p("::").p("__delete");
 			cp.p("(").p(prepend(classVisitor.getIdentifier())).p("*").p(" __this)").pln("{");
@@ -145,9 +153,14 @@ public class PrintHandler {
 					cp.p("()").pln();
 
 				} else {
+					
+					if (!m.isStatic()){
 					// print parameters with implicit this
 					cp.p(" (").p(classVisitor.getIdentifier() + " __this")
 							.p(m.parametersToString()).p(")").pln();
+					} else {
+						cp.p(" (").p(m.parametersToStringNoComma()).p(")").pln();
+					}
 				}
 
 				for (CppPrintable p : m.getImplementationVisitor().getCppPrintList()) {
@@ -229,6 +242,11 @@ public class PrintHandler {
 		
 		// the constructor
 		cp.p(prepend(classVisitor.getConstructor())).pln(";");
+		
+		// the fields
+		for ( FieldVisitor f : classVisitor.getFieldList()) {
+			cp.p(f.forHeader()).pln();
+		}
 		
 		// the destructor
 		cp.p("static void __delete(").p(prepend(classVisitor.getIdentifier()) + "*").p(")").pln(";");

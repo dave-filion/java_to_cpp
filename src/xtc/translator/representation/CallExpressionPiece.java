@@ -29,10 +29,28 @@ public class CallExpressionPiece extends Visitor implements CppPrintable{
 	
 	public void visitCallExpression(GNode n) {		
 		
+		boolean staticCall = false;
+		
 		// get caller
 		Node caller = n.getNode(0);
 		if (caller.getName().equals("PrimaryIdentifier")) {
-			representation += caller.getString(0);
+			if (variableMap.containsKey(caller.getString(0)))
+				representation += caller.getString(0);
+			else {
+				representation += "__" + caller.getString(0);
+				staticCall = true;
+				System.out.println(caller + " is static");
+			}
+				
+		}
+		
+		if (caller.getName().equals("CastExpression")) {
+			System.out.println("CAST!!!!");
+			representation += " __rt::java_cast<";
+			representation += caller.getNode(0).getNode(0).getString(0);
+			representation += ">(";
+			representation += caller.getNode(1).getString(0);
+			representation += ") ";
 		}
 		
 		// recurse into caller for chained methods
@@ -67,17 +85,17 @@ public class CallExpressionPiece extends Visitor implements CppPrintable{
 			if (caller.getName().equals("PrimaryIdentifier")) {
 				String className = variableMap.get(caller.getString(0));
 				System.out.println("Class for " + name + " is " + className + " and caller is " + caller);
-				Map<String, List<Method>> mm = MethodMaps.getMethodMapForClass(className);
+				Map<String, List<Method>> mm = null;
+				if (staticCall)
+					mm = MethodMaps.getMethodMapForClass(caller.getString(0));
+				else
+					mm = MethodMaps.getMethodMapForClass(className);
 
 				// no method map for this class, means it is something we don't know what to do with
-				if (mm == null) {
+				if (mm == null && !staticCall) {
 					System.out.println("DONT HAVE " + className);
-					representation += ".";
-					representation += name;
-					
-					//TODO do arguments
-					representation += "DO_ARGS_HERE";
-					return;
+					representation += "-> __vptr ->";
+					representation += name;													
 				} else {
 					methodList = mm.get(name);
 				}
@@ -87,35 +105,68 @@ public class CallExpressionPiece extends Visitor implements CppPrintable{
 			}
 
 			if (methodList == null) {
-				// TODO: throw exception
-				System.out.println("COULDNT FIND METHOD " + name);
-			} else {
-				for (Method method : methodList) {
+				// Print arguments
+				representation += "(";
+				
+				if (caller.getName().equals("PrimaryIdentifier")) {
+					representation += caller.getString(0);
+				} else {
+					representation += "__this";
+				}
 
+				// TODO: fix this horrible get.get thing
+				for (Argument arg : argumentVisitor.getArguments().getArguments()) {
+					representation += ",";
+					representation += arg.value;
+				}
+
+				representation += ")";
+				
+				return;
+				
+			} else {
+				boolean matchFound = false;
+
+				for (Method method : methodList) {
+									
 					// check for method with matching arguments
 					if (method.getArguments().compareTo(
 							argumentVisitor.getArguments()) == 0) {
-
-						// TODO: need to check method type to see whether to go
-						// thru v pointer or statically
+						matchFound = true;
+						
+						System.out.println("FOUND " + method + "static: " + method.isStatic);
+						
 						if (method.isStatic) {
-							representation += "."
+							if (staticCall) {
+								representation += "::" + method.getOverloadedIdentifier();
+							}else{
+							representation += "->"
 									+ method.getOverloadedIdentifier();
+							}
+							staticCall = true;
 						} else {
 							representation += "->__vptr ->"
 									+ method.getOverloadedIdentifier();
 						}
 					}
 				}
+				
+				if (!matchFound) {
+					System.out.println("No match found for " + name);
+					representation += "->__vptr ->" + name;
+				}
+				
 			}
 
 			// Print arguments
 			representation += "(";
 			
 			if (caller.getName().equals("PrimaryIdentifier")) {
-				representation += caller.getString(0);
+				if (!staticCall)
+					representation += caller.getString(0);
 			} else {
-				representation += "__this";
+				if (!staticCall)
+					representation += "__this";
 			}
 
 			// TODO: fix this horrible get.get thing

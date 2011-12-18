@@ -18,11 +18,15 @@ import xtc.translator.representation.Argument;
 import xtc.translator.representation.CallExpressionPiece;
 import xtc.translator.representation.ClassVisitor;
 import xtc.translator.representation.CompilationUnit;
+import xtc.translator.representation.CppPrintable;
+import xtc.translator.representation.FieldMap;
 import xtc.translator.representation.FieldVisitor;
+import xtc.translator.representation.IPiece;
 import xtc.translator.representation.ImplementationVisitor;
 import xtc.translator.representation.Method;
 import xtc.translator.representation.MethodMaps;
 import xtc.translator.representation.MethodVisitor;
+import xtc.translator.representation.PostfixPiece;
 import xtc.translator.representation.SourceObject;
 import xtc.translator.representation.VariableVisitor;
 
@@ -74,7 +78,10 @@ public class Collector extends Visitor {
 	 * Main method to begin collection
 	 * 
 	 */
-	public void collect() throws IOException, ParseException {		
+	public void collect() throws IOException, ParseException {	
+		// sort classes
+		this.sortClasses();
+		
 		// assign super classes to classVisitors
 		this.assignSuperClass();
 		
@@ -94,7 +101,32 @@ public class Collector extends Visitor {
 
 		// Process method calls for proper overloading
 		this.processCallExpression();
+		
+		this.processPostfixPieces();
+		
+		this.processPrimaryId();
+		
 	}
+	
+	private void sortClasses() {
+		//TODO implement real sort, this one is bullshit
+		ClassVisitor prev = null;
+		ClassVisitor current = null;
+		ArrayList<ClassVisitor> ordered = new ArrayList<ClassVisitor>();
+		
+		for (ClassVisitor c : classes) {
+			current = c;
+			if (prev != null && current.getIdentifier().equals(prev.getExtension())) {
+				int i1 = classes.indexOf(prev);
+				int i2 = classes.indexOf(current);
+				ordered.add(i1, current);
+				ordered.add(i2, prev);
+			}	
+			prev = current;
+		}
+		classes = ordered;	
+	}
+	
 
 	private void assignSuperClass() {
 		for (ClassVisitor cv : classes) {
@@ -253,7 +285,8 @@ public class Collector extends Visitor {
 					}
 
 					if (!m.getIdentifier().equals("main"))
-						m.setIdentifier(method.getOverloadedIdentifier());
+						if (!currentClass.getIdentifier().equals("Object"))
+							m.setIdentifier(method.getOverloadedIdentifier());
 				}
 				currentClass = currentClass.getSuperClass();
 			}
@@ -280,8 +313,6 @@ public class Collector extends Visitor {
 
 			method.getArguments().setArguments(paramTypes);
 
-			method.generateOverloadedIdentifier();
-
 			// if method is already there, add it to the list
 			if (source.getOverloadMap().containsKey(method.getIdentifier())) {
 				source.getOverloadMap().get(method.getIdentifier()).add(method);
@@ -292,7 +323,7 @@ public class Collector extends Visitor {
 			}
 
 			if (!m.getIdentifier().equals("main"))
-				m.setIdentifier(method.getOverloadedIdentifier());
+				m.setIdentifier(method.getIdentifier());
 		}
 
 		MethodMaps.addMethodMapForClass(source.getIdentifier(),
@@ -310,8 +341,10 @@ public class Collector extends Visitor {
 
 				// Put field variables into it
 				for (FieldVisitor fv : classVisitor.getFieldList()) {
-					vv.getVariableMap().put(fv.variableName, fv.variableType);
+					vv.getVariableMap().put(fv.getVariableName(), fv.getVariableType());
+					FieldMap.fieldmap.put(fv.getVariableName(), fv);
 				}
+				
 
 				// get the rest of the variables in method scope
 				vv.dispatch(m.getBaseNode());
@@ -341,7 +374,61 @@ public class Collector extends Visitor {
 			}
 		}
 	}
+	
+	private void processPostfixPieces() {
+		
+		for (ClassVisitor classVisitor : classes) {
 
+			for (MethodVisitor m : classVisitor.getMethodList()) {
+				ImplementationVisitor i = m.getImplementationVisitor();
+				
+				if (i == null) {
+					System.out.println("No implementationVisitor for " + m.getIdentifier());
+				} else {
+					for (PostfixPiece c : m.getImplementationVisitor().getPostfixPieces()) {
+						c.setVariableMap(m.getImplementationVisitor().getVarTypeDict());
+						c.processNode();
+					}
+				}
+			}
+		}
+		
+	}
+	
+	private void processPrimaryId() {
+		
+		for (ClassVisitor classVisitor: classes) {
+			for (MethodVisitor m : classVisitor.getMethodList()) {
+				ImplementationVisitor i = m.getImplementationVisitor();
+				
+				if (i == null) {
+					System.out.println("No implementationVisitor for " + m.getIdentifier());
+				} else {					
+					for (IPiece p : i.getIpieces()) {		
+						
+						Node n = p.getBaseNode();
+						
+						if (n.getName().equals("PrimaryIdentifier")) {
+							FieldVisitor fv = FieldMap.fieldmap.get(p.getRepresentation());
+							if (fv != null)
+								p.setRepresentation("__" + fv.parent.getIdentifier() + "::" + p.getRepresentation());
+						}					
+						
+						if (n.getName().equals("SelectionExpression")) {
+							String primaryId = n.getNode(0).getString(0);							
+							String field = n.getString(1);
+							System.out.println("__" + primaryId + "::" + field);
+							
+							p.setRepresentation("__" + primaryId + "::" + field);
+							
+						}
+					}
+				}
+			}
+		}
+	}
+
+	
 	public ArrayList<ClassVisitor> getSortedClasses() {
 		sort();
 		return sortedClasses;

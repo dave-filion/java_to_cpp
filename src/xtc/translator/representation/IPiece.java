@@ -22,6 +22,22 @@ public class IPiece implements CppPrintable{
 	public void printCpp(CppPrinter cp) {
 		cp.p(representation);
 	}
+
+	public Node getBaseNode() {
+		return baseNode;
+	}
+
+	public void setBaseNode(Node baseNode) {
+		this.baseNode = baseNode;
+	}
+
+	public String getRepresentation() {
+		return representation;
+	}
+
+	public void setRepresentation(String representation) {
+		this.representation = representation;
+	}
 	
 	
 }

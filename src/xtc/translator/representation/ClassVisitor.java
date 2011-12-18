@@ -109,7 +109,8 @@ public class ClassVisitor extends Visitor implements Cloneable {
 	}
 
 	public void visitFieldDeclaration(GNode n) {
-		FieldVisitor fieldVisitor = new FieldVisitor();
+		System.out.println(n);
+		FieldVisitor fieldVisitor = new FieldVisitor(this);
 		fieldVisitor.dispatch(n);
 		this.fieldList.add(fieldVisitor);
 	}

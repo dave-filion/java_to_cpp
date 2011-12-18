@@ -22,6 +22,8 @@ public class ImplementationVisitor extends Visitor {
 
 	private ArrayList<CppPrintable> cppPrintList;
 	private ArrayList<CallExpressionPiece> callExpressions;
+	private ArrayList<PostfixPiece> postfixPieces;
+	private ArrayList<IPiece> ipieces;
 
 	public ImplementationVisitor() {
 		super();
@@ -40,6 +42,8 @@ public class ImplementationVisitor extends Visitor {
 
 		cppPrintList = new ArrayList<CppPrintable>();
 		callExpressions = new ArrayList<CallExpressionPiece>();
+		postfixPieces = new ArrayList<PostfixPiece>();
+		ipieces = new ArrayList<IPiece>();
 	}
 
 	public void visit(Node n) {
@@ -62,41 +66,41 @@ public class ImplementationVisitor extends Visitor {
 		visit(n);
 		cppPrintList.add(new BlockPiece("}"));
 	}
-
+	
 	public void visitNewClassExpression(GNode n) {
-		add("new ");
-		add("__");
+		add("new ", n);
+		add("__", n);
 
 		String identifier = n.getNode(2).getString(0);
 
 		// Node arguments = n.getNode(3);
-		add(identifier);
-		add("( ");
+		add(identifier, n);
+		add("( ", n);
 
 		dispatch(n.getNode(3));
 
-		add(" )");
+		add(" )", n);
 	}
 
 	// SWITCH STATEMENTS START
 	public void visitSwitchStatement(GNode n) {
-		addLn("switch (" + n.getGeneric(0).getString(0) + ") {");
+		addLn("switch (" + n.getGeneric(0).getString(0) + ") {", n);
 		// visit other children
 		skipEldest(n);
-		addLn("}");
+		addLn("}", n);
 	}
 
 	public void visitCaseClause(GNode n) {
-		addLn("case " + n.getGeneric(0).getString(0) + ":");
+		addLn("case " + n.getGeneric(0).getString(0) + ":", n);
 		skipEldest(n);
 	}
 
 	public void visitBreakStatement(GNode n) {
-		addLn("break;");
+		addLn("break;", n);
 	}
 
 	public void visitDefaultClause(GNode n) {
-		addLn("default: ");
+		addLn("default: ", n);
 		visit(n);
 	}
 
@@ -104,12 +108,12 @@ public class ImplementationVisitor extends Visitor {
 
 	// DO WHILE LOOPS START
 	public void visitDoWhileStatement(GNode n) {
-		addLn("do");
+		addLn("do", n);
 		// in a do while loop, the youngest child is special
 		skipYoungest(n);
-		add("while (");
+		add("while (", n);
 		dispatch(n.getGeneric(n.size() - 1));
-		addLn(");");
+		addLn(");", n);
 	}
 
 	// DO WHILE LOOPS END
@@ -117,13 +121,13 @@ public class ImplementationVisitor extends Visitor {
 	// FUNNY RETURN STATEMENT STUFF START
 	public void visitAdditiveExpression(GNode n) {
 		dispatch(n.getNode(0));
-		add(" " + n.getString(1) + " ");
+		add(" " + n.getString(1) + " ", n);
 		dispatch(n.getNode(2));
 	}
 
 	public void visitMultiplicativeExpression(GNode n) {
 		dispatch(n.getNode(0));
-		add(" " + n.getString(1) + " ");
+		add(" " + n.getString(1) + " ", n);
 		dispatch(n.getNode(2));
 	}
 
@@ -136,54 +140,52 @@ public class ImplementationVisitor extends Visitor {
 		 */
 		for (int i = 0; i < n.size(); i++) {
 			String identifier = n.getString(i);
-			add(identifier + " ");
+			add(identifier + " ", n);
 			usedClasses.add(identifier);
 		}
 	}
 
 	public void visitLogicalAndExpression(GNode n) {
 		dispatch(n.getNode(0)); // bob2
-		add(" && ");
+		add(" && ", n);
 		dispatch(n.getNode(1));
 	}
 
 	public void visitLogicalOrExpression(GNode n) {
 		dispatch((Node) n.get(0));
-		add(" || ");
+		add(" || ", n);
 		dispatch((Node) n.get(1));
 	}
 
 	public void visitWhileStatement(GNode n) {
-		add(getIndent());
-		add("while (");
+		add("while (", n);
 		dispatch((Node) n.get(0)); // while condition
-		add(")");
+		add(")", n);
 		dispatch((Node) n.get(1)); // attached block
 	}
 
 	public void visitForStatement(GNode n) {
-		add(getIndent());
-		add("for");
+		add("for", n);
 		visit(n);
 	}
 
 	public void visitBasicForControl(GNode n) {
-		add("(");
+		add("(", n);
 		for (Object o : n) {
 			if (o instanceof Node) {
 				if (((Node) o).getName() == "Declarators") {
 					dispatch((Node) o);
-					add(";");
+					add(";", n);
 				} else if (((Node) o).getName() == "RelationalExpression") {
 					dispatch((Node) o);
-					add(";");
+					add(";", n);
 				} else {
 					dispatch((Node) o);
 				}
 			}
 			// add(";");
 		}
-		add(")");
+		add(")", n);
 	}
 
 	public void visitDeclarators(GNode n) {
@@ -197,7 +199,7 @@ public class ImplementationVisitor extends Visitor {
 				dispatch(child);
 			}
 			if (m instanceof String) {
-				add((String) m);
+				add((String) m, n);
 			}
 		}
 	}
@@ -207,7 +209,7 @@ public class ImplementationVisitor extends Visitor {
 			if (o instanceof Node) {
 				dispatch((Node) o);
 			} else if (o instanceof String) {
-				add((String) o); // print operator
+				add((String) o, n); // print operator
 			}
 		}
 	}
@@ -217,19 +219,17 @@ public class ImplementationVisitor extends Visitor {
 			if (o instanceof Node) {
 				dispatch((Node) o);
 			} else if (o instanceof String) {
-				add((String) o); // Print operator
+				add((String) o, n); // Print operator
 			}
 		}
 	}
 
 	public void visitPostfixExpression(GNode n) {
-		for (Object o : n) {
-			if (o instanceof Node) {
-				dispatch((Node) o);
-			} else if (o instanceof String) {
-				add((String) o); // Print operator
-			}
-		}
+		System.out.println("POSTFIX EXPRESSION -> " + n);
+
+		PostfixPiece p = new PostfixPiece(n);
+		cppPrintList.add(p);
+		postfixPieces.add(p);
 	}
 
 	public void visitUnaryExpression(GNode n) {
@@ -237,15 +237,14 @@ public class ImplementationVisitor extends Visitor {
 			if (o instanceof Node) {
 				dispatch((Node) o);
 			} else if (o instanceof String) {
-				add((String) o); // Print operator
+				add((String) o, n); // Print operator
 			}
 		}
 	}
 
 	public void visitExpressionStatement(GNode n) {
-		add(getIndent());
 		visit(n);
-		addLn(";");
+		addLn(";", n);
 	}
 
 	public void visitExpression(GNode n) {
@@ -253,21 +252,20 @@ public class ImplementationVisitor extends Visitor {
 			if (o instanceof Node) {
 				dispatch((Node) o);
 			} else if (o instanceof String) {
-				add((String) o); // Print operator
+				add((String) o, n); // Print operator
 			}
 		}
 	}
 
 	public void visitConditionalStatement(GNode n) {
-		add(getIndent());
-		add("if (");
+		add(getIndent(), n);
+		add("if (", n);
 		dispatch((Node) n.get(0));
-		add(")");
+		add(")", n);
 		dispatch((Node) n.get(1));
 		Node elseStatement = (Node) n.get(2);
 		if (elseStatement != null) {
-			add(getIndent());
-			add("else ");
+			add("else ", n);
 			dispatch((Node) n.get(2));
 		}
 	}
@@ -279,7 +277,7 @@ public class ImplementationVisitor extends Visitor {
 			dispatch(n.getGeneric(0));
 			if (n.size() > 1) {
 				for (int i = 1; i < n.size(); i++) {
-					add(" , ");
+					add(" , ", n);
 					dispatch(n.getGeneric(i));
 				}
 			}
@@ -288,7 +286,7 @@ public class ImplementationVisitor extends Visitor {
 
 	public void visitDeclarator(GNode n) {
 		String declaratorName = n.getString(0);
-		add(declaratorName);
+		add(declaratorName, n);
 
 		// The commented out code doesn't work in the case where
 		// nothing is assigned to a declarator
@@ -296,7 +294,7 @@ public class ImplementationVisitor extends Visitor {
 		// visit(n);
 
 		if (GNode.test(n.get(2))) {
-			add(" = ");
+			add(" = ", n);
 			dispatch(n.getGeneric(2));
 
 			// We want to get the declared variable's name and type!
@@ -337,11 +335,11 @@ public class ImplementationVisitor extends Visitor {
 	}
 
 	private void addCheckNotNull(String name) {
-		addLn("__rt::checkNotNull(" + name + ");");
+		addLn("__rt::checkNotNull(" + name + ");", null);
 	}
 
 	public void visitSuperExpression(GNode n) {
-		add("super");
+		add("super", n);
 		// add(".");
 		visit(n);
 	}
@@ -349,21 +347,19 @@ public class ImplementationVisitor extends Visitor {
 	public void visitSelectionExpression(GNode n) {
 		// Visits the first part, prints it, puts the dot, then prints the rest
 		// changed this from :: to ->
-		visit(n);
-		add("->");
-		add((String) n.get(1));
+		add((String) n.get(1), n);
 	}
 
 	public void visitThisExpression(GNode n) {
 		// use the runtime __this
-		add("__this");
+		add("__this", n);
 		visit(n);
 	}
 
 	public void visitPrimaryIdentifier(GNode n) {
 		String word = (String) n.get(0);
 
-		add(word);
+		add(word, n);
 		visit(n);
 	}
 
@@ -374,7 +370,7 @@ public class ImplementationVisitor extends Visitor {
 	public void visitModifier(GNode n) {
 		for (Object o : n) {
 			if (o instanceof String) {
-				add((String) o);
+				add((String) o, n);
 			} else if (o instanceof Node) {
 				dispatch((Node) o);
 			}
@@ -382,13 +378,13 @@ public class ImplementationVisitor extends Visitor {
 	}
 
 	public void visitVoidType(GNode n) {
-		add("void");
+		add("void", n);
 	}
 
 	public void visitFieldDeclaration(GNode n) {
-		add(getIndent());
+		add(getIndent(), n);
 		visit(n);
-		addLn(";");
+		addLn(";", n);
 	}
 
 	public void visitType(GNode n) {
@@ -397,29 +393,47 @@ public class ImplementationVisitor extends Visitor {
 
 	public void visitPrimitiveType(GNode n) {
 		// add((String) n.get(0) + " ");
-		add((String) n.get(0) + " ");
+		add((String) n.get(0) + " ", n);
 	}
 
 	public void visitIntegerLiteral(GNode n) {
-		add((String) n.get(0));
+		add((String) n.get(0), n);
 	}
 
 	public void visitReturnStatement(GNode n) {
-		add("return ");
+		add("return ", n);
 		visit(n);
-		addLn(";");
+		addLn(";", n);
+	}
+	
+	public void visitNullLiteral(GNode n) {
+		add("__rt::null()", n);
 	}
 
 	public void visitStringLiteral(GNode n) {
-		add("__rt::literal(" + n.getString(0) + ")");
+		add("__rt::literal(" + n.getString(0) + ")", n);
 	}
 
 	public void visitBooleanLiteral(GNode n) {
 		for (Object o : n) {
 			if (o instanceof String) {
-				add((String) o);
+				add((String) o, n);
 			}
 		}
+	}
+	
+	public void visitCastExpression(GNode n) {
+		System.out.println("CAST -> " + n);
+		add("__rt::java_cast(", n);
+		visit(n);
+		add(")", n);
+	}
+	
+	public void visitBasicCastExpression(GNode n) {
+		add("(", n);
+		visit(n.getNode(0));
+		add(") ", n);
+		visit(n.getNode(2));
 	}
 
 	public String getIndent() {
@@ -435,10 +449,11 @@ public class ImplementationVisitor extends Visitor {
 	 * Protected method to add new part to implementation representation
 	 * 
 	 **/
-	protected void add(String addition) {
+	protected void add(String addition, Node baseNode) {
 		// implementation += addition;
-
-		cppPrintList.add(new IPiece(null, addition));
+		IPiece i = new IPiece(baseNode, addition);
+		cppPrintList.add(i);
+		ipieces.add(i);
 	}
 
 	private void removeLastComma() {
@@ -446,8 +461,8 @@ public class ImplementationVisitor extends Visitor {
 				implementation.length() - 1);
 	}
 
-	private void addLn(String addition) {
-		add(addition + "\n");
+	private void addLn(String addition, Node baseNode) {
+		add(addition + "\n", baseNode);
 	}
 
 	// Dispatch on a node's children, skipping the eldest child
@@ -505,6 +520,22 @@ public class ImplementationVisitor extends Visitor {
 
 	public void setVarTypeDict(HashMap<String, String> varTypeDict) {
 		this.varTypeDict = varTypeDict;
+	}
+
+	public ArrayList<PostfixPiece> getPostfixPieces() {
+		return postfixPieces;
+	}
+
+	public void setPostfixPieces(ArrayList<PostfixPiece> postfixPieces) {
+		this.postfixPieces = postfixPieces;
+	}
+
+	public ArrayList<IPiece> getIpieces() {
+		return ipieces;
+	}
+
+	public void setIpieces(ArrayList<IPiece> ipieces) {
+		this.ipieces = ipieces;
 	}
 
 }

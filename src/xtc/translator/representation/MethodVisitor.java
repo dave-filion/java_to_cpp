@@ -183,13 +183,19 @@ public class MethodVisitor extends Visitor implements Cloneable{
 		if (this.identifier.equals("main")) {
 			// do nothing
 		} else {
-
-			out += implicitThis.getIdentifier();
+			if (!isStatic){
+				out += implicitThis.getIdentifier();
+				out += ",";
+			}
 
 			// Print parameter types
 			for (Map<String, String> p : this.parameters) {
-				out += ", ";
 				out += p.get("type");
+				out += ",";
+			}
+
+			if (out.charAt(out.length() - 1) == ','){
+				out = out.substring(0, out.length() - 1);
 			}
 
 		}
@@ -338,6 +344,22 @@ public class MethodVisitor extends Visitor implements Cloneable{
 
 	public void setVariableMap(Map<String, String> variableMap) {
 		this.variableMap = variableMap;
+	}
+
+	public String parametersToStringNoComma() {
+		String out = "";
+		
+		for (Map p : this.parameters) {
+			out += p.get("type");
+			out += " ";
+			out += p.get("name");
+			out += ",";
+		}
+		
+		if (!parameters.isEmpty())
+			out = out.substring(0, out.length() - 1);
+		
+		return out;
 	}
 
 	

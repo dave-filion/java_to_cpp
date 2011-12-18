@@ -42,7 +42,7 @@ public class ConstructorVisitor extends MethodVisitor {
 					  // handle ThisExpressions differently in constructors
 					  // this is an anonymous class I think
 					  public void visitThisExpression(GNode n) {
-					    add("this");
+					    add("this", n);
 					    visit(n);
           	}
 					};

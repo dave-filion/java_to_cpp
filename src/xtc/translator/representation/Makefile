@@ -61,7 +61,9 @@ SOURCE = ClassVisitor.java \
 	ArgumentVisitor.java \
 	VariableVisitor.java \
 	Argument.java \
-	MethodMaps.java
+	MethodMaps.java \
+	PostfixPiece.java \
+	FieldMap.java
 	
 
 JNI_SOURCE =

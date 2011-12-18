@@ -17,3 +17,10 @@ void OutStream::print(int32_t i) {
 void OutStream::println(int32_t i) {
   std::cout << i << std::endl;
 }
+
+void OutStream::print() {
+}
+
+void OutStream::println() {
+   std::cout << std::endl;
+}
