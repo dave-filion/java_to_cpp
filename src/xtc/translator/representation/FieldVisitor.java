@@ -100,6 +100,12 @@ public class FieldVisitor extends BaseVisitor {
 		this.variableType = variableType;
 	}
 
+	@Override
+	public String toString() {
+		return variableName;
+	}
+
+	
 
 
 }

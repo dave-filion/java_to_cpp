@@ -1,31 +1,15 @@
 package xtc.translator.translation;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.io.Reader;
-import java.io.Writer;
-
-import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 
-import xtc.translator.*;
 import xtc.translator.representation.ClassVisitor;
-import xtc.translator.representation.CompilationUnit;
-
 import xtc.parser.ParseException;
-import xtc.parser.Result;
-
-import xtc.tree.Node;
-
-import xtc.lang.JavaFiveParser;
 
 /**
- * A translator from (a subset of) Java to (a subset of) C++.
+ * A translator from (a subset of) Java to  (a subset of) C++.
  * 
  * @author Robert Grimm
  * @version $Revision$

@@ -18,6 +18,7 @@ import xtc.translator.representation.Argument;
 import xtc.translator.representation.CallExpressionPiece;
 import xtc.translator.representation.ClassVisitor;
 import xtc.translator.representation.CompilationUnit;
+import xtc.translator.representation.ConstructorVisitor;
 import xtc.translator.representation.CppPrintable;
 import xtc.translator.representation.FieldMap;
 import xtc.translator.representation.FieldVisitor;
@@ -84,6 +85,7 @@ public class Collector extends Visitor {
 		// sort classes
 		this.sortClasses();
 		
+		// Make simple type list for consulting
 		makeTypeList();
 		
 		// assign super classes to classVisitors
@@ -91,7 +93,6 @@ public class Collector extends Visitor {
 		
 		// get overloaded methods
 		this.generateMethodOverload();
-		System.out.println("Method Map is " + MethodMaps.methodMaps);
 
 		// Use assigned super classes to create implementation
 		// map of all methods in class hierarchy (vtable precursor)
@@ -106,14 +107,44 @@ public class Collector extends Visitor {
 		// Process method calls for proper overloading
 		this.processCallExpression();
 		
+		// Process postfix pieces, which require special rules
 		this.processPostfixPieces();
 		
-		this.processPrimaryId();
+		// Process general pieces, which require certain post processing
+		this.processPieces();
 		
+		// Inherit relevant fields in subclasses
+		this.inheritFields();
+		
+		// HACKY
+		// Initialize inherited values in subclasses constructors
+		this.initilizeInheritedValues();
+	}
+	
+	private void inheritFields() {
+		for (ClassVisitor cv : classes) {
+			inheritFields(cv.getSuperClass(), cv);
+		}
+	}
+	
+	// Inherits all fields of superclasses
+	private void inheritFields(ClassVisitor current, ClassVisitor original) {
+		if (current == null) {
+			return;
+		} else {
+			inheritFields(current.getSuperClass(), original);
+			for (FieldVisitor f : current.getFieldList()) {
+				if (!f.isStatic) {
+					original.getFieldList().add(f);
+					original.getInheritedFields().add(f);
+				}
+			}
+		}
+				
 	}
 	
 	private void sortClasses() {
-		//TODO implement real sort, this one is bullshit
+		//TODO implement real sort, this one is a hack.
 		ClassVisitor prev = null;
 		ClassVisitor current = null;
 		ArrayList<ClassVisitor> ordered = new ArrayList<ClassVisitor>();
@@ -131,13 +162,20 @@ public class Collector extends Visitor {
 		classes = ordered;	
 	}
 	
-
+	
+	/**
+	 * Entry point to recursive method to assign superclasses.
+	 */
 	private void assignSuperClass() {
 		for (ClassVisitor cv : classes) {
 			assignSuperClass(cv);
 		}
 	}
 	
+	/**
+	 * Recursively assigns superclasses to classes based on extension string.
+	 * @param current
+	 */
 	private void assignSuperClass(ClassVisitor current) {
 		
 		if (current == null) {
@@ -395,11 +433,27 @@ public class Collector extends Visitor {
 					}
 				}
 			}
-		}
-		
+		}		
 	}
 	
-	private void processPrimaryId() {
+	private void initilizeInheritedValues() {
+		for (ClassVisitor classVisitor : classes) {
+			for (ConstructorVisitor con : classVisitor.getConstructorList()) {
+				List<CppPrintable> pieces = con.getImplementationVisitor().getCppPrintList();
+				pieces.remove(pieces.size() - 1); //remove last brace;
+				System.out.println(classVisitor.getIdentifier() + " : " + classVisitor.getInheritedFields());
+				for (FieldVisitor fv : classVisitor.getInheritedFields()) {
+					pieces.add(new IPiece(null, fv.variableName + " =  0;"));
+				}
+				
+				pieces.add(new IPiece(null, "}\n"));
+				con.getImplementationVisitor().setCppPrintList(pieces);
+				System.out.println(con.getImplementationVisitor().getCppPrintList());
+			}
+		}
+	}
+	
+	private void processPieces() {
 		
 		for (ClassVisitor classVisitor: classes) {
 			for (MethodVisitor m : classVisitor.getMethodList()) {
@@ -423,9 +477,9 @@ public class Collector extends Visitor {
 							String field = n.getString(1);
 							
 							if (typeList.contains(primaryId))
-								p.setRepresentation("__" + primaryId + "::" + field);							
+								p.setRepresentation("(__" + primaryId + "::" + field + ")");							
 							else
-								p.setRepresentation(primaryId + "->" + field);
+								p.setRepresentation("(" + primaryId + "->" + field + ")");
 						}
 						
 						if (n.getName().equals("InstanceOfExpression")) {
@@ -461,7 +515,14 @@ public class Collector extends Visitor {
 		
 		if (n.getNode(0).getName().equals("StringLiteral")) {
 			String first = n.getNode(0).getString(0);
-			String second = n.getNode(2).getString(0);
+			String second = null;
+			// special concatination of characters
+			if (n.getNode(2).getName().equals("CharacterLiteral")){
+				second = n.getNode(2).getString(0);
+				second = second.replace("'", "\"");
+			}else {
+				second = n.getNode(2).getString(0);
+			}
 			return first + second;
 		} else if(n.getNode(0).getName().equals("PrimaryIdentifier")){
 			String first = variableMap.get(n.getNode(0).getString(0));

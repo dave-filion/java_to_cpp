@@ -6,6 +6,7 @@ import xtc.tree.GNode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * A Visitor that visits and stores the implementation details of a method.
@@ -21,10 +22,10 @@ public class ImplementationVisitor extends Visitor {
 	private HashMap<String, String> varTypeDict;
 	public static HashMap<String, String> varValues = new HashMap<String, String>();
 
-	private ArrayList<CppPrintable> cppPrintList;
+	private List<CppPrintable> cppPrintList;
 	private ArrayList<CallExpressionPiece> callExpressions;
 	private ArrayList<PostfixPiece> postfixPieces;
-	private ArrayList<IPiece> ipieces;
+	private List<IPiece> ipieces;
 
 	public ImplementationVisitor() {
 		super();
@@ -63,9 +64,9 @@ public class ImplementationVisitor extends Visitor {
 	}
 
 	public void visitBlock(GNode n) {
-		cppPrintList.add(new BlockPiece("{"));
+		addLn("{", n);
 		visit(n);
-		cppPrintList.add(new BlockPiece("}"));
+		addLn("}", n);
 	}
 	
 	public void visitNewClassExpression(GNode n) {
@@ -197,6 +198,7 @@ public class ImplementationVisitor extends Visitor {
 	}
 
 	public void visitEqualityExpression(GNode n) {
+		add("(", n);
 		for (Object m : n) {
 			if (m instanceof Node) {
 				Node child = (Node) m;
@@ -206,6 +208,7 @@ public class ImplementationVisitor extends Visitor {
 				add((String) m, n);
 			}
 		}
+		add(")",n);
 	}
 
 	public void visitRelationalExpression(GNode n) {
@@ -534,12 +537,12 @@ public class ImplementationVisitor extends Visitor {
 		return varTypeDict;
 	}
 
-	public ArrayList<CppPrintable> getCppPrintList() {
+	public List<CppPrintable> getCppPrintList() {
 		return cppPrintList;
 	}
 
-	public void setCppPrintList(ArrayList<CppPrintable> cppPrintList) {
-		this.cppPrintList = cppPrintList;
+	public void setCppPrintList(List<CppPrintable> pieces) {
+		this.cppPrintList = pieces;
 	}
 
 	public ArrayList<CallExpressionPiece> getCallExpressions() {
@@ -567,12 +570,12 @@ public class ImplementationVisitor extends Visitor {
 		this.postfixPieces = postfixPieces;
 	}
 
-	public ArrayList<IPiece> getIpieces() {
+	public List<IPiece> getIpieces() {
 		return ipieces;
 	}
 
-	public void setIpieces(ArrayList<IPiece> ipieces) {
-		this.ipieces = ipieces;
+	public void setIpieces(List<IPiece> pieces) {
+		this.ipieces = pieces;
 	}
 
 }

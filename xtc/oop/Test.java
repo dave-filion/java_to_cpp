@@ -363,7 +363,7 @@ public class Test {
     // // -----------------------------------------------------------------------
 
     // o = ((Test)o).m1();
-
+    // 
     // if (R1 == o) {
     //   System.out.println("PASS (Test)o");
     //   success++;
@@ -396,13 +396,13 @@ public class Test {
 
     // // -----------------------------------------------------------------------
 
-    // if ((0 == r.round) && (0 == r.count)) {
-    //   System.out.println("PASS Rest.<init>()");
-    //   success++;
-    // } else {
-    //   System.out.println("FAIL Rest.<init>()");
-    // }
-    // test++;
+    if ((0 == r.round) && (0 == r.count)) {
+      System.out.println("PASS Rest.<init>()");
+      success++;
+    } else {
+      System.out.println("FAIL Rest.<init>()");
+    }
+    test++;
 
     // // -----------------------------------------------------------------------
 
@@ -418,15 +418,15 @@ public class Test {
 
     // // -----------------------------------------------------------------------
 
-    // r.m3().m4();
+    r.m3().m4();
 
-    // if ((1 == r.round) && (1 == r.count)) {
-    //   System.out.println("PASS r.m3().m4()");
-    //   success++;
-    // } else {
-    //   System.out.println("FAIL r.m3().m4()");
-    // }
-    // test++;
+    if ((1 == r.round) && (1 == r.count)) {
+      System.out.println("PASS r.m3().m4()");
+      success++;
+    } else {
+      System.out.println("FAIL r.m3().m4()");
+    }
+    test++;
 
     // // -----------------------------------------------------------------------
 
@@ -446,7 +446,7 @@ public class Test {
     // r.count = 0;
     // r.round = 0;
     // r.m5(r).m3().m4();
-
+    // 
     // if ((2 == r.round) && (2 == r.count)) {
     //   System.out.println("PASS r.m5(r).m3().m4()");
     //   success++;
@@ -712,15 +712,15 @@ public class Test {
 
     // // -----------------------------------------------------------------------
 
-    // o = r.m10(n);
+    o = r.m10(n);
 
-    // if (R2 == o) {
-    //   System.out.println("PASS r.m10(n)");
-    //   success++;
-    // } else {
-    //   System.out.println("FAIL r.m10(n)");
-    // }
-    // test++;
+    if (R2 == o) {
+      System.out.println("PASS r.m10(n)");
+      success++;
+    } else {
+      System.out.println("FAIL r.m10(n)");
+    }
+    test++;
 
     // // -----------------------------------------------------------------------
 

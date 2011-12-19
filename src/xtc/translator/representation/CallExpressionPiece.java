@@ -69,7 +69,7 @@ public class CallExpressionPiece extends Visitor implements CppPrintable{
 			
 			representation += ".";
 			representation += name;
-			//TODO: make this more robust
+
 			if (argumentVisitor.getArguments().getArguments().size() == 0) {
 				representation += "()";
 			} else {
@@ -174,8 +174,36 @@ public class CallExpressionPiece extends Visitor implements CppPrintable{
 				}
 				
 				if (!matchFound) {
-					System.out.println("No match found for " + name);
-					representation += "->__vptr ->" + name;
+					// try casting as int if short
+					if (argumentVisitor.getArguments().getArguments().get(0).type.equals("short")) {
+						argumentVisitor.getArguments().getArguments().get(0).type = "int";
+						for (Method method : methodList) {
+							
+							// check for method with matching arguments
+							if (method.getArguments().compareTo(
+									argumentVisitor.getArguments()) == 0) {
+								matchFound = true;
+								
+								System.out.println("FOUND " + method + "static: " + method.isStatic);
+								
+								if (method.isStatic) {
+									if (staticCall) {
+										representation += "::" + method.getOverloadedIdentifier();
+									}else{
+									representation += "->"
+											+ method.getOverloadedIdentifier();
+									}
+									staticCall = true;
+								} else {
+									representation += "->__vptr ->"
+											+ method.getOverloadedIdentifier();
+								}
+							}
+						}
+
+					} else {
+						representation += "->__vptr ->" + name;
+					}
 				}
 				
 			}

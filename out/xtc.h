@@ -130,6 +130,7 @@ struct __Rest{
 __Rest_VT* __vptr;
 __Rest();
 int round;
+int count;
 static void __delete(__Rest*);
 static Object m1(Rest);
 static Object m2();

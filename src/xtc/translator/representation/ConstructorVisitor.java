@@ -12,7 +12,7 @@ public class ConstructorVisitor extends MethodVisitor {
 	
 	public String getSignature(){
 		String out = "";
-		out += this.getIdentifier() + "(";
+		out += "__" + this.getIdentifier() + "(";
 
 		int i = 0;
 		
@@ -38,16 +38,11 @@ public class ConstructorVisitor extends MethodVisitor {
 
 			if (o instanceof Node) {
 				if (((Node) o).getName() == "Block") {
-					ImplementationVisitor iv = new ImplementationVisitor() {
-					  // handle ThisExpressions differently in constructors
-					  // this is an anonymous class I think
-					  public void visitThisExpression(GNode n) {
-					    add("this", n);
-					    visit(n);
-          	}
-					};
+					ImplementationVisitor iv = new ImplementationVisitor();
+					
 					iv.dispatch((Node) o);
 					this.setImplementation(iv.getImplementation());
+					this.setImplementationVisitor(iv);
 				}
 
 				if (((Node) o).getName() == "Modifiers") {

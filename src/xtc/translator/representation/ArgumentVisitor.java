@@ -93,7 +93,6 @@ public class ArgumentVisitor extends Visitor {
 		List<Method> methodList = methodMap.get(name);
 
 		if (methodList == null) {
-			// TODO: throw exception
 			System.out.println("COULDNT FIND METHOD " + name);
 		} else {
 			for (Method method : methodList) {

@@ -7,8 +7,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import xtc.translator.representation.ClassVisitor;
+import xtc.translator.representation.ConstructorVisitor;
 import xtc.translator.representation.CppPrintable;
 import xtc.translator.representation.FieldVisitor;
+import xtc.translator.representation.ImplementationVisitor;
 import xtc.translator.representation.MethodVisitor;
 
 public class PrintHandler {
@@ -120,11 +122,23 @@ public class PrintHandler {
 				cp.pln();
 			}
 
-			// Print constructor
-			// TODO: FIX CONSTRUCOR PRINTING
-			cp.p(prepend(classVisitor.getIdentifier())).p("::").p(prepend(classVisitor.getIdentifier()));
-			cp.p("() : __vptr(&__vtable) { }").pln();
+			for (ConstructorVisitor con : classVisitor.getConstructorList()) {
+				// Print constructor
+				// TODO: FIX CONSTRUCOR PRINTING
+				cp.p(prepend(classVisitor.getIdentifier())).p("::")
+						.p(prepend(classVisitor.getIdentifier()));
+				cp.p("() : __vptr(&__vtable)").pln();
+				ImplementationVisitor iv = con.getImplementationVisitor();
+				if (iv == null) {
+					System.out.println("NO CONSTRUCTOR FOR " + classVisitor);
+				} else {
+					for (CppPrintable p : iv.getCppPrintList()) {
+						p.printCpp(cp);
+					}					
+				}
+			}
 			
+
 			// the fields
 			for ( FieldVisitor f : classVisitor.getFieldList()) {
 				if (f.isStatic)
@@ -242,7 +256,9 @@ public class PrintHandler {
 		cp.p(vtDec(classVisitor.getIdentifier())).p("*").p(" ").p("__vptr").pln(";");
 		
 		// the constructor
-		cp.p(prepend(classVisitor.getConstructor())).pln(";");
+		for (ConstructorVisitor con : classVisitor.getConstructorList()) {
+			cp.p(con.getSignature()).pln(";");
+		}
 		
 		// the fields
 		for ( FieldVisitor f : classVisitor.getFieldList()) {

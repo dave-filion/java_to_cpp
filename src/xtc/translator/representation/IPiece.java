@@ -39,5 +39,8 @@ public class IPiece implements CppPrintable{
 		this.representation = representation;
 	}
 	
+	public String toString(){
+		return representation;
+	}
 	
 }

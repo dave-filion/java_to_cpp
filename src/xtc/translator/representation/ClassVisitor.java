@@ -29,7 +29,7 @@ public class ClassVisitor extends Visitor implements Cloneable {
 	private List<MethodVisitor> methodList;
 	private Map<String, String> implementationMap;
 	private Map<String, List<Method>> overloadMap;
-	
+	private ArrayList<FieldVisitor> inheritedFields;
 	private String packageName;
 	private List<String> imports;
 
@@ -48,7 +48,7 @@ public class ClassVisitor extends Visitor implements Cloneable {
 
 		this.usedClasses = new ArrayList<String>();
 		this.imports = new ArrayList<String>();
-		
+		this.inheritedFields = new ArrayList<FieldVisitor>();
 		this.overloadMap = new HashMap<String, List<Method>>();		
 	}
 
@@ -278,16 +278,6 @@ public class ClassVisitor extends Visitor implements Cloneable {
 		this.imports = imports;
 	}
 	
-	public String getConstructor() {
-		String con = "";
-		
-		con += this.identifier;
-		con += "(";
-		//TODO FIX CONSTRUCTORS
-		con += ")";
-		
-		return con;
-	}
 	
 	public String makeFullIdentifier() {
 		return packageName + "." + identifier;
@@ -323,6 +313,14 @@ public class ClassVisitor extends Visitor implements Cloneable {
 
 	public void setFullIdentifier(String fullIdentifier) {
 		this.fullIdentifier = fullIdentifier;
+	}
+
+	public ArrayList<FieldVisitor> getInheritedFields() {
+		return inheritedFields;
+	}
+
+	public void setInheritedFields(ArrayList<FieldVisitor> inheritedFields) {
+		this.inheritedFields = inheritedFields;
 	}
 	
 	
