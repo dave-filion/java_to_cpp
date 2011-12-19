@@ -388,7 +388,32 @@ public class ImplementationVisitor extends Visitor {
 	}
 
 	public void visitType(GNode n) {
+	    // for arrays
+	    if (GNode.test(n.get(1)) ) {
+	        add("__rt::Ptr<__rt::Array<", n);
+        }
 		visit(n);
+		if (GNode.test(n.get(1)) ) {
+		    add("> >", n);
+		}
+	}
+	
+	// for arrays
+	public void visitNewArrayExpression(GNode n) {
+	    add(" new __rt::Array<", n);
+	    dispatch(n.getGeneric(0));
+	    add(">(", n);
+	    dispatch(n.getGeneric(1));
+	    add(")", n);
+	}
+	
+	// for arrays
+	public void visitSubscriptExpression(GNode n) {
+	    add("(*", n);
+	    dispatch(n.getGeneric(0));
+	    add(")[", n);
+	    dispatch(n.getGeneric(1));
+	    add("]", n);
 	}
 
 	public void visitPrimitiveType(GNode n) {
