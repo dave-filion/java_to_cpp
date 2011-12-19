@@ -143,6 +143,11 @@ public class ImplementationVisitor extends Visitor {
 			usedClasses.add(identifier);
 		}
 	}
+	
+	public void visitLogicalNegationExpression(GNode n) {
+	   add("!", n);
+	   visit(n);
+	}
 
 	public void visitLogicalAndExpression(GNode n) {
 		dispatch(n.getNode(0)); // bob2

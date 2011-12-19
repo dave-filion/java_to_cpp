@@ -20,4 +20,5 @@ else:
                         print "Compile Failed"
                 else:
                         print "Sucess!"
+                        os.system("indent *")
 			os.system("./a.out")

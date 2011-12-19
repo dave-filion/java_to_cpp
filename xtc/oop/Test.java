@@ -19,7 +19,7 @@
 package xtc.oop;
 
 public class Test {
-
+   
   public static final Object R1 = new Object();
   public static final Object R2 = new Object();
   public static final Object R3 = new Object();
@@ -748,7 +748,7 @@ public class Test {
     test++;
 
     // // -----------------------------------------------------------------------
-
+    System.out.println(k1.getName());
     if (k1.getName().equals("xtc.oop.Test")) {
       System.out.println("PASS k1.getName().equals(\"xtc.oop.Test\")");
       success++;
@@ -768,7 +768,7 @@ public class Test {
     // test++;
 
     // // -----------------------------------------------------------------------
-
+    System.out.println(k1.toString());
     if (k1.toString().equals("class xtc.oop.Test")) {
       System.out.println("PASS k1.toString().equals(\"class xtc.oop.Test\")");
       success++;

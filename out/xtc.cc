@@ -264,7 +264,7 @@ else {
 System::out.println(__rt::literal("FAIL t != r"));
 }
 test++;
-if (t->__vptr ->equals(t,r)){
+if (!t->__vptr ->equals(t,r)){
 System::out.println(__rt::literal("PASS ! t.equals(r)"));
 success++;
 }
@@ -273,7 +273,7 @@ System::out.println(__rt::literal("FAIL ! t.equals(r)"));
 }
 test++;
 s1=t->__vptr ->toString(t);
-if (s1-> __vptr ->equals(s1,s2)){
+if (!s1-> __vptr ->equals(s1,s2)){
 System::out.println(__rt::literal("PASS ! t.toString().equals(r.toString())"));
 success++;
 }
@@ -525,6 +525,7 @@ else {
 System::out.println(__rt::literal("FAIL K1 != k2"));
 }
 test++;
+System::out.println(k1);
 if (k1-> __vptr ->getName(k1)->__vptr ->equals(k1,__rt::literal("xtc.oop.Test"))){
 System::out.println(__rt::literal("PASS k1.getName().equals(\"xtc.oop.Test\")"));
 success++;
@@ -533,6 +534,7 @@ else {
 System::out.println(__rt::literal("FAIL k1.getName().equals(\"xtc.oop.Test\")"));
 }
 test++;
+System::out.println(k1);
 if (k1-> __vptr ->toString(k1)->__vptr ->equals(k1,__rt::literal("class xtc.oop.Test"))){
 System::out.println(__rt::literal("PASS k1.toString().equals(\"class xtc.oop.Test\")"));
 success++;
@@ -541,7 +543,7 @@ else {
 System::out.println(__rt::literal("FAIL k1.toString().equals(\"class xtc.oop.Test\")"));
 }
 test++;
-if (k1-> __vptr ->equals(k1,k2)){
+if (!k1-> __vptr ->equals(k1,k2)){
 System::out.println(__rt::literal("PASS ! k1.equals(k2)"));
 success++;
 }
