@@ -936,27 +936,27 @@ public class Test {
 
     // // -----------------------------------------------------------------------
 
-    // short[] a0 = new short[0];
+    short[] a0 = new short[0];
 
-    // if (a0.length == 0) {
-    //   System.out.println("PASS short[0].length");
-    //   success++;
-    // } else {
-    //   System.out.println("FAIL short[0].length");
-    // }
-    // test++;
+    if (a0.length == 0) {
+      System.out.println("PASS short[0].length");
+      success++;
+    } else {
+      System.out.println("FAIL short[0].length");
+    }
+    test++;
 
     // // -----------------------------------------------------------------------
 
-    // short[] a1 = new short[1];
+    short[] a1 = new short[1];
 
-    // if (a1.length == 1) {
-    //   System.out.println("PASS short[1].length");
-    //   success++;
-    // } else {
-    //   System.out.println("FAIL short[1].length");
-    // }
-    // test++;
+    if (a1.length == 1) {
+      System.out.println("PASS short[1].length");
+      success++;
+    } else {
+      System.out.println("FAIL short[1].length");
+    }
+    test++;
 
     // // -----------------------------------------------------------------------
 

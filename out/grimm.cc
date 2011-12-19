@@ -127,7 +127,7 @@ return __rt::null();
 
 void __Test::main()
 {
-short n = 1;
+int n = 1;
 Test t;
 Rest r;
 Object o = __rt::null();
@@ -637,8 +637,26 @@ else {
 System::out.println(__rt::literal("FAIL s1.equals(String + char)"));
 }
 test++;
+__rt::Ptr<__rt::Array<int > >a0 =  new __rt::Array<int >(0);
+if (a0->length==0){
+System::out.println(__rt::literal("PASS short[0].length"));
+success++;
+}
+else {
+System::out.println(__rt::literal("FAIL short[0].length"));
+}
+test++;
+__rt::Ptr<__rt::Array<int > >a1 =  new __rt::Array<int >(1);
+if (a1->length==1){
+System::out.println(__rt::literal("PASS short[1].length"));
+success++;
+}
+else {
+System::out.println(__rt::literal("FAIL short[1].length"));
+}
+test++;
 System::out.println();
-System::out.println(success);
+System::out.println;
 }
 
 Class __Test::__class() {

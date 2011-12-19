@@ -3,6 +3,7 @@ package xtc.translator.representation;
 import java.util.List;
 import java.util.Map;
 
+import xtc.translator.translation.Collector;
 import xtc.translator.translation.CppPrinter;
 import xtc.tree.GNode;
 import xtc.tree.Node;
@@ -28,8 +29,6 @@ public class CallExpressionPiece extends Visitor implements CppPrintable{
 	}
 	
 	public void visitCallExpression(GNode n) {		
-
-		System.out.println(n);
 		
 		boolean staticCall = false;
 		
@@ -74,7 +73,13 @@ public class CallExpressionPiece extends Visitor implements CppPrintable{
 			if (argumentVisitor.getArguments().getArguments().size() == 0) {
 				representation += "()";
 			} else {
-				representation += "(" + argumentVisitor.getArguments().getArguments().get(0).value + ")";				
+				if (arguments.getNode(0).getName().equals("AdditiveExpression")) {
+					System.out.println("SYSTEM ADDING!!!!@$!#$!$!2");
+					String result = Collector.concat("", arguments.getNode(0), ImplementationVisitor.varValues);
+					System.out.println(result);
+				}else{
+					representation += "(" + argumentVisitor.getArguments().getArguments().get(0).value + ")";				
+				}
 			}
 			
 		} else {
@@ -108,18 +113,14 @@ public class CallExpressionPiece extends Visitor implements CppPrintable{
 			if (methodList == null) {
 				// Print arguments
 				representation += "(";
-				
-				System.out.println(caller.getName());
-				
+								
 				if (caller.getName().equals("PrimaryIdentifier")) {
 					representation += caller.getString(0);
 				} else if (caller.getName().equals("CallExpression")){
-					System.out.println("SHIIIIT");
 					Node currentNode = caller;
 					String result = "";
 					while (currentNode != null && currentNode.getName().equals("CallExpression")) {
 						if (currentNode.getNode(0) != null && currentNode.getNode(0).getName().equals("PrimaryIdentifier")) {
-							System.out.println("FOUND ONE");
 							result = currentNode.getNode(0).getString(0);
 							break;
 						}

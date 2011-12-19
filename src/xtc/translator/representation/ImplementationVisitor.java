@@ -19,6 +19,7 @@ public class ImplementationVisitor extends Visitor {
 	private ArrayList<String> usedClasses;
 	// key is variable, value is variable type
 	private HashMap<String, String> varTypeDict;
+	public static HashMap<String, String> varValues = new HashMap<String, String>();
 
 	private ArrayList<CppPrintable> cppPrintList;
 	private ArrayList<CallExpressionPiece> callExpressions;
@@ -299,6 +300,7 @@ public class ImplementationVisitor extends Visitor {
 			String varName = n.getString(0);
 			String varType = evaluateClass(n.getGeneric(2));
 			varTypeDict.put(varName, varType);
+			varValues.put(varName, varType);
 		}
 	}
 
@@ -316,7 +318,10 @@ public class ImplementationVisitor extends Visitor {
 		}
 		// otherwise type is n's name without the word Literal
 		else if (n.getName().contains("Literal")) {
-			return n.getName().substring(0, (n.getName().length() - 7));
+			if (!n.getName().equals("NullLiteral"))
+				return n.getString(0);
+			else
+				return "seriously?";
 		}
 		// uh oh we screwed up :(:(:(
 		else {

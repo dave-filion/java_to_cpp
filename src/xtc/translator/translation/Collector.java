@@ -438,7 +438,7 @@ public class Collector extends Visitor {
 							
 							String real = "";
 							
-							real = concat(real, n);
+							real = concat(real, n, null);
 							
 							real = real.replaceAll("\"", "");
 							real = "\"" + real + "\"";
@@ -446,20 +446,29 @@ public class Collector extends Visitor {
 							p.setRepresentation(real);
 
 						}
+						
+						if (p.representation.contains("short")) {
+							System.out.println("FUCK SHORTS");
+							p.setRepresentation(p.getRepresentation().replace("short", "int"));
+						}
 					}
 				}
 			}
 		}
 	}
 	
-	private String concat(String result, Node n) {
+	public static String concat(String result, Node n, Map<String, String> variableMap) {
 		
 		if (n.getNode(0).getName().equals("StringLiteral")) {
 			String first = n.getNode(0).getString(0);
 			String second = n.getNode(2).getString(0);
 			return first + second;
+		} else if(n.getNode(0).getName().equals("PrimaryIdentifier")){
+			String first = variableMap.get(n.getNode(0).getString(0));
+			String second = n.getNode(2).getString(0);
+			return first + second;			
 		} else {
-			result = concat(result, n.getNode(0));
+			result = concat(result, n.getNode(0), variableMap);
 			result += n.getNode(2).getString(0);
 			return result;
 		}
