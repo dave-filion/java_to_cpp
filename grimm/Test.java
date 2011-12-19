@@ -222,41 +222,41 @@ public class Test {
 
     // // -----------------------------------------------------------------------
 
-    // o = Rest.m2();
+    o = Rest.m2();
 
-    // if (R4 == o) {
-    //   System.out.println("PASS Rest.m2()");
-    //   success++;
-    // } else {
-    //   System.out.println("FAIL Rest.m2()");
-    // }
-    // test++;
+    if (R4 == o) {
+      System.out.println("PASS Rest.m2()");
+      success++;
+    } else {
+      System.out.println("FAIL Rest.m2()");
+    }
+    test++;
 
     // -----------------------------------------------------------------------
 
-    // o = r.m2();
+    o = r.m2();
 
-    // if (R4 == o) {
-    //   System.out.println("PASS r.m2()");
-    //   success++;
-    // } else {
-    //   System.out.println("FAIL r.m2()");
-    // }
-    // test++;
+    if (R4 == o) {
+      System.out.println("PASS r.m2()");
+      success++;
+    } else {
+      System.out.println("FAIL r.m2()");
+    }
+    test++;
 
-    // // -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
 
-    // Test tr = r;
+    Test tr = r;
 
-    // o = tr.m2();
+    o = tr.m2();
 
-    // if (R3 == o) {
-    //   System.out.println("PASS tr.m2()");
-    //   success++;
-    // } else {
-    //   System.out.println("FAIL tr.m2()");
-    // }
-    // test++;
+    if (R3 == o) {
+      System.out.println("PASS tr.m2()");
+      success++;
+    } else {
+      System.out.println("FAIL tr.m2()");
+    }
+    test++;
 
     // // -----------------------------------------------------------------------
 
@@ -284,53 +284,53 @@ public class Test {
 
     // // -----------------------------------------------------------------------
 
-    // t = new Test();
+    t = new Test();
 
-    // if (t != r) {
-    //   System.out.println("PASS t != r");
-    //   success++;
-    // } else {
-    //   System.out.println("FAIL t != r");
-    // }
-    // test++;
-
-    // // -----------------------------------------------------------------------
-
-    // if (! t.equals(r)) {
-    //   System.out.println("PASS ! t.equals(r)");
-    //   success++;
-    // } else {
-    //   System.out.println("FAIL ! t.equals(r)");
-    // }
-    // test++;
+    if (t != r) {
+      System.out.println("PASS t != r");
+      success++;
+    } else {
+      System.out.println("FAIL t != r");
+    }
+    test++;
 
     // // -----------------------------------------------------------------------
 
-    // s1 = t.toString();
-
-    // if (! s1.equals(s2)) {
-    //   System.out.println("PASS ! t.toString().equals(r.toString())");
-    //   success++; 
-    // } else {
-    //   System.out.println("FAIL ! t.toString().equals(r.toString())");
-    // }
-    // test++;
+    if (! t.equals(r)) {
+      System.out.println("PASS ! t.equals(r)");
+      success++;
+    } else {
+      System.out.println("FAIL ! t.equals(r)");
+    }
+    test++;
 
     // // -----------------------------------------------------------------------
 
-    // o = t.m1();
+    s1 = t.toString();
 
-    // if (R1 == o) {
-    //   System.out.println("PASS t.m1()");
-    //   success++;
-    // } else {
-    //   System.out.println("FAIL t.m1()");
-    // }
-    // test++;
+    if (! s1.equals(s2)) {
+      System.out.println("PASS ! t.toString().equals(r.toString())");
+      success++; 
+    } else {
+      System.out.println("FAIL ! t.toString().equals(r.toString())");
+    }
+    test++;
 
     // // -----------------------------------------------------------------------
 
-    // o = t;
+    o = t.m1();
+
+    if (R1 == o) {
+      System.out.println("PASS t.m1()");
+      success++;
+    } else {
+      System.out.println("FAIL t.m1()");
+    }
+    test++;
+
+    // // -----------------------------------------------------------------------
+
+    //  o = t;
 
     // if (o instanceof Test) {
     //   System.out.println("PASS o instanceof Test");
@@ -374,25 +374,25 @@ public class Test {
 
     // // -----------------------------------------------------------------------
 
-    // o = t.m2();
+    o = t.m2();
 
-    // if (R3 == o) {
-    //   System.out.println("PASS t.m2()");
-    //   success++;
-    // } else {
-    //   System.out.println("FAIL t.m2()");
-    // }
-    // test++;
+    if (R3 == o) {
+      System.out.println("PASS t.m2()");
+      success++;
+    } else {
+      System.out.println("FAIL t.m2()");
+    }
+    test++;
 
     // // -----------------------------------------------------------------------
 
-    // if (0 == t.count) {
-    //   System.out.println("PASS Test.<init>()");
-    //   success++;
-    // } else {
-    //   System.out.println("FAIL Test.<init>()");
-    // }
-    // test++;
+    if (0 == t.count) {
+      System.out.println("PASS Test.<init>()");
+      success++;
+    } else {
+      System.out.println("FAIL Test.<init>()");
+    }
+    test++;
 
     // // -----------------------------------------------------------------------
 
@@ -406,15 +406,15 @@ public class Test {
 
     // // -----------------------------------------------------------------------
 
-    // t.m3().m4();
+    t.m3().m4();
 
-    // if (2 == t.count) {
-    //   System.out.println("PASS t.m3().m4()");
-    //   success++;
-    // } else {
-    //   System.out.println("FAIL t.m3().m4()");
-    // }
-    // test++;
+    if (2 == t.count) {
+      System.out.println("PASS t.m3().m4()");
+      success++;
+    } else {
+      System.out.println("FAIL t.m3().m4()");
+    }
+    test++;
 
     // // -----------------------------------------------------------------------
 
@@ -430,16 +430,16 @@ public class Test {
 
     // // -----------------------------------------------------------------------
 
-    // t.count = 0;
-    // t.m5(t).m3().m4();
+    t.count = 0;
+    t.m5(t).m3().m4();
 
-    // if (4 == t.count) {
-    //   System.out.println("PASS t.m5(t).m3().m4()");
-    //   success++;
-    // } else {
-    //   System.out.println("FAIL t.m5(t).m3().m4()");
-    // }
-    // test++;
+    if (4 == t.count) {
+      System.out.println("PASS t.m5(t).m3().m4()");
+      success++;
+    } else {
+      System.out.println("FAIL t.m5(t).m3().m4()");
+    }
+    test++;
 
     // // -----------------------------------------------------------------------
 
@@ -472,243 +472,243 @@ public class Test {
 
     // // -----------------------------------------------------------------------
 
-    // o = t.m6(t);
+    o = t.m6(t);
 
-    // if (R1 == o) {
-    //   System.out.println("PASS t.m6(t)");
-    //   success++;
-    // } else {
-    //   System.out.println("FAIL t.m6(t)");
-    // }
-    // test++;
-
-    // // -----------------------------------------------------------------------
-
-    // o = t.m6(r);
-
-    // if (R2 == o) {
-    //   System.out.println("PASS t.m6(r)");
-    //   success++;
-    // } else {
-    //   System.out.println("FAIL t.m6(r)");
-    // }
-    // test++;
+    if (R1 == o) {
+      System.out.println("PASS t.m6(t)");
+      success++;
+    } else {
+      System.out.println("FAIL t.m6(t)");
+    }
+    test++;
 
     // // -----------------------------------------------------------------------
 
-    // o = r.m6(t);
+    o = t.m6(r);
 
-    // if (R1 == o) {
-    //   System.out.println("PASS r.m6(t)");
-    //   success++;
-    // } else {
-    //   System.out.println("FAIL r.m6(t)");
-    // }
-    // test++;
-
-    // // -----------------------------------------------------------------------
-
-    // o = r.m6(r);
-
-    // if (R2 == o) {
-    //   System.out.println("PASS r.m6(r)");
-    //   success++;
-    // } else {
-    //   System.out.println("FAIL r.m6(r)");
-    // }
-    // test++;
+    if (R2 == o) {
+      System.out.println("PASS t.m6(r)");
+      success++;
+    } else {
+      System.out.println("FAIL t.m6(r)");
+    }
+    test++;
 
     // // -----------------------------------------------------------------------
 
-    // o = t.m7(t);
+    o = r.m6(t);
 
-    // if (R1 == o) {
-    //   System.out.println("PASS t.m7(t)");
-    //   success++;
-    // } else {
-    //   System.out.println("FAIL t.m7(t)");
-    // }
-    // test++;
-
-    // // -----------------------------------------------------------------------
-
-    // o = t.m7(r);
-
-    // if (R2 == o) {
-    //   System.out.println("PASS t.m7(r)");
-    //   success++;
-    // } else {
-    //   System.out.println("FAIL t.m7(r)");
-    // }
-    // test++;
+    if (R1 == o) {
+      System.out.println("PASS r.m6(t)");
+      success++;
+    } else {
+      System.out.println("FAIL r.m6(t)");
+    }
+    test++;
 
     // // -----------------------------------------------------------------------
 
-    // o = t.m7(o);
+    o = r.m6(r);
 
-    // if (R3 == o) {
-    //   System.out.println("PASS t.m7(o)");
-    //   success++;
-    // } else {
-    //   System.out.println("FAIL t.m7(o)");
-    // }
-    // test++;
-
-    // // -----------------------------------------------------------------------
-
-    // o = t.m7(s1);
-
-    // if (R4 == o) {
-    //   System.out.println("PASS t.m7(s1)");
-    //   success++;
-    // } else {
-    //   System.out.println("FAIL t.m7(s1)");
-    // }
-    // test++;
+    if (R2 == o) {
+      System.out.println("PASS r.m6(r)");
+      success++;
+    } else {
+      System.out.println("FAIL r.m6(r)");
+    }
+    test++;
 
     // // -----------------------------------------------------------------------
 
-    // o = r.m7(t);
+    o = t.m7(t);
 
-    // if (R3 == o) {
-    //   System.out.println("PASS r.m7(t)");
-    //   success++;
-    // } else {
-    //   System.out.println("FAIL r.m7(t)");
-    // }
-    // test++;
-
-    // // -----------------------------------------------------------------------
-
-    // o = r.m7(r);
-
-    // if (R2 == o) {
-    //   System.out.println("PASS r.m7(r)");
-    //   success++;
-    // } else {
-    //   System.out.println("FAIL r.m7(r)");
-    // }
-    // test++;
+    if (R1 == o) {
+      System.out.println("PASS t.m7(t)");
+      success++;
+    } else {
+      System.out.println("FAIL t.m7(t)");
+    }
+    test++;
 
     // // -----------------------------------------------------------------------
 
-    // o = t.m8(t);
+    o = t.m7(r);
 
-    // if (R1 == o) {
-    //   System.out.println("PASS t.m8(t)");
-    //   success++;
-    // } else {
-    //   System.out.println("FAIL t.m8(t)");
-    // }
-    // test++;
-
-    // // -----------------------------------------------------------------------
-
-    // o = t.m8(r);
-
-    // if (R2 == o) {
-    //   System.out.println("PASS t.m8(r)");
-    //   success++;
-    // } else {
-    //   System.out.println("FAIL t.m8(r)");
-    // }
-    // test++;
+    if (R2 == o) {
+      System.out.println("PASS t.m7(r)");
+      success++;
+    } else {
+      System.out.println("FAIL t.m7(r)");
+    }
+    test++;
 
     // // -----------------------------------------------------------------------
 
-    // o = r.m8(t);
+    o = t.m7(o);
 
-    // if (R1 == o) {
-    //   System.out.println("PASS r.m8(t)");
-    //   success++;
-    // } else {
-    //   System.out.println("FAIL r.m8(t)");
-    // }
-    // test++;
-
-    // // -----------------------------------------------------------------------
-
-    // o = r.m8(r);
-
-    // if (R2 == o) {
-    //   System.out.println("PASS r.m8(r)");
-    //   success++;
-    // } else {
-    //   System.out.println("FAIL r.m8(r)");
-    // }
-    // test++;
+    if (R3 == o) {
+      System.out.println("PASS t.m7(o)");
+      success++;
+    } else {
+      System.out.println("FAIL t.m7(o)");
+    }
+    test++;
 
     // // -----------------------------------------------------------------------
 
-    // o = r.m8(t, t);
+    o = t.m7(s1);
 
-    // if (R3 == o) {
-    //   System.out.println("PASS r.m8(t, t)");
-    //   success++;
-    // } else {
-    //   System.out.println("FAIL r.m8(t, t)");
-    // }
-    // test++;
+    if (R4 == o) {
+      System.out.println("PASS t.m7(s1)");
+      success++;
+    } else {
+      System.out.println("FAIL t.m7(s1)");
+    }
+    test++;
 
-    // // -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
 
-    // o = r.m8(tr, t);
+    o = r.m7(t);
 
-    // if (R3 == o) {
-    //   System.out.println("PASS r.m8(tr, t)");
-    //   success++;
-    // } else {
-    //   System.out.println("FAIL r.m8(tr, t)");
-    // }
-    // test++;
+    if (R3 == o) {
+      System.out.println("PASS r.m7(t)");
+      success++;
+    } else {
+      System.out.println("FAIL r.m7(t)");
+    }
+    test++;
 
-    // // -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
 
-    // o = r.m8(r, t);
+    o = r.m7(r);
 
-    // if (R4 == o) {
-    //   System.out.println("PASS r.m8(r, t)");
-    //   success++;
-    // } else {
-    //   System.out.println("FAIL r.m8(r, t)");
-    // }
-    // test++;
+    if (R2 == o) {
+      System.out.println("PASS r.m7(r)");
+      success++;
+    } else {
+      System.out.println("FAIL r.m7(r)");
+    }
+    test++;
 
-    // // -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
 
-    // o = r.m9(n);
+    o = t.m8(t);
 
-    // if (R1 == o) {
-    //   System.out.println("PASS r.m9(n)");
-    //   success++;
-    // } else {
-    //   System.out.println("FAIL r.m9(n)");
-    // }
-    // test++;
-
-    // // -----------------------------------------------------------------------
-
-    // o = r.m9(n + n);
-
-    // if (R2 == o) {
-    //   System.out.println("PASS r.m9(n+n)");
-    //   success++;
-    // } else {
-    //   System.out.println("FAIL r.m9(n+n)");
-    // }
-    // test++;
+    if (R1 == o) {
+      System.out.println("PASS t.m8(t)");
+      success++;
+    } else {
+      System.out.println("FAIL t.m8(t)");
+    }
+    test++;
 
     // // -----------------------------------------------------------------------
 
-    // o = r.m9(n + 5l);
+    o = t.m8(r);
 
-    // if (R3 == o) {
-    //   System.out.println("PASS r.m9(n+5l)");
-    //   success++;
-    // } else {
-    //   System.out.println("FAIL r.m9(n+5l)");
-    // }
-    // test++;
+    if (R2 == o) {
+      System.out.println("PASS t.m8(r)");
+      success++;
+    } else {
+      System.out.println("FAIL t.m8(r)");
+    }
+    test++;
+
+    // -----------------------------------------------------------------------
+
+    o = r.m8(t);
+
+    if (R1 == o) {
+      System.out.println("PASS r.m8(t)");
+      success++;
+    } else {
+      System.out.println("FAIL r.m8(t)");
+    }
+    test++;
+
+    // -----------------------------------------------------------------------
+
+    o = r.m8(r);
+
+    if (R2 == o) {
+      System.out.println("PASS r.m8(r)");
+      success++;
+    } else {
+      System.out.println("FAIL r.m8(r)");
+    }
+    test++;
+
+    // -----------------------------------------------------------------------
+
+    o = r.m8(t, t);
+
+    if (R3 == o) {
+      System.out.println("PASS r.m8(t, t)");
+      success++;
+    } else {
+      System.out.println("FAIL r.m8(t, t)");
+    }
+    test++;
+
+    // -----------------------------------------------------------------------
+
+    o = r.m8(tr, t);
+
+    if (R3 == o) {
+      System.out.println("PASS r.m8(tr, t)");
+      success++;
+    } else {
+      System.out.println("FAIL r.m8(tr, t)");
+    }
+    test++;
+
+    // -----------------------------------------------------------------------
+
+    o = r.m8(r, t);
+
+    if (R4 == o) {
+      System.out.println("PASS r.m8(r, t)");
+      success++;
+    } else {
+      System.out.println("FAIL r.m8(r, t)");
+    }
+    test++;
+
+    // -----------------------------------------------------------------------
+
+    o = r.m9(n);
+
+    if (R1 == o) {
+      System.out.println("PASS r.m9(n)");
+      success++;
+    } else {
+      System.out.println("FAIL r.m9(n)");
+    }
+    test++;
+
+    // // -----------------------------------------------------------------------
+
+    o = r.m9(n + n);
+
+    if (R2 == o) {
+      System.out.println("PASS r.m9(n+n)");
+      success++;
+    } else {
+      System.out.println("FAIL r.m9(n+n)");
+    }
+    test++;
+
+    // // -----------------------------------------------------------------------
+
+    o = r.m9(n + 5l);
+
+    if (R3 == o) {
+      System.out.println("PASS r.m9(n+5l)");
+      success++;
+    } else {
+      System.out.println("FAIL r.m9(n+5l)");
+    }
+    test++;
 
     // // -----------------------------------------------------------------------
 
@@ -724,38 +724,38 @@ public class Test {
 
     // // -----------------------------------------------------------------------
 
-    // o = r.m10(n + n);
+    o = r.m10(n + n);
 
-    // if (R2 == o) {
-    //   System.out.println("PASS r.m10(n+n)");
-    //   success++;
-    // } else {
-    //   System.out.println("FAIL r.m10(n+n)");
-    // }
-    // test++;
-
-    // // -----------------------------------------------------------------------
-
-    // Class k1 = t.getClass();
-    // Class k2 = r.getClass();
-
-    // if (k1 != k2) {
-    //   System.out.println("PASS k1 != k2");
-    //   success++;
-    // } else {
-    //   System.out.println("FAIL K1 != k2");
-    // }
-    // test++;
+    if (R2 == o) {
+      System.out.println("PASS r.m10(n+n)");
+      success++;
+    } else {
+      System.out.println("FAIL r.m10(n+n)");
+    }
+    test++;
 
     // // -----------------------------------------------------------------------
 
-    // if (k1.getName().equals("xtc.oop.Test")) {
-    //   System.out.println("PASS k1.getName().equals(\"xtc.oop.Test\")");
-    //   success++;
-    // } else {
-    //   System.out.println("FAIL k1.getName().equals(\"xtc.oop.Test\")");
-    // }
-    // test++;
+    Class k1 = t.getClass();
+    Class k2 = r.getClass();
+
+    if (k1 != k2) {
+      System.out.println("PASS k1 != k2");
+      success++;
+    } else {
+      System.out.println("FAIL K1 != k2");
+    }
+    test++;
+
+    // // -----------------------------------------------------------------------
+
+    if (k1.getName().equals("xtc.oop.Test")) {
+      System.out.println("PASS k1.getName().equals(\"xtc.oop.Test\")");
+      success++;
+    } else {
+      System.out.println("FAIL k1.getName().equals(\"xtc.oop.Test\")");
+    }
+    test++;
 
     // // -----------------------------------------------------------------------
 
@@ -769,136 +769,136 @@ public class Test {
 
     // // -----------------------------------------------------------------------
 
-    // if (k1.toString().equals("class xtc.oop.Test")) {
-    //   System.out.println("PASS k1.toString().equals(\"class xtc.oop.Test\")");
-    //   success++;
-    // } else {
-    //   System.out.println("FAIL k1.toString().equals(\"class xtc.oop.Test\")");
-    // }
-    // test++;
+    if (k1.toString().equals("class xtc.oop.Test")) {
+      System.out.println("PASS k1.toString().equals(\"class xtc.oop.Test\")");
+      success++;
+    } else {
+      System.out.println("FAIL k1.toString().equals(\"class xtc.oop.Test\")");
+    }
+    test++;
+
+    // -----------------------------------------------------------------------
+
+    if (! k1.equals(k2)) {
+      System.out.println("PASS ! k1.equals(k2)");
+      success++;
+    } else {
+      System.out.println("FAIL ! k1.equals(k2)");
+    }
+    test++;
 
     // // -----------------------------------------------------------------------
 
-    // if (! k1.equals(k2)) {
-    //   System.out.println("PASS ! k1.equals(k2)");
-    //   success++;
-    // } else {
-    //   System.out.println("FAIL ! k1.equals(k2)");
-    // }
-    // test++;
+    k2 = k2.getSuperclass();
+
+    if (k1 == k2) {
+      System.out.println("PASS k1 == k2.super()");
+      success++;
+    } else {
+      System.out.println("FAIL K1 == k2.super()");
+    }
+    test++;
 
     // // -----------------------------------------------------------------------
 
-    // k2 = k2.getSuperclass();
-
-    // if (k1 == k2) {
-    //   System.out.println("PASS k1 == k2.super()");
-    //   success++;
-    // } else {
-    //   System.out.println("FAIL K1 == k2.super()");
-    // }
-    // test++;
+    if (k1.equals(k2)) {
+      System.out.println("PASS k1.equals(k2.super())");
+      success++;
+    } else {
+      System.out.println("FAIL k1.equals(k2.super())");
+    }
+    test++;
 
     // // -----------------------------------------------------------------------
 
-    // if (k1.equals(k2)) {
-    //   System.out.println("PASS k1.equals(k2.super())");
-    //   success++;
-    // } else {
-    //   System.out.println("FAIL k1.equals(k2.super())");
-    // }
-    // test++;
+    k1 = k1.getSuperclass();
+    k2 = k2.getSuperclass();
+
+    if (k1 == k2) {
+      System.out.println("PASS k1.super() == k2.super().super()");
+      success++;
+    } else {
+      System.out.println("FAIL K1.super() == k2.super().super()");
+    }
+    test++;
 
     // // -----------------------------------------------------------------------
 
-    // k1 = k1.getSuperclass();
-    // k2 = k2.getSuperclass();
-
-    // if (k1 == k2) {
-    //   System.out.println("PASS k1.super() == k2.super().super()");
-    //   success++;
-    // } else {
-    //   System.out.println("FAIL K1.super() == k2.super().super()");
-    // }
-    // test++;
+    if (k1.equals(k2)) {
+      System.out.println("PASS k1.super().equals(k2.super().super())");
+      success++;
+    } else {
+      System.out.println("FAIL k1.super().equals(k2.super().super())");
+    }
+    test++;
 
     // // -----------------------------------------------------------------------
 
-    // if (k1.equals(k2)) {
-    //   System.out.println("PASS k1.super().equals(k2.super().super())");
-    //   success++;
-    // } else {
-    //   System.out.println("FAIL k1.super().equals(k2.super().super())");
-    // }
-    // test++;
+    k1 = k1.getSuperclass();
+
+    if (null == k1) {
+      System.out.println("PASS null == k1.super().super()");
+      success++;
+    } else {
+      System.out.println("FAIL null == k1.super().super()");
+    }
+    test++;
 
     // // -----------------------------------------------------------------------
 
-    // k1 = k1.getSuperclass();
-
-    // if (null == k1) {
-    //   System.out.println("PASS null == k1.super().super()");
-    //   success++;
-    // } else {
-    //   System.out.println("FAIL null == k1.super().super()");
-    // }
-    // test++;
-
-    // // -----------------------------------------------------------------------
-
-    // s1 = "Hello Kitty #1";
-    // s2 = "Hello Kitty #1";
-    // if (s1.equals(s2)) {
-    //   System.out.println("PASS s1.equals(String)");
-    //   success++;
-    // } else {
-    //   System.out.println("FAIL s1.equals(String)");
-    // }
-    // test++;
+    s1 = "Hello Kitty #1";
+    s2 = "Hello Kitty #1";
+    if (s1.equals(s2)) {
+      System.out.println("PASS s1.equals(String)");
+      success++;
+    } else {
+      System.out.println("FAIL s1.equals(String)");
+    }
+    test++;
 
     // // -----------------------------------------------------------------------
 
-    // s2 = "Hel" + "lo Kitty #1";
-    // if (s1.equals(s2)) {
-    //   System.out.println("PASS s1.equals(String + String)");
-    //   success++;
-    // } else {
-    //   System.out.println("FAIL s1.equals(String + String)");
-    // }
-    // test++;
+    s2 = "Hel" + "lo Kitty #1";
+    if (s1.equals(s2)) {
+      System.out.println("PASS s1.equals(String + String)");
+      success++;
+    } else {
+      System.out.println("FAIL s1.equals(String + String)");
+    }
+    test++;
 
     // // -----------------------------------------------------------------------
 
-    // s2 = "He" + "ll" + "o Kitty #1";
-    // if (s1.equals(s2)) {
-    //   System.out.println("PASS s1.equals(String + String + String)");
-    //   success++;
-    // } else {
-    //   System.out.println("FAIL s1.equals(String + String + String)");
-    // }
-    // test++;
+    s2 = "He" + "ll" + "o Kitty #1";
+    if (s1.equals(s2)) {
+      System.out.println("PASS s1.equals(String + String + String)");
+      success++;
+    } else {
+      System.out.println("FAIL s1.equals(String + String + String)");
+    }
+    test++;
 
     // // -----------------------------------------------------------------------
 
-    // s2 = "Hello Kitty #" + 1;
-    // if (s1.equals(s2)) {
-    //   System.out.println("PASS s1.equals(String + int)");
-    //   success++;
-    // } else {
-    //   System.out.println("FAIL s1.equals(String + int)");
-    // }
-    // test++;
+    s2 = "Hello Kitty #" + 1;
+    if (s1.equals(s2)) {
+      System.out.println("PASS s1.equals(String + int)");
+      success++;
+    } else {
+      System.out.println("FAIL s1.equals(String + int)");
+    }
+    test++;
 
     // // -----------------------------------------------------------------------
 
-    // s2 = "Hello Kitty #" + '1';
-    // if (s1.equals(s2)) {
-    //   System.out.println("PASS s1.equals(String + char)");
-    //   success++;
-    // } else {
-    //   System.out.println("FAIL s1.equals(String + char)");
-    // }
-    // test++;
+    s2 = "Hello Kitty #" + '1';
+    if (s1.equals(s2)) {
+      System.out.println("PASS s1.equals(String + char)");
+      success++;
+    } else {
+      System.out.println("FAIL s1.equals(String + char)");
+    }
+    test++;
 
     // // -----------------------------------------------------------------------
 
@@ -923,7 +923,7 @@ public class Test {
     // }
     // test++;
 
-    // // -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
 
     // s2 = 'H' + "ello Kitty #1";
     // if (s1.equals(s2)) {
@@ -1003,8 +1003,8 @@ public class Test {
 
     // // -----------------------------------------------------------------------
 
-    // System.out.println();
-    // System.out.println(success + " out of " + test + " tests have passed.");
+    System.out.println();
+    System.out.println(success + " out of " + test + " tests have passed.");
   }
 
 }

@@ -28,6 +28,8 @@ public class CallExpressionPiece extends Visitor implements CppPrintable{
 	}
 	
 	public void visitCallExpression(GNode n) {		
+
+		System.out.println(n);
 		
 		boolean staticCall = false;
 		
@@ -39,7 +41,6 @@ public class CallExpressionPiece extends Visitor implements CppPrintable{
 			else {
 				representation += "__" + caller.getString(0);
 				staticCall = true;
-				System.out.println(caller + " is static");
 			}
 				
 		}
@@ -108,10 +109,24 @@ public class CallExpressionPiece extends Visitor implements CppPrintable{
 				// Print arguments
 				representation += "(";
 				
+				System.out.println(caller.getName());
+				
 				if (caller.getName().equals("PrimaryIdentifier")) {
 					representation += caller.getString(0);
+				} else if (caller.getName().equals("CallExpression")){
+					System.out.println("SHIIIIT");
+					Node currentNode = caller;
+					String result = "";
+					while (currentNode != null && currentNode.getName().equals("CallExpression")) {
+						if (currentNode.getNode(0) != null && currentNode.getNode(0).getName().equals("PrimaryIdentifier")) {
+							System.out.println("FOUND ONE");
+							result = currentNode.getNode(0).getString(0);
+							break;
+						}
+						representation += result;
+					}
 				} else {
-					representation += "__this";
+					representation += "__this";					
 				}
 
 				// TODO: fix this horrible get.get thing
@@ -164,7 +179,18 @@ public class CallExpressionPiece extends Visitor implements CppPrintable{
 			if (caller.getName().equals("PrimaryIdentifier")) {
 				if (!staticCall)
 					representation += caller.getString(0);
-			} else {
+			} else if (caller.getName().equals("CallExpression")){
+				Node currentNode = caller;
+				String result = "";
+				while (currentNode != null && currentNode.getName().equals("CallExpression")) {
+					if (currentNode.getNode(0) != null && currentNode.getNode(0).getName().equals("PrimaryIdentifier")) {
+						result = currentNode.getNode(0).getString(0);
+						break;
+					}
+					currentNode = currentNode.getNode(0);
+				}
+				representation += result;
+			}else {
 				if (!staticCall)
 					representation += "__this";
 			}

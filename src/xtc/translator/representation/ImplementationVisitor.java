@@ -120,9 +120,7 @@ public class ImplementationVisitor extends Visitor {
 
 	// FUNNY RETURN STATEMENT STUFF START
 	public void visitAdditiveExpression(GNode n) {
-		dispatch(n.getNode(0));
-		add(" " + n.getString(1) + " ", n);
-		dispatch(n.getNode(2));
+		add(n.getString(1), n);
 	}
 
 	public void visitMultiplicativeExpression(GNode n) {
@@ -361,6 +359,10 @@ public class ImplementationVisitor extends Visitor {
 
 		add(word, n);
 		visit(n);
+	}
+	
+	public void visitInstanceOfExpression(GNode n) {
+		add(null, n);
 	}
 
 	public void visitModifiers(GNode n) {

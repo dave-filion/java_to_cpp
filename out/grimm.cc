@@ -47,7 +47,7 @@ return __this;
 
 Test __Test::m5_Test (Test __this,Test t)
 {
-return t->__vptr ->m3(t)->__vptr ->m4(__this);
+return t->__vptr ->m3(t)->__vptr ->m4(t);
 }
 
 Object __Test::m6_Test (Test __this,Test t)
@@ -207,6 +207,34 @@ else {
 System::out.println(__rt::literal("FAIL t.m1()"));
 }
 test++;
+o=__Rest::m2();
+if (__Test::R4==o){
+System::out.println(__rt::literal("PASS Rest.m2()"));
+success++;
+}
+else {
+System::out.println(__rt::literal("FAIL Rest.m2()"));
+}
+test++;
+o=r->m2();
+if (__Test::R4==o){
+System::out.println(__rt::literal("PASS r.m2()"));
+success++;
+}
+else {
+System::out.println(__rt::literal("FAIL r.m2()"));
+}
+test++;
+Test tr = r;
+o=tr->m2();
+if (__Test::R3==o){
+System::out.println(__rt::literal("PASS tr.m2()"));
+success++;
+}
+else {
+System::out.println(__rt::literal("FAIL tr.m2()"));
+}
+test++;
 o=__Test::m2();
 if (__Test::R3==o){
 System::out.println(__rt::literal("PASS Test.m2()"));
@@ -225,6 +253,392 @@ else {
 System::out.println(__rt::literal("FAIL t.m2()"));
 }
 test++;
+t=new __Test(  );
+if (t!=r){
+System::out.println(__rt::literal("PASS t != r"));
+success++;
+}
+else {
+System::out.println(__rt::literal("FAIL t != r"));
+}
+test++;
+if (t->__vptr ->equals(t,r)){
+System::out.println(__rt::literal("PASS ! t.equals(r)"));
+success++;
+}
+else {
+System::out.println(__rt::literal("FAIL ! t.equals(r)"));
+}
+test++;
+s1=t->__vptr ->toString(t);
+if (s1-> __vptr ->equals(s1,s2)){
+System::out.println(__rt::literal("PASS ! t.toString().equals(r.toString())"));
+success++;
+}
+else {
+System::out.println(__rt::literal("FAIL ! t.toString().equals(r.toString())"));
+}
+test++;
+o=t->__vptr ->m1(t);
+if (__Test::R1==o){
+System::out.println(__rt::literal("PASS t.m1()"));
+success++;
+}
+else {
+System::out.println(__rt::literal("FAIL t.m1()"));
+}
+test++;
+o=t->m2();
+if (__Test::R3==o){
+System::out.println(__rt::literal("PASS t.m2()"));
+success++;
+}
+else {
+System::out.println(__rt::literal("FAIL t.m2()"));
+}
+test++;
+if (0==t->count){
+System::out.println(__rt::literal("PASS Test.<init>()"));
+success++;
+}
+else {
+System::out.println(__rt::literal("FAIL Test.<init>()"));
+}
+test++;
+t->__vptr ->m3(t)->__vptr ->m4(t);
+if (2==t->count){
+System::out.println(__rt::literal("PASS t.m3().m4()"));
+success++;
+}
+else {
+System::out.println(__rt::literal("FAIL t.m3().m4()"));
+}
+test++;
+t->count=0;
+t->__vptr ->m5_Test(t,t)->__vptr ->m3(t)->__vptr ->m4(t);
+if (4==t->count){
+System::out.println(__rt::literal("PASS t.m5(t).m3().m4()"));
+success++;
+}
+else {
+System::out.println(__rt::literal("FAIL t.m5(t).m3().m4()"));
+}
+test++;
+o=t->__vptr ->m6_Test(t,t);
+if (__Test::R1==o){
+System::out.println(__rt::literal("PASS t.m6(t)"));
+success++;
+}
+else {
+System::out.println(__rt::literal("FAIL t.m6(t)"));
+}
+test++;
+o=t->__vptr ->m6_Rest(t,r);
+if (__Test::R2==o){
+System::out.println(__rt::literal("PASS t.m6(r)"));
+success++;
+}
+else {
+System::out.println(__rt::literal("FAIL t.m6(r)"));
+}
+test++;
+o=r->__vptr ->m6_Test(r,t);
+if (__Test::R1==o){
+System::out.println(__rt::literal("PASS r.m6(t)"));
+success++;
+}
+else {
+System::out.println(__rt::literal("FAIL r.m6(t)"));
+}
+test++;
+o=r->__vptr ->m6_Rest(r,r);
+if (__Test::R2==o){
+System::out.println(__rt::literal("PASS r.m6(r)"));
+success++;
+}
+else {
+System::out.println(__rt::literal("FAIL r.m6(r)"));
+}
+test++;
+o=t->__vptr ->m7_Test(t,t);
+if (__Test::R1==o){
+System::out.println(__rt::literal("PASS t.m7(t)"));
+success++;
+}
+else {
+System::out.println(__rt::literal("FAIL t.m7(t)"));
+}
+test++;
+o=t->__vptr ->m7_Rest(t,r);
+if (__Test::R2==o){
+System::out.println(__rt::literal("PASS t.m7(r)"));
+success++;
+}
+else {
+System::out.println(__rt::literal("FAIL t.m7(r)"));
+}
+test++;
+o=t->__vptr ->m7_Object(t,o);
+if (__Test::R3==o){
+System::out.println(__rt::literal("PASS t.m7(o)"));
+success++;
+}
+else {
+System::out.println(__rt::literal("FAIL t.m7(o)"));
+}
+test++;
+o=t->__vptr ->m7_String(t,s1);
+if (__Test::R4==o){
+System::out.println(__rt::literal("PASS t.m7(s1)"));
+success++;
+}
+else {
+System::out.println(__rt::literal("FAIL t.m7(s1)"));
+}
+test++;
+o=r->__vptr ->m7_Test(r,t);
+if (__Test::R3==o){
+System::out.println(__rt::literal("PASS r.m7(t)"));
+success++;
+}
+else {
+System::out.println(__rt::literal("FAIL r.m7(t)"));
+}
+test++;
+o=r->__vptr ->m7_Rest(r,r);
+if (__Test::R2==o){
+System::out.println(__rt::literal("PASS r.m7(r)"));
+success++;
+}
+else {
+System::out.println(__rt::literal("FAIL r.m7(r)"));
+}
+test++;
+o=t->__vptr ->m8_Test(t,t);
+if (__Test::R1==o){
+System::out.println(__rt::literal("PASS t.m8(t)"));
+success++;
+}
+else {
+System::out.println(__rt::literal("FAIL t.m8(t)"));
+}
+test++;
+o=t->__vptr ->m8_Rest(t,r);
+if (__Test::R2==o){
+System::out.println(__rt::literal("PASS t.m8(r)"));
+success++;
+}
+else {
+System::out.println(__rt::literal("FAIL t.m8(r)"));
+}
+test++;
+o=r->__vptr ->m8_Test(r,t);
+if (__Test::R1==o){
+System::out.println(__rt::literal("PASS r.m8(t)"));
+success++;
+}
+else {
+System::out.println(__rt::literal("FAIL r.m8(t)"));
+}
+test++;
+o=r->__vptr ->m8_Rest(r,r);
+if (__Test::R2==o){
+System::out.println(__rt::literal("PASS r.m8(r)"));
+success++;
+}
+else {
+System::out.println(__rt::literal("FAIL r.m8(r)"));
+}
+test++;
+o=r->__vptr ->m8_Test_Test(r,t,t);
+if (__Test::R3==o){
+System::out.println(__rt::literal("PASS r.m8(t, t)"));
+success++;
+}
+else {
+System::out.println(__rt::literal("FAIL r.m8(t, t)"));
+}
+test++;
+o=r->__vptr ->m8_Test_Test(r,tr,t);
+if (__Test::R3==o){
+System::out.println(__rt::literal("PASS r.m8(tr, t)"));
+success++;
+}
+else {
+System::out.println(__rt::literal("FAIL r.m8(tr, t)"));
+}
+test++;
+o=r->__vptr ->m8_Rest_Test(r,r,t);
+if (__Test::R4==o){
+System::out.println(__rt::literal("PASS r.m8(r, t)"));
+success++;
+}
+else {
+System::out.println(__rt::literal("FAIL r.m8(r, t)"));
+}
+test++;
+o=r->__vptr ->m9_short(r,n);
+if (__Test::R1==o){
+System::out.println(__rt::literal("PASS r.m9(n)"));
+success++;
+}
+else {
+System::out.println(__rt::literal("FAIL r.m9(n)"));
+}
+test++;
+o=r->__vptr ->m9_int(r,n + n);
+if (__Test::R2==o){
+System::out.println(__rt::literal("PASS r.m9(n+n)"));
+success++;
+}
+else {
+System::out.println(__rt::literal("FAIL r.m9(n+n)"));
+}
+test++;
+o=r->__vptr ->m9_long(r,n + 5l);
+if (__Test::R3==o){
+System::out.println(__rt::literal("PASS r.m9(n+5l)"));
+success++;
+}
+else {
+System::out.println(__rt::literal("FAIL r.m9(n+5l)"));
+}
+test++;
+o=r->__vptr ->m10_int(r,n + n);
+if (__Test::R2==o){
+System::out.println(__rt::literal("PASS r.m10(n+n)"));
+success++;
+}
+else {
+System::out.println(__rt::literal("FAIL r.m10(n+n)"));
+}
+test++;
+Class k1 = t->__vptr ->getClass(t);
+Class k2 = r->__vptr ->getClass(r);
+if (k1!=k2){
+System::out.println(__rt::literal("PASS k1 != k2"));
+success++;
+}
+else {
+System::out.println(__rt::literal("FAIL K1 != k2"));
+}
+test++;
+if (k1-> __vptr ->getName(k1)->__vptr ->equals(k1,__rt::literal("xtc.oop.Test"))){
+System::out.println(__rt::literal("PASS k1.getName().equals(\"xtc.oop.Test\")"));
+success++;
+}
+else {
+System::out.println(__rt::literal("FAIL k1.getName().equals(\"xtc.oop.Test\")"));
+}
+test++;
+if (k1-> __vptr ->toString(k1)->__vptr ->equals(k1,__rt::literal("class xtc.oop.Test"))){
+System::out.println(__rt::literal("PASS k1.toString().equals(\"class xtc.oop.Test\")"));
+success++;
+}
+else {
+System::out.println(__rt::literal("FAIL k1.toString().equals(\"class xtc.oop.Test\")"));
+}
+test++;
+if (k1-> __vptr ->equals(k1,k2)){
+System::out.println(__rt::literal("PASS ! k1.equals(k2)"));
+success++;
+}
+else {
+System::out.println(__rt::literal("FAIL ! k1.equals(k2)"));
+}
+test++;
+k2=k2-> __vptr ->getSuperclass(k2);
+if (k1==k2){
+System::out.println(__rt::literal("PASS k1 == k2.super()"));
+success++;
+}
+else {
+System::out.println(__rt::literal("FAIL K1 == k2.super()"));
+}
+test++;
+if (k1-> __vptr ->equals(k1,k2)){
+System::out.println(__rt::literal("PASS k1.equals(k2.super())"));
+success++;
+}
+else {
+System::out.println(__rt::literal("FAIL k1.equals(k2.super())"));
+}
+test++;
+k1=k1-> __vptr ->getSuperclass(k1);
+k2=k2-> __vptr ->getSuperclass(k2);
+if (k1==k2){
+System::out.println(__rt::literal("PASS k1.super() == k2.super().super()"));
+success++;
+}
+else {
+System::out.println(__rt::literal("FAIL K1.super() == k2.super().super()"));
+}
+test++;
+if (k1-> __vptr ->equals(k1,k2)){
+System::out.println(__rt::literal("PASS k1.super().equals(k2.super().super())"));
+success++;
+}
+else {
+System::out.println(__rt::literal("FAIL k1.super().equals(k2.super().super())"));
+}
+test++;
+k1=k1-> __vptr ->getSuperclass(k1);
+if (__rt::null()==k1){
+System::out.println(__rt::literal("PASS null == k1.super().super()"));
+success++;
+}
+else {
+System::out.println(__rt::literal("FAIL null == k1.super().super()"));
+}
+test++;
+s1=__rt::literal("Hello Kitty #1");
+s2=__rt::literal("Hello Kitty #1");
+if (s1-> __vptr ->equals(s1,s2)){
+System::out.println(__rt::literal("PASS s1.equals(String)"));
+success++;
+}
+else {
+System::out.println(__rt::literal("FAIL s1.equals(String)"));
+}
+test++;
+s2=__rt::literal("Hello Kitty #1");
+if (s1-> __vptr ->equals(s1,s2)){
+System::out.println(__rt::literal("PASS s1.equals(String + String)"));
+success++;
+}
+else {
+System::out.println(__rt::literal("FAIL s1.equals(String + String)"));
+}
+test++;
+s2=__rt::literal("Hello Kitty #1");
+if (s1-> __vptr ->equals(s1,s2)){
+System::out.println(__rt::literal("PASS s1.equals(String + String + String)"));
+success++;
+}
+else {
+System::out.println(__rt::literal("FAIL s1.equals(String + String + String)"));
+}
+test++;
+s2=__rt::literal("Hello Kitty #1");
+if (s1-> __vptr ->equals(s1,s2)){
+System::out.println(__rt::literal("PASS s1.equals(String + int)"));
+success++;
+}
+else {
+System::out.println(__rt::literal("FAIL s1.equals(String + int)"));
+}
+test++;
+s2=__rt::literal("Hello Kitty #'1'");
+if (s1-> __vptr ->equals(s1,s2)){
+System::out.println(__rt::literal("PASS s1.equals(String + char)"));
+success++;
+}
+else {
+System::out.println(__rt::literal("FAIL s1.equals(String + char)"));
+}
+test++;
+System::out.println();
+System::out.println(success);
 }
 
 Class __Test::__class() {

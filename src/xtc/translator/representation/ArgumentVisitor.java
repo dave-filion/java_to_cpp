@@ -38,6 +38,28 @@ public class ArgumentVisitor extends Visitor {
 	public void visitIntegerLiteral(GNode n) {
 		arguments.addArgument("int", n.getString(0));
 	}
+	
+	public void visitAdditiveExpression(GNode n) {
+		if (n.getNode(0).getName().equals("PrimaryIdentifier") && n.getNode(2).getName().equals("PrimaryIdentifier")) {
+			String first = n.getNode(0).getString(0);
+			String second = n.getNode(2).getString(0);
+			String op = n.getString(1);
+			arguments.addArgument("int", first + " " + op + " " + second);
+		} else if (n.getNode(0).getName().equals("PrimaryIdentifier") && n.getNode(2).getName().equals("IntegerLiteral")) {
+			String first = n.getNode(0).getString(0);
+			String second = n.getNode(2).getString(0);
+			String op = n.getString(1);
+			arguments.addArgument("long", first + " " + op + " " + second);		
+		} else if (n.getNode(0).getName().equals("StringLiteral") && n.getNode(2).getName().equals("StringLiteral")) {
+			String first = n.getNode(0).getString(0);
+			String second = n.getNode(2).getString(0);
+			String real = first + second; //dont do it in c++
+			arguments.addArgument("String", real);
+			
+		} else {
+			visit(n);			
+		}
+	}
 
 	public void visitCallExpression(GNode n) {
 		Argument arg = new Argument();

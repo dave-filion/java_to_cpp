@@ -48,6 +48,7 @@ public class Collector extends Visitor {
 	public ArrayList<String> packages;
 	public List<ClassVisitor> classes;
 	public ClassVisitor mainClass;
+	public ArrayList<String> typeList;
 
 	/**
 	 * a list of classes that are used this should come from
@@ -71,6 +72,7 @@ public class Collector extends Visitor {
 		this.mainClass = null;
 		this.packDirs = new ArrayList<File>();
 		this.sortedClasses = new ArrayList<ClassVisitor>();
+		this.typeList = new ArrayList<String>();
 
 	}
 
@@ -81,6 +83,8 @@ public class Collector extends Visitor {
 	public void collect() throws IOException, ParseException {	
 		// sort classes
 		this.sortClasses();
+		
+		makeTypeList();
 		
 		// assign super classes to classVisitors
 		this.assignSuperClass();
@@ -417,17 +421,60 @@ public class Collector extends Visitor {
 						if (n.getName().equals("SelectionExpression")) {
 							String primaryId = n.getNode(0).getString(0);							
 							String field = n.getString(1);
-							System.out.println("__" + primaryId + "::" + field);
 							
-							p.setRepresentation("__" + primaryId + "::" + field);
+							if (typeList.contains(primaryId))
+								p.setRepresentation("__" + primaryId + "::" + field);							
+							else
+								p.setRepresentation(primaryId + "->" + field);
+						}
+						
+						if (n.getName().equals("InstanceOfExpression")) {
+							String primary = n.getNode(0).getString(0);
+							String other = n.getNode(1).getNode(0).getString(0);
+							p.setRepresentation(primary + " -> __vptr -> getClass( " + primary + ") -> __vptr -> isInstance( " + primary + " -> __vptr -> getClass(), new __" + other + " ())" );
+						}
+						
+						if (n.getName().equals("AdditiveExpression")) {
 							
+							String real = "";
+							
+							real = concat(real, n);
+							
+							real = real.replaceAll("\"", "");
+							real = "\"" + real + "\"";
+							real = "__rt::literal(" + real + ")";
+							p.setRepresentation(real);
+
 						}
 					}
 				}
 			}
 		}
 	}
-
+	
+	private String concat(String result, Node n) {
+		
+		if (n.getNode(0).getName().equals("StringLiteral")) {
+			String first = n.getNode(0).getString(0);
+			String second = n.getNode(2).getString(0);
+			return first + second;
+		} else {
+			result = concat(result, n.getNode(0));
+			result += n.getNode(2).getString(0);
+			return result;
+		}
+		
+	}
+	
+	public void makeTypeList() {
+		for (ClassVisitor cv : classes) {
+			typeList.add(cv.getIdentifier());
+		}
+		
+		typeList.add("Object");
+		typeList.add("String");
+		typeList.add("Class");
+	}
 	
 	public ArrayList<ClassVisitor> getSortedClasses() {
 		sort();
