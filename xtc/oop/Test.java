@@ -330,35 +330,35 @@ public class Test {
 
     // // -----------------------------------------------------------------------
 
-    //  o = t;
+     o = t;
 
-    // if (o instanceof Test) {
-    //   System.out.println("PASS o instanceof Test");
-    //   success++;
-    // } else {
-    //   System.out.println("FAIL o instanceof Test");
-    // }
-    // test++;
-
-    // // -----------------------------------------------------------------------
-
-    // if (o instanceof Object) {
-    //   System.out.println("PASS o instanceof Object");
-    //   success++;
-    // } else {
-    //   System.out.println("FAIL o instanceof Object");
-    // }
-    // test++;
+    if (o instanceof Test) {
+      System.out.println("PASS o instanceof Test");
+      success++;
+    } else {
+      System.out.println("FAIL o instanceof Test");
+    }
+    test++;
 
     // // -----------------------------------------------------------------------
 
-    // if (! (o instanceof String)) {
-    //   System.out.println("PASS ! (o instanceof String)");
-    //   success++;
-    // } else {
-    //   System.out.println("FAIL ! (o instanceof String)");
-    // }
-    // test++;
+    if (o instanceof Object) {
+      System.out.println("PASS o instanceof Object");
+      success++;
+    } else {
+      System.out.println("FAIL o instanceof Object");
+    }
+    test++;
+
+    // // -----------------------------------------------------------------------
+
+    if (! (o instanceof String)) {
+      System.out.println("PASS ! (o instanceof String)");
+      success++;
+    } else {
+      System.out.println("FAIL ! (o instanceof String)");
+    }
+    test++;
 
     // // -----------------------------------------------------------------------
 
@@ -925,14 +925,14 @@ public class Test {
 
     // -----------------------------------------------------------------------
 
-    // s2 = 'H' + "ello Kitty #1";
-    // if (s1.equals(s2)) {
-    //   System.out.println("PASS s1.equals(char + String)");
-    //   success++;
-    // } else {
-    //   System.out.println("FAIL s1.equals(char + String)");
-    // }
-    // test++;
+    s2 = 'H' + "ello Kitty #1";
+    if (s1.equals(s2)) {
+      System.out.println("PASS s1.equals(char + String)");
+      success++;
+    } else {
+      System.out.println("FAIL s1.equals(char + String)");
+    }
+    test++;
 
     // // -----------------------------------------------------------------------
 

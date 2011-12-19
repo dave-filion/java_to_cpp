@@ -293,6 +293,31 @@ else {
 System::out.println(__rt::literal("FAIL t.m1()"));
 }
 test++;
+o=t;
+if (o -> __vptr -> getClass( o) -> __vptr -> isInstance( o -> __vptr -> getClass(o), (Test)(new __Test))){
+System::out.println(__rt::literal("PASS o instanceof Test"));
+success++;
+}
+else {
+System::out.println(__rt::literal("FAIL o instanceof Test"));
+}
+test++;
+if (o -> __vptr -> getClass( o) -> __vptr -> isInstance( o -> __vptr -> getClass(o), (new __Object))){
+System::out.println(__rt::literal("PASS o instanceof Object"));
+success++;
+}
+else {
+System::out.println(__rt::literal("FAIL o instanceof Object"));
+}
+test++;
+if (!o -> __vptr -> getClass( o) -> __vptr -> isInstance( o -> __vptr -> getClass(o), (String)(new __String("Hi")))){
+System::out.println(__rt::literal("PASS ! (o instanceof String)"));
+success++;
+}
+else {
+System::out.println(__rt::literal("FAIL ! (o instanceof String)"));
+}
+test++;
 o=t->m2();
 if ((__Test::R3==o)){
 System::out.println(__rt::literal("PASS t.m2()"));
@@ -668,6 +693,15 @@ success++;
 }
 else {
 System::out.println(__rt::literal("FAIL s1.equals(String + char)"));
+}
+test++;
+s2=__rt::literal("Hello Kitty #1");
+if (s1-> __vptr ->equals(s1,s2)){
+System::out.println(__rt::literal("PASS s1.equals(char + String)"));
+success++;
+}
+else {
+System::out.println(__rt::literal("FAIL s1.equals(char + String)"));
 }
 test++;
 __rt::Ptr<__rt::Array<int > >a0 =  new __rt::Array<int >(0);

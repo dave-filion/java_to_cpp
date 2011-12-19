@@ -87,9 +87,6 @@ public class Collector extends Visitor {
 		// map of all methods in class hierarchy (vtable precursor)
 		this.createImplementationMap();
 
-		// sort the list of classes for printing
-		// this.sort();
-
 		// Create variable map for each method
 		this.createVariableMaps();
 
@@ -420,7 +417,15 @@ public class Collector extends Visitor {
 						if (n.getName().equals("InstanceOfExpression")) {
 							String primary = n.getNode(0).getString(0);
 							String other = n.getNode(1).getNode(0).getString(0);
-							p.setRepresentation(primary + " -> __vptr -> getClass( " + primary + ") -> __vptr -> isInstance( " + primary + " -> __vptr -> getClass(), new __" + other + " ())" );
+							String representation = "";
+							if (other.equals("String"))
+								representation += primary + " -> __vptr -> getClass( " + primary + ") -> __vptr -> isInstance( " + primary + " -> __vptr -> getClass(" + primary + "), (" + other + ")(new __" + other+"(\"Hi\")))";
+							else if (other.equals("Object"))
+								representation += primary + " -> __vptr -> getClass( " + primary + ") -> __vptr -> isInstance( " + primary + " -> __vptr -> getClass(" + primary + "), (new __" + other + "))";
+							else
+								representation += primary + " -> __vptr -> getClass( " + primary + ") -> __vptr -> isInstance( " + primary + " -> __vptr -> getClass(" + primary + "), (" + other + ")(new __" + other + "))";
+
+							p.setRepresentation(representation);
 						}
 						
 						if (n.getName().equals("AdditiveExpression")) {
@@ -443,11 +448,23 @@ public class Collector extends Visitor {
 	}
 	
 	public static String concat(String result, Node n, Map<String, String> variableMap) {
-		
-		if (n.getNode(0).getName().equals("StringLiteral")) {
+
+		if (n.getNode(0).getName().equals("CharacterLiteral")) {
+			String second = n.getNode(2).getString(0);
+			String first = null;
+			// special concatenation of characters
+			if (n.getNode(0).getName().equals("CharacterLiteral")){
+				first = n.getNode(0).getString(0);
+				first = first.replace("'", "\"");
+			}else {
+				first = n.getNode(0).getString(0);
+			}
+			return first + second;
+
+		} else if (n.getNode(0).getName().equals("StringLiteral")) {
 			String first = n.getNode(0).getString(0);
 			String second = null;
-			// special concatination of characters
+			// special concatenation of characters
 			if (n.getNode(2).getName().equals("CharacterLiteral")){
 				second = n.getNode(2).getString(0);
 				second = second.replace("'", "\"");
