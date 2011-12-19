@@ -232,8 +232,6 @@ public class ImplementationVisitor extends Visitor {
 	}
 
 	public void visitPostfixExpression(GNode n) {
-		System.out.println("POSTFIX EXPRESSION -> " + n);
-
 		PostfixPiece p = new PostfixPiece(n);
 		cppPrintList.add(p);
 		postfixPieces.add(p);
@@ -463,7 +461,6 @@ public class ImplementationVisitor extends Visitor {
 	}
 	
 	public void visitCastExpression(GNode n) {
-		System.out.println("CAST -> " + n);
 		add("__rt::java_cast(", n);
 		visit(n);
 		add(")", n);
@@ -494,11 +491,6 @@ public class ImplementationVisitor extends Visitor {
 		IPiece i = new IPiece(baseNode, addition);
 		cppPrintList.add(i);
 		ipieces.add(i);
-	}
-
-	private void removeLastComma() {
-		implementation = implementation.substring(0,
-				implementation.length() - 1);
 	}
 
 	private void addLn(String addition, Node baseNode) {

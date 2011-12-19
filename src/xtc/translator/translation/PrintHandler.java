@@ -4,7 +4,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import xtc.translator.representation.ClassVisitor;
 import xtc.translator.representation.ConstructorVisitor;
@@ -130,7 +129,7 @@ public class PrintHandler {
 				cp.p("() : __vptr(&__vtable)").pln();
 				ImplementationVisitor iv = con.getImplementationVisitor();
 				if (iv == null) {
-					System.out.println("NO CONSTRUCTOR FOR " + classVisitor);
+					// Do nothing
 				} else {
 					for (CppPrintable p : iv.getCppPrintList()) {
 						p.printCpp(cp);
@@ -369,17 +368,6 @@ public class PrintHandler {
 		}
 	}
 
-	private String periodToColons(String word) {
-		return word.replace(".", "::");
-	}
-	
-	private String getFullClassName(ClassVisitor classVisitor) {
-		return classVisitor.getPackageName() + "." + classVisitor.getIdentifier();
-	}
-	
-	private String getFullImportName(ClassVisitor classVisitor, String importName) {
-		return classVisitor.getPackageName() + "::" + importName;
-	}
 	
 	private String[] splitPackageName(String packageName) {
 		String[] pieces = packageName.split("[.]");

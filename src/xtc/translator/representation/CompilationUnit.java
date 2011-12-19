@@ -1,11 +1,9 @@
 package xtc.translator.representation;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import xtc.tree.GNode;
 import xtc.tree.Node;
-import xtc.tree.Visitor;
 
 public class CompilationUnit extends BaseVisitor{
 	
@@ -46,22 +44,13 @@ public class CompilationUnit extends BaseVisitor{
 		classVisitors.add(newClass);
 	}
    
-   // public void visitPackageDeclaration(GNode n) {
-   //    System.out.println(n);
-   //    Node qi = n.getNode(1);
-   //    String one = qi.getString(0);
-   //    String two = qi.getString(1);
-   //    this.packageName = one + "." + two;
-   // }
-
 	public void visitImportDeclaration(GNode n) {
 		String theImport = "";
 		
 		Node qualifiedIdentifier = n.getNode(1);
 		
 		for (int i = 0; i < qualifiedIdentifier.size(); i++) {
-			theImport += qualifiedIdentifier.getString(i);
-			
+			theImport += qualifiedIdentifier.getString(i);		
 			if (i != qualifiedIdentifier.size() - 1) {
 				theImport += ".";
 			}

@@ -5,7 +5,6 @@ import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
 
-import xtc.translator.representation.ClassVisitor;
 import xtc.parser.ParseException;
 
 /**
@@ -36,26 +35,31 @@ public class Translator {
 			PackageResolver packageResolver = new PackageResolver(mainClassPath, classPath);
 
 			try {
+				// Collect files from packages
 				packageResolver.collect();
 				
+				// Make protoClassManager with packageResolvers ProtoClasses
 				ProtoManager protoManager = new ProtoManager(packageResolver.getProtoClasses());
-								
+				
+				// Make new collector with classes from protoManager
 				Collector collector = new Collector(protoManager.processProtoClasses());
 				
-				for (ClassVisitor c : collector.classes) {
-					System.out.println(c.getOverloadMap());
-				}
-
+				// Collect information and process classes to prepare for printing
 				collector.collect();
 				
+				// Create new printHandler to handle printing
 				PrintHandler printHandler = new PrintHandler(collector.classes, classPath);
-								
+				
+				// Print c++ headers
 				printHandler.printAllHeaders();
 				
+				// Print c++ .cc files
 				printHandler.printAllImplementations();
 				
+				// Print main.cc file, using main class
 				printHandler.printMainFile(mainClassPath);
 				
+				// Copy necessary dependencies to out file
 				for (File file : new File("dependencies").listFiles()) {
 					FileUtils.copyFileToDirectory(file, new File("out"));
 				}

@@ -74,9 +74,7 @@ public class Method implements Comparable{
 	}
 
 	@Override
-	public int compareTo(Object arg0) {
-		System.out.println("Comaparing " + this.getOverloadedIdentifier() + " and " + ((Method)arg0).getOverloadedIdentifier());
-		
+	public int compareTo(Object arg0) {		
 		if (((Method)arg0).overloadedIdentifier.equals(this.overloadedIdentifier)) {
 			return 0;
 		} else {

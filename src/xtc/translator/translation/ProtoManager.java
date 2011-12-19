@@ -25,9 +25,7 @@ public class ProtoManager {
 			for (ClassVisitor classVisitor : compilationUnit.getClassVisitors()) {
 				classVisitor.setPackageName(protoClass.getPackageName());
 				classVisitor.setImports(compilationUnit.getImports());
-				//TODO: make this sourceNode the actual class begin
-				classVisitor.setSourceNode(protoClass.getSourceNode());
-				
+				classVisitor.setSourceNode(protoClass.getSourceNode());				
 			}
 			
 		}

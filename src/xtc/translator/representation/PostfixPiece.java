@@ -16,12 +16,9 @@ public class PostfixPiece implements CppPrintable{
 		this.representation = "";
 	}
 
-	
 	@Override
 	public void printCpp(CppPrinter cp) {
 		cp.p(representation).p("++");
-
-		
 	}
 
 
@@ -54,10 +51,6 @@ public class PostfixPiece implements CppPrintable{
 			representation += "__this -> " + id;
 		} else {
 			representation += id;
-		}
-		
+		}	
 	}
-
-	
-	
 }

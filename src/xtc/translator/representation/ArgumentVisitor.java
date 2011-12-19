@@ -7,7 +7,7 @@ import xtc.tree.GNode;
 import xtc.tree.Node;
 import xtc.tree.Visitor;
 
-public class ArgumentVisitor extends Visitor {
+public class ArgumentVisitor extends BaseVisitor {
 
 	private Arguments arguments;
 	private Map<String, String> variableMap;
@@ -31,7 +31,6 @@ public class ArgumentVisitor extends Visitor {
 
 	public void visitPrimaryIdentifier(GNode n) {
 		String type = variableMap.get(n.getString(0));
-		System.out.println("Type of " + n.getString(0) + " is " + type);
 		arguments.addArgument(type, n.getString(0));
 	}
 
@@ -54,8 +53,7 @@ public class ArgumentVisitor extends Visitor {
 			String first = n.getNode(0).getString(0);
 			String second = n.getNode(2).getString(0);
 			String real = first + second; //dont do it in c++
-			arguments.addArgument("String", real);
-			
+			arguments.addArgument("String", real);	
 		} else {
 			visit(n);			
 		}
@@ -101,8 +99,6 @@ public class ArgumentVisitor extends Visitor {
 				if (method.getArguments().compareTo(
 						argumentVisitor.getArguments()) == 0) {
 
-					// TODO: need to check method type to see whether to go
-					// thru v pointer or statically
 					if (method.isStatic) {
 						arg.value += "." + method.getOverloadedIdentifier();
 					} else {
@@ -119,7 +115,6 @@ public class ArgumentVisitor extends Visitor {
 		arg.value += "(";
 		arg.value += "__this";
 
-		// TODO: fix this horrible get.get thing
 		for (Argument innerArg : argumentVisitor.getArguments().getArguments()) {
 			arg.value += ",";
 			arg.value += innerArg.value;
@@ -153,13 +148,6 @@ public class ArgumentVisitor extends Visitor {
 
 	public void setArguments(Arguments arguments) {
 		this.arguments = arguments;
-	}
-
-	public void visit(Node n) {
-		for (Object o : n) {
-			if (o instanceof Node)
-				dispatch((Node) o);
-		}
 	}
 
 }

@@ -15,11 +15,10 @@ import xtc.tree.Visitor;
  * data from it, to be processed later.
  * 
  */
-public class ClassVisitor extends Visitor implements Cloneable {
+public class ClassVisitor extends BaseVisitor implements Cloneable {
 
 	private Node sourceNode;
 	private String identifier;
-	private String fullIdentifier;
 	private List<String> extensions;
 	private String extension;
 	private ClassVisitor superClass;
@@ -58,7 +57,6 @@ public class ClassVisitor extends Visitor implements Cloneable {
 	 * @param n
 	 */
 	public void visitClassDeclaration(GNode n) {
-		System.out.println("Class Dec -> " + n);
 		for (Object o : n) {
 
 			// record the class name if o is a string
@@ -109,7 +107,6 @@ public class ClassVisitor extends Visitor implements Cloneable {
 	}
 
 	public void visitFieldDeclaration(GNode n) {
-		System.out.println(n);
 		FieldVisitor fieldVisitor = new FieldVisitor(this);
 		fieldVisitor.dispatch(n);
 		this.fieldList.add(fieldVisitor);
@@ -129,14 +126,6 @@ public class ClassVisitor extends Visitor implements Cloneable {
 		this.usedClasses.addAll(methodVisitor.getUsedClasses());
 	}
 
-	/**
-	 * Catch-all visit.
-	 */
-	public void visit(Node n) {
-		for (Object o : n)
-			if (o instanceof Node)
-				dispatch((Node) o);
-	}
 	
 	public void getVTable(CppPrinter cp) {
 		getVTable(cp, this, this);
@@ -311,9 +300,6 @@ public class ClassVisitor extends Visitor implements Cloneable {
 		this.overloadMap = overloadMap;
 	}
 
-	public void setFullIdentifier(String fullIdentifier) {
-		this.fullIdentifier = fullIdentifier;
-	}
 
 	public ArrayList<FieldVisitor> getInheritedFields() {
 		return inheritedFields;

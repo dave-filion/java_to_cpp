@@ -6,8 +6,7 @@ public class SourceObject extends ClassVisitor{
 	public SourceObject(){
 		super();
 		this.setIdentifier("Object");
-		
-		
+			
 		// Unfortunately, this needs to be hard-coded, as it explicitly creates 
 		// MethodVisitor for java.lang.Object
 		MethodVisitor hashCode = new MethodVisitor("hashCode", "int32_t");

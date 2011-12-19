@@ -1,7 +1,5 @@
 package xtc.translator.representation;
 
-import javax.sound.sampled.LineEvent.Type;
-
 import xtc.translator.translation.CppPrinter;
 
 public class BlockPiece implements CppPrintable{
@@ -23,7 +21,6 @@ public class BlockPiece implements CppPrintable{
 	
 	@Override
 	public void printCpp(CppPrinter cp) {
-		
 		if (type == Type.OPEN) {
 			cp.pln("{");
 		} else if (type == Type.CLOSE) {

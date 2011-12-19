@@ -29,7 +29,6 @@ public class Arguments implements Comparable {
 		if (other == null) {
 			return -1;
 		} else {
-			
 			List<Argument> otherArgs = ((Arguments)other).getArguments();
 			
 			// If the sizes are different, they are not the same
@@ -38,18 +37,13 @@ public class Arguments implements Comparable {
 			}
 			
 			for (int i = 0; i < this.arguments.size(); i++) {
-				
 				String o = otherArgs.get(i).type;
 				if (! o.equals(arguments.get(i).type)) {
 					return -1;
-				}
-				
-			}
-			
+				}	
+			}	
 			return 0;
-		}
-		
-		
+		}	
 	}
 
 	@Override

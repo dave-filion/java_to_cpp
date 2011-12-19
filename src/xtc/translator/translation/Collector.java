@@ -1,17 +1,11 @@
 package xtc.translator.translation;
 
-import java.lang.Character;
-
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.FilenameFilter;
 import java.io.IOException;
 
 import xtc.translator.representation.Argument;
@@ -31,10 +25,7 @@ import xtc.translator.representation.PostfixPiece;
 import xtc.translator.representation.SourceObject;
 import xtc.translator.representation.VariableVisitor;
 
-import xtc.lang.JavaFiveParser;
 import xtc.parser.ParseException;
-import xtc.parser.Result;
-import xtc.tree.GNode;
 import xtc.tree.Node;
 import xtc.tree.Visitor;
 
@@ -57,7 +48,6 @@ public class Collector extends Visitor {
 	 */
 	public ArrayList<String> usedClasses;
 	public HashMap<String, String> usedClassesDict;
-	public ArrayList<ClassVisitor> sortedClasses;
 
 	public Collector(List<CompilationUnit> compilationUnits) {
 
@@ -72,7 +62,6 @@ public class Collector extends Visitor {
 		this.packages = new ArrayList<String>();
 		this.mainClass = null;
 		this.packDirs = new ArrayList<File>();
-		this.sortedClasses = new ArrayList<ClassVisitor>();
 		this.typeList = new ArrayList<String>();
 
 	}
@@ -229,59 +218,10 @@ public class Collector extends Visitor {
 		}
 	}
 
-	/**
-	 * Driver to sort Collector's classes list
-	 */
-	private void sort() {
-		// only sort if it hasn't already been sorted
-		if (sortedClasses.size() == 0) {
-			HashMap<String, Integer> visited = new HashMap<String, Integer>();
-			for (ClassVisitor currentClass : classes) {
-				if (currentClass.getIdentifier() != "Object") {
-					if (!visited.containsKey(currentClass.getIdentifier())) {
-						sort(currentClass, visited);
-					}
-				}
-			}
-		}
-	}
-
-	/**
-	 * Recursive helper method for sorting classes in heirarchical order
-	 */
-	private void sort(ClassVisitor currentClass,
-			HashMap<String, Integer> visited) {
-		if (currentClass.getIdentifier() != "Object") {
-			if (currentClass.getSuperClass() != null) {
-				// have not encountered the superclass, so sort it!
-				if (!visited.containsKey(currentClass.getSuperClass()
-						.getIdentifier())) {
-					sort(currentClass.getSuperClass(), visited);
-				}
-				// put yourself after the your parent
-				else {
-					int index = visited.get(currentClass.getSuperClass()
-							.getIdentifier()) + 1;
-					sortedClasses.add(index, currentClass);
-					visited.put(currentClass.getIdentifier(), index);
-				}
-			}
-			// make sure that the class has not already been visited
-			if (!visited.containsKey(currentClass.getIdentifier())) {
-				// store the location of where you put the class
-				// note that haven't actually put class in sortedClasses yet, so
-				// don't have to
-				// decrement sortedClasses.size()
-				visited.put(currentClass.getIdentifier(), sortedClasses.size());
-				sortedClasses.add(currentClass);
-			}
-		}
-	}
 
 	private void generateMethodOverload() {
 
 		for (ClassVisitor classVisitor : classes) {
-			
 			ClassVisitor currentClass = classVisitor;
 						
 			while (currentClass != null) {
@@ -321,7 +261,6 @@ public class Collector extends Visitor {
 						
 					} else {
 						List<Method> methodList = new ArrayList<Method>();
-						System.out.println("Adding list for method: " + method.getIdentifier());
 						methodList.add(method);
 						classVisitor.getOverloadMap().put(method.getIdentifier(), methodList);
 					}
@@ -420,7 +359,6 @@ public class Collector extends Visitor {
 	private void processPostfixPieces() {
 		
 		for (ClassVisitor classVisitor : classes) {
-
 			for (MethodVisitor m : classVisitor.getMethodList()) {
 				ImplementationVisitor i = m.getImplementationVisitor();
 				
@@ -441,14 +379,12 @@ public class Collector extends Visitor {
 			for (ConstructorVisitor con : classVisitor.getConstructorList()) {
 				List<CppPrintable> pieces = con.getImplementationVisitor().getCppPrintList();
 				pieces.remove(pieces.size() - 1); //remove last brace;
-				System.out.println(classVisitor.getIdentifier() + " : " + classVisitor.getInheritedFields());
 				for (FieldVisitor fv : classVisitor.getInheritedFields()) {
 					pieces.add(new IPiece(null, fv.variableName + " =  0;"));
 				}
 				
 				pieces.add(new IPiece(null, "}\n"));
 				con.getImplementationVisitor().setCppPrintList(pieces);
-				System.out.println(con.getImplementationVisitor().getCppPrintList());
 			}
 		}
 	}
@@ -465,7 +401,6 @@ public class Collector extends Visitor {
 					for (IPiece p : i.getIpieces()) {		
 						
 						Node n = p.getBaseNode();
-						
 						if (n.getName().equals("PrimaryIdentifier")) {
 							FieldVisitor fv = FieldMap.fieldmap.get(p.getRepresentation());
 							if (fv != null)
@@ -490,10 +425,7 @@ public class Collector extends Visitor {
 						
 						if (n.getName().equals("AdditiveExpression")) {
 							
-							String real = "";
-							
-							real = concat(real, n, null);
-							
+							String real = concat("", n, null);;							
 							real = real.replaceAll("\"", "");
 							real = "\"" + real + "\"";
 							real = "__rt::literal(" + real + ")";
@@ -502,7 +434,6 @@ public class Collector extends Visitor {
 						}
 						
 						if (p.representation.contains("short")) {
-							System.out.println("FUCK SHORTS");
 							p.setRepresentation(p.getRepresentation().replace("short", "int"));
 						}
 					}
@@ -546,8 +477,4 @@ public class Collector extends Visitor {
 		typeList.add("Class");
 	}
 	
-	public ArrayList<ClassVisitor> getSortedClasses() {
-		sort();
-		return sortedClasses;
-	}
 }

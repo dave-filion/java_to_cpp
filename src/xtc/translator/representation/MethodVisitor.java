@@ -107,8 +107,6 @@ public class MethodVisitor extends Visitor implements Cloneable{
 				param.put("name", (String) o);
 			}
 
-			// FIXME: This needs to be able to handle qualified/primitive type
-			// plus Dimension if it is an array
 			if (o instanceof Node) {
 				if (((Node) o).getName() == "Type") {
 					Node innerType = (Node) ((Node) o).get(0);
@@ -208,7 +206,7 @@ public class MethodVisitor extends Visitor implements Cloneable{
 		
 		String out = "";
 		
-		for (Map p : this.parameters) {
+		for (Map<String, String> p : this.parameters) {
 			out += ",";
 			out += p.get("type");
 			out += " ";
@@ -216,10 +214,6 @@ public class MethodVisitor extends Visitor implements Cloneable{
 		}
 		
 		return out;
-	}
-
-	public String getConstructorPtr() {
-		return "CONSTR PTR";
 	}
 
 	@Override
@@ -349,7 +343,7 @@ public class MethodVisitor extends Visitor implements Cloneable{
 	public String parametersToStringNoComma() {
 		String out = "";
 		
-		for (Map p : this.parameters) {
+		for (Map<String, String> p : this.parameters) {
 			out += p.get("type");
 			out += " ";
 			out += p.get("name");

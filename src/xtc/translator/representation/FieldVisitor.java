@@ -1,11 +1,7 @@
 package xtc.translator.representation;
-import java.awt.Dialog.ModalExclusionType;
-import java.util.ArrayList;
-import java.util.List;
 
 import xtc.tree.Node;
 import xtc.tree.GNode;
-import xtc.tree.Visitor;
 
 public class FieldVisitor extends BaseVisitor {
 
@@ -24,7 +20,6 @@ public class FieldVisitor extends BaseVisitor {
 	}
 	
 	public void visitFieldDeclaration(GNode n) {
-		
 		visit(n);
 		headerRep += ";";
 		implementationRep += ";";
