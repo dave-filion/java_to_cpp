@@ -74,9 +74,15 @@ public class CallExpressionPiece extends Visitor implements CppPrintable{
 				representation += "()";
 			} else {
 				if (arguments.getNode(0).getName().equals("AdditiveExpression")) {
-					System.out.println("SYSTEM ADDING!!!!@$!#$!$!2");
-					String result = Collector.concat("", arguments.getNode(0), ImplementationVisitor.varValues);
-					System.out.println(result);
+					representation += "(";
+      			for (Argument arg : argumentVisitor.getArguments().getArguments()) {
+      				representation += arg.value;
+      				representation += ",";
+      			}
+               
+               representation = representation.substring(0, representation.length() - 1);
+               
+      			representation += ")";
 				}else{
 					representation += "(" + argumentVisitor.getArguments().getArguments().get(0).value + ")";				
 				}

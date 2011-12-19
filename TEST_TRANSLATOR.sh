@@ -2,4 +2,4 @@
 
 cd ~/xtc
 
-python translate.py Test.java grimm
+python translate.py Test.java xtc

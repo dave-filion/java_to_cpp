@@ -4,7 +4,7 @@
 #include <cstring>
 #include "ptr.h"
 #include "java_lang.h"
-#include "grimm.h"
+#include "xtc.h"
 int main(){
-grimm::__Test::main();
+xtc::oop::__Test::main();
 }

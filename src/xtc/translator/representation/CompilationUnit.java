@@ -45,6 +45,14 @@ public class CompilationUnit extends BaseVisitor{
 		newClass.dispatch(n);
 		classVisitors.add(newClass);
 	}
+   
+   // public void visitPackageDeclaration(GNode n) {
+   //    System.out.println(n);
+   //    Node qi = n.getNode(1);
+   //    String one = qi.getString(0);
+   //    String two = qi.getString(1);
+   //    this.packageName = one + "." + two;
+   // }
 
 	public void visitImportDeclaration(GNode n) {
 		String theImport = "";

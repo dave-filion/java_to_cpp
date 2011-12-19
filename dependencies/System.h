@@ -24,6 +24,8 @@ struct outstream {
   static void print();
 
   static void println();
+  
+  static void println(int32_t, String, int32_t, String);
 };
 
 

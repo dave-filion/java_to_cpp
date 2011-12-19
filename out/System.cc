@@ -24,3 +24,8 @@ void OutStream::print() {
 void OutStream::println() {
    std::cout << std::endl;
 }
+
+void OutStream::println(int32_t one, String two, int32_t three, String four){
+   std::cout << one << two << three << four << std::endl;
+}
+

@@ -175,7 +175,8 @@ public class PrintHandler {
 			cp.p("::__class() {").pln();
 			cp.p("static Class k = new __Class(__rt::literal(");
 			//TODO: print full name here
-			cp.p("\"" + classVisitor.getIdentifier() + "\"");
+			String fullName = "\"" + classVisitor.getPackageName() + "." + classVisitor.getIdentifier() + "\"";
+			cp.p(fullName);
 			//print superclass
 			cp.p("), ").p(prepend(classVisitor.getSuperClass().getIdentifier()));
 			cp.p("::__class());").pln();
